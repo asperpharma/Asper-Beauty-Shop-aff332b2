@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Asper Beauty Quiet Luxury Palette */
+    
+    /* Cream #F3E5DC = HSL 25 47% 91% - Global Background */
+    --cream: 25 47% 91%;
+    --cream-dark: 25 35% 85%;
+    
+    /* Gold Foil #D4AF37 = HSL 46 66% 52% - Accents & Borders */
+    --gold: 46 66% 52%;
+    --gold-light: 46 66% 62%;
+    --gold-glow: 46 66% 70%;
+    
+    /* Deep Burgundy #4A0E19 = HSL 348 68% 17% - Header/Footer */
+    --burgundy: 348 68% 17%;
+    --burgundy-light: 348 58% 25%;
+    --burgundy-dark: 348 68% 12%;
+    
+    /* Dark Warm Brown #2C1A1D = HSL 350 25% 14% - Text */
+    --warm-brown: 350 25% 14%;
+    --warm-brown-light: 350 20% 35%;
+    
+    /* Primary backgrounds - Cream base */
+    --background: 25 47% 91%;
+    --foreground: 350 25% 14%;
+
+    --card: 25 40% 95%;
+    --card-foreground: 350 25% 14%;
+
+    --popover: 25 47% 91%;
+    --popover-foreground: 350 25% 14%;
+
+    /* Deep Burgundy for primary accent surfaces */
+    --primary: 348 68% 17%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft cream for secondary surfaces */
+    --secondary: 25 35% 88%;
+    --secondary-foreground: 350 25% 14%;
+
+    --muted: 25 30% 85%;
+    --muted-foreground: 350 20% 40%;
+
+    /* Gold accent */
+    --accent: 46 66% 52%;
+    --accent-foreground: 350 25% 14%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 46 40% 75%;
+    --input: 46 40% 80%;
+    --ring: 46 66% 52%;
+
+    --radius: 0.5rem;
+
+    /* Legacy token mappings for compatibility */
+    --maroon: 348 68% 17%;
+    --maroon-light: 348 58% 25%;
+    --maroon-dark: 348 68% 12%;
+    --rose: 350 45% 55%;
+    --rose-light: 350 50% 65%;
+    --shiny-gold: 46 66% 52%;
+    --soft-ivory: 25 47% 91%;
+    --dark-charcoal: 350 25% 14%;
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', 'Lato', sans-serif;
+    --font-script: 'Great Vibes', cursive;
+
+    --sidebar-background: 348 68% 17%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 348 68% 17%;
+    --sidebar-accent: 348 58% 25%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 348 58% 22%;
+    --sidebar-ring: 46 66% 52%;
+  }
+
+  .dark {
+    /* Dark mode with Burgundy base */
+    --background: 348 68% 10%;
+    --foreground: 25 47% 91%;
+
+    --card: 348 68% 14%;
+    --card-foreground: 25 47% 91%;
+
+    --popover: 348 68% 14%;
+    --popover-foreground: 25 47% 91%;
+
+    --primary: 25 47% 91%;
+    --primary-foreground: 348 68% 10%;
+
+    --secondary: 348 58% 18%;
+    --secondary-foreground: 25 47% 91%;
+
+    --muted: 348 50% 20%;
+    --muted-foreground: 25 30% 70%;
+
+    --accent: 46 66% 52%;
+    --accent-foreground: 348 68% 10%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 25 47% 91%;
+
+    --border: 348 50% 22%;
+    --input: 348 50% 22%;
+    --ring: 46 66% 52%;
+
+    --burgundy: 348 68% 10%;
+    --burgundy-light: 348 58% 18%;
+    --cream: 25 47% 91%;
+    --gold: 46 66% 52%;
+    --gold-light: 46 66% 62%;
+
+    --sidebar-background: 348 68% 10%;
+    --sidebar-foreground: 25 47% 91%;
+    --sidebar-primary: 25 47% 91%;
+    --sidebar-primary-foreground: 348 68% 10%;
+    --sidebar-accent: 348 58% 18%;
+    --sidebar-accent-foreground: 25 47% 91%;
+    --sidebar-border: 348 50% 22%;
+    --sidebar-ring: 46 66% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    font-family: 'Inter', 'Tajawal', sans-serif;
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6 {
+    font-family: 'Playfair Display', 'Tajawal', serif;
+  }
+}
+
+@layer components {
+  .luxury-container {
+    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  }
+
+  .luxury-heading {
+    @apply font-display text-foreground tracking-wide;
+  }
+
+  .luxury-subheading {
+    @apply font-body text-muted-foreground tracking-widest uppercase text-xs;
+  }
+
+  .luxury-script {
+    @apply font-script text-accent;
+  }
+
+  .luxury-divider {
+    @apply w-16 h-px bg-accent mx-auto;
+  }
+
+  /* Product Cards - Quiet Luxury */
+  .luxury-card {
+    @apply bg-card border border-gold/30 rounded-lg transition-all duration-400 ease-in-out;
+    box-shadow: 0 4px 20px -4px hsl(var(--warm-brown) / 0.08);
+  }
+
+  .luxury-card:hover {
+    box-shadow: 0 8px 30px -4px hsl(var(--warm-brown) / 0.15);
+  }
+
+  .luxury-card-image {
+    @apply overflow-hidden rounded-t-lg;
+  }
+
+  .luxury-card-image img {
+    @apply transition-transform duration-400 ease-in-out;
+  }
+
+  .luxury-card:hover .luxury-card-image img {
+    transform: scale(1.05);
+  }
+
+  /* Buttons - Quiet Luxury */
+  .luxury-button {
+    @apply font-body tracking-widest uppercase text-xs py-4 px-8 transition-all duration-400 ease-in-out;
+  }
+
+  .luxury-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-burgundy-light;
+  }
+
+  .luxury-button-secondary {
+    @apply bg-transparent text-primary border-2 border-gold hover:bg-gold/10;
+  }
+
+  .luxury-link {
+    @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-accent after:origin-bottom-right after:transition-transform after:duration-400 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+
+  /* Mega Menu */
+  .mega-menu {
+    @apply absolute left-0 right-0 bg-cream border-t border-gold/30 shadow-xl opacity-0 invisible transition-all duration-400 ease-in-out;
+  }
+
+  .mega-menu.open {
+    @apply opacity-100 visible;
+  }
+}
+
+@layer utilities {
+  .duration-400 {
+    transition-duration: 400ms;
+  }
+
+  .ease-luxury {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
