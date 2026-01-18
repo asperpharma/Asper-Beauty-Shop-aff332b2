@@ -124,7 +124,7 @@ export const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps
             ) : (
               <ProductImagePlaceholder
                 title={node.title}
-                brand={(node as any).vendor || node.title.split(' ')[0]}
+                brand={node.vendor || node.title.split(' ')[0]}
                 category={categorizeProduct(node.title, node.productType, node.vendor)}
                 className="w-full h-full"
               />

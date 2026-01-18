@@ -146,7 +146,7 @@ export const FeaturedCarousel = () => {
                     ) : (
                       <ProductImagePlaceholder
                         title={displayTitle}
-                        brand={(product.node as any).vendor || displayTitle.split(' ')[0]}
+                        brand={product.node.vendor || displayTitle.split(' ')[0]}
                         category={categorizeProduct(product.node.title, product.node.productType, product.node.vendor)}
                         className="w-full h-full"
                       />

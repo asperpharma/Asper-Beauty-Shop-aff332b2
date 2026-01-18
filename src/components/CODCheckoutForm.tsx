@@ -133,7 +133,7 @@ export const CODCheckoutForm = ({ onSuccess, onCancel }: CODCheckoutFormProps) =
       clearCart();
       onSuccess(data.order_number);
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to place COD order:', error);
       
       // Provide more specific error messages
