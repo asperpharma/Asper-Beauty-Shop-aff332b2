@@ -20,9 +20,9 @@ const FeaturedProductsCategory = ({ categorySlug, limit = 4 }: FeaturedProductsB
   const [loading, setLoading] = useState(true);
 
   const categoryInfo = CATEGORIES[categorySlug];
-  if (!categoryInfo) return null;
 
   useEffect(() => {
+    if (!categoryInfo) return;
     const loadProducts = async () => {
       try {
         setLoading(true);
@@ -49,7 +49,9 @@ const FeaturedProductsCategory = ({ categorySlug, limit = 4 }: FeaturedProductsB
     };
 
     loadProducts();
-  }, [categorySlug, limit]);
+  }, [categorySlug, limit, categoryInfo]);
+
+  if (!categoryInfo) return null;
 
   if (loading) {
     return (

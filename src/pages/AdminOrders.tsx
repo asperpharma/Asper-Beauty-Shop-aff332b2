@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -125,7 +125,7 @@ export default function AdminOrders() {
   }, [user, authLoading]);
 
   // Fetch orders
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!isAdmin) return;
     
     setIsLoading(true);
@@ -150,13 +150,13 @@ export default function AdminOrders() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAdmin]);
 
   useEffect(() => {
     if (isAdmin) {
       fetchOrders();
     }
-  }, [isAdmin]);
+  }, [isAdmin, fetchOrders]);
 
   // Update order status
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
