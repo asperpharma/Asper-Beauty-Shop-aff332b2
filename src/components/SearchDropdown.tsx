@@ -4,6 +4,8 @@ import { Loader2, Search, X } from "lucide-react";
 import { searchProducts, ShopifyProduct } from "@/lib/shopify";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translateTitle } from "@/lib/productUtils";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { categorizeProduct } from "@/lib/categoryMapping";
 
 interface SearchDropdownProps {
   isOpen: boolean;
@@ -130,9 +132,12 @@ export const SearchDropdown = ({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          <Search className="w-5 h-5" />
-                        </div>
+                        <ProductImagePlaceholder
+                          title={displayTitle}
+                          brand={(product.node as any).vendor || displayTitle.split(' ')[0]}
+                          category={categorizeProduct(product.node.title, product.node.productType, product.node.vendor)}
+                          className="w-full h-full rounded-lg"
+                        />
                       )}
                     </div>
 

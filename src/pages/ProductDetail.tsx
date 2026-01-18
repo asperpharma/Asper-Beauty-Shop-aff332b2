@@ -11,6 +11,8 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { toast } from "sonner";
 import { getLocalizedDescription, extractKeyBenefits, getLocalizedCategory, translateTitle } from "@/lib/productUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ProductImagePlaceholder } from "@/components/ProductImagePlaceholder";
+import { categorizeProduct } from "@/lib/categoryMapping";
 import {
   Accordion,
   AccordionContent,
@@ -228,9 +230,12 @@ const ProductDetail = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-muted-foreground font-body">No image</span>
-                  </div>
+                  <ProductImagePlaceholder
+                    title={product.title}
+                    brand={product.vendor || product.title.split(' ')[0]}
+                    category={categorizeProduct(product.title, product.productType, product.vendor)}
+                    className="w-full h-full"
+                  />
                 )}
 
                 {/* Sale Badge */}

@@ -243,15 +243,37 @@ export const CartDrawer = () => {
                       </span>
                     </div>
                     
-                    {/* COD Button - Primary */}
-                    <button 
-                      onClick={() => setCheckoutMode('cod')}
-                      disabled={items.length === 0}
-                      className="w-full py-4 px-8 bg-burgundy text-white font-display text-sm tracking-widest uppercase transition-all duration-400 hover:bg-burgundy-light hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center justify-center gap-2"
-                    >
-                      <Truck className="w-4 h-4" />
-                      {isArabic ? 'الدفع عند الاستلام' : 'Cash on Delivery'}
-                    </button>
+                    {/* Checkout Buttons */}
+                    <div className="space-y-3">
+                      {/* Shopify Checkout Button */}
+                      <button 
+                        onClick={handleCheckout}
+                        disabled={items.length === 0 || isLoading}
+                        className="w-full py-4 px-8 bg-gold text-white font-display text-sm tracking-widest uppercase transition-all duration-400 hover:bg-gold-light hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center justify-center gap-2"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            {isArabic ? 'جاري المعالجة...' : 'Processing...'}
+                          </>
+                        ) : (
+                          <>
+                            <Lock className="w-4 h-4" />
+                            {isArabic ? 'الدفع عبر الإنترنت' : 'Checkout'}
+                          </>
+                        )}
+                      </button>
+                      
+                      {/* COD Button */}
+                      <button 
+                        onClick={() => setCheckoutMode('cod')}
+                        disabled={items.length === 0}
+                        className="w-full py-4 px-8 bg-burgundy text-white font-display text-sm tracking-widest uppercase transition-all duration-400 hover:bg-burgundy-light hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center justify-center gap-2"
+                      >
+                        <Truck className="w-4 h-4" />
+                        {isArabic ? 'الدفع عند الاستلام' : 'Cash on Delivery'}
+                      </button>
+                    </div>
                     
                     {/* Trust Badge */}
                     <div className="flex items-center justify-center gap-2 mt-4">

@@ -8,6 +8,8 @@ import { useCartStore } from "@/stores/cartStore";
 import { translateTitle } from "@/lib/productUtils";
 import { toast } from "sonner";
 import { OptimizedImage } from "./OptimizedImage";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { categorizeProduct } from "@/lib/categoryMapping";
 
 export const FeaturedCarousel = () => {
   const { language, isRTL } = useLanguage();
@@ -142,9 +144,12 @@ export const FeaturedCarousel = () => {
                         sizes="(max-width: 768px) 256px, 288px"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                        <ShoppingBag className="w-12 h-12 text-gray-300" />
-                      </div>
+                      <ProductImagePlaceholder
+                        title={displayTitle}
+                        brand={(product.node as any).vendor || displayTitle.split(' ')[0]}
+                        category={categorizeProduct(product.node.title, product.node.productType, product.node.vendor)}
+                        className="w-full h-full"
+                      />
                     )}
 
                     {/* Quick Add Button - Shows on Hover */}

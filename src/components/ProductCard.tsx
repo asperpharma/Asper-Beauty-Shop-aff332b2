@@ -5,11 +5,13 @@ import { ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { toast } from "sonner";
-import { ShoppingBag, Eye, Heart, Star, Sparkles, Info } from "lucide-react";
+import { ShoppingBag, Eye, Heart, Star, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QuickViewModal } from "./QuickViewModal";
 import { getLocalizedDescription, translateTitle } from "@/lib/productUtils";
 import { OptimizedImage } from "./OptimizedImage";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { categorizeProduct } from "@/lib/categoryMapping";
 
 interface ProductCardProps {
   product: ShopifyProduct;
@@ -89,19 +91,22 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
+  // Get category for display
+  const productCategory = categorizeProduct(node.title, node.productType, node.vendor);
+
   return (
     <Link to={`/product/${node.handle}`} className="group block">
-      {/* Luxury Card Container */}
-      <div className="bg-white rounded-lg overflow-hidden transition-all duration-400 ease-in-out border border-transparent group-hover:border-gold group-hover:shadow-lg">
+      {/* Luxury Card Container - Enhanced with slow, cinematic transitions */}
+      <div className="bg-white overflow-hidden transition-all duration-700 ease-in-out border border-gray-100 group-hover:border-gold/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] group-hover:shadow-gold-hover-lg">
         
-        {/* Image Container */}
-        <div className="aspect-square bg-secondary overflow-hidden relative">
+        {/* Image Container with slow zoom effect */}
+        <div className="aspect-[3/4] bg-secondary overflow-hidden relative">
           {firstImage ? (
             <>
               <OptimizedImage
                 src={firstImage.url}
                 alt={firstImage.altText || node.title}
-                className="w-full h-full object-cover transition-transform duration-400 ease-in-out group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                 loading="lazy"
                 width={400}
                 height={400}
@@ -109,9 +114,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               />
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-secondary">
-              <span className="text-muted-foreground font-body text-sm">{t.noImage}</span>
-            </div>
+            <ProductImagePlaceholder
+              title={node.title}
+              brand={brand}
+              category={productCategory}
+              className="group-hover:border-gold/20 transition-all duration-700"
+            />
           )}
 
           {/* Gold Badge Icons */}
@@ -147,25 +155,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
           </button>
 
-          {/* Smart Hover Buttons - Hidden on mobile (no hover) */}
-          <div className="hidden md:flex absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-in-out">
+          {/* Luxury Quick Add Button - Appears on hover with slow animation */}
+          <div className="hidden md:flex absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-in-out">
             <Button
               onClick={handleAddToCart}
-              className="flex-1 bg-burgundy text-white hover:bg-burgundy-light rounded-none py-3 font-body text-xs tracking-widest uppercase border-r border-gold/20"
+              className="w-full bg-[#1A1A1A] text-white hover:bg-gold hover:text-[#1A1A1A] rounded-none py-4 font-serif text-sm tracking-[0.2em] uppercase transition-all duration-500 shadow-gold-button-hover"
             >
               <ShoppingBag className="w-4 h-4 me-2" />
-              {language === 'ar' ? 'إضافة' : 'Add to Bag'}
-            </Button>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsQuickViewOpen(true);
-              }}
-              className="flex-1 bg-cream text-burgundy hover:bg-gold hover:text-burgundy rounded-none py-3 font-body text-xs tracking-widest uppercase border-l border-gold/20"
-            >
-              <Info className="w-4 h-4 me-2" />
-              {language === 'ar' ? 'لماذا يعمل؟' : 'Why this works?'}
+              {language === 'ar' ? 'إضافة إلى السلة' : `Add to Bag — ${price.currencyCode} ${currentPrice.toFixed(2)}`}
             </Button>
           </div>
 
@@ -182,28 +179,40 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-3 md:p-5 bg-white">
-          {/* Brand Name */}
-          <p className="font-body text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest mb-1">
+        {/* Content - Luxury Typography & Spacing */}
+        <div className="p-6 md:p-8 bg-white text-center space-y-3">
+          {/* Category Badge - Wide Letter Spacing (Luxury Fashion Style) */}
+          <p className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
+            {categorizeProduct(node.title, node.productType, node.vendor).replace('-', ' ')}
+          </p>
+          
+          {/* Brand Name - Minimalist */}
+          <p className="font-body text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.15em] opacity-70">
             {brand}
           </p>
           
-          {/* Product Title */}
-          <h3 className="font-display text-sm md:text-base text-foreground mb-2 line-clamp-2 leading-snug">
+          {/* Product Title - Serif Font, Hover Gold */}
+          <h3 className="font-serif text-base md:text-lg text-[#1A1A1A] group-hover:text-gold transition-colors duration-300 line-clamp-2 leading-relaxed">
             {translateTitle(node.title, language)}
           </h3>
           
-          {/* Price */}
-          <div className="flex items-center gap-2">
+          {/* Price - Elegant Display */}
+          <div className="flex items-center justify-center gap-3 pt-2">
             {isOnSale && originalPrice && (
-              <p className="font-body text-xs md:text-sm text-muted-foreground line-through">
+              <p className="font-body text-sm text-muted-foreground line-through opacity-60">
                 {price.currencyCode} {originalPrice.toFixed(2)}
               </p>
             )}
-            <p className={`font-display text-base md:text-lg font-semibold ${isOnSale ? 'text-burgundy' : 'text-burgundy'}`}>
+            <p className={`font-serif text-lg md:text-xl font-semibold ${isOnSale ? 'text-burgundy' : 'text-[#1A1A1A]'}`}>
               {price.currencyCode} {currentPrice.toFixed(2)}
             </p>
+          </div>
+          
+          {/* Optional: Star Rating (Luxury Touch) */}
+          <div className="flex justify-center gap-1 opacity-60 pt-1">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-3 h-3 fill-gold text-gold" />
+            ))}
           </div>
         </div>
       </div>

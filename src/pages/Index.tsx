@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import AnimatedShaderHero from "@/components/ui/animated-shader-hero";
+import { ShopByCategory } from "@/components/ShopByCategory";
+import { FeaturedProductsByCategory } from "@/components/FeaturedProductsByCategory";
+import { NewArrivals } from "@/components/NewArrivals";
+import { TrendingProducts } from "@/components/TrendingProducts";
+import { FeaturedDeals } from "@/components/FeaturedDeals";
 import { AmmanEdit } from "@/components/AmmanEdit";
 import { FeaturedBrands } from "@/components/FeaturedBrands";
 import { Testimonials } from "@/components/Testimonials";
@@ -39,9 +44,10 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream animate-fade-in">
+    <div className="min-h-screen bg-cream animate-fade-in luxury-texture">
       <Header />
       <main>
+        {/* Hero Section */}
         <AnimatedShaderHero
           trustBadge={{
             text: "Trusted by 50,000+ Beauty Enthusiasts",
@@ -63,11 +69,38 @@ const Index = () => {
             }
           }}
         />
+
+        {/* Shop by Category - Organized navigation like Ulta/Cult Beauty */}
+        <ShopByCategory />
+
+        {/* Featured Products by Category - Organized sections with category headers */}
+        <FeaturedProductsByCategory />
+
+        {/* Featured Deals Section - Sale products highlighted separately */}
+        <FeaturedDeals />
+
+        {/* New Arrivals Section */}
+        <NewArrivals />
+
+        {/* Trending Products Section */}
+        <TrendingProducts />
+
+        {/* The Amman Edit - Curated Selection */}
         <AmmanEdit />
+
+        {/* Featured Brands */}
         <FeaturedBrands />
+
+        {/* Testimonials */}
         <Testimonials />
+
+        {/* Instagram Feed */}
         <InstagramFeed />
+
+        {/* Newsletter */}
         <Newsletter />
+
+        {/* Trust Banner */}
         <TrustBanner />
       </main>
       <Footer />

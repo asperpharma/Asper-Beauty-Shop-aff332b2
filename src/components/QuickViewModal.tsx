@@ -8,6 +8,8 @@ import { ShoppingBag, Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { translateTitle, getLocalizedDescription } from "@/lib/productUtils";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { categorizeProduct } from "@/lib/categoryMapping";
 
 interface QuickViewModalProps {
   product: ShopifyProduct;
@@ -120,9 +122,12 @@ export const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps
                 )}
               </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-muted-foreground">{t.noImage}</span>
-              </div>
+              <ProductImagePlaceholder
+                title={node.title}
+                brand={(node as any).vendor || node.title.split(' ')[0]}
+                category={categorizeProduct(node.title, node.productType, node.vendor)}
+                className="w-full h-full"
+              />
             )}
           </div>
           

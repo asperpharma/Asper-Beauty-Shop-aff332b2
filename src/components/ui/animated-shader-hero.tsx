@@ -488,70 +488,110 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
           background-size: 200% 200%;
           animation: gradient-shift 3s ease infinite;
         }
+
+        @keyframes gold-pulse {
+          0%, 100% {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.1);
+          }
+          50% {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.2);
+          }
+        }
+
+        .animate-gold-pulse {
+          animation: gold-pulse 3s ease-in-out infinite;
+        }
       `}</style>
       
       {/* WebGL Canvas Background */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full z-0"
         style={{ touchAction: 'none' }}
       />
       
+      {/* Elegant Portrait Background - Very Subtle Overlay */}
+      {/* Uncomment hero-portrait-background class below when image is added to public/luxury-beauty-background.jpg */}
+      <div className="hero-portrait-background" />
+      
       {/* Hero Content Overlay */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        {/* Trust Badge */}
+        {/* Decorative Gold Accent Lines */}
+        <div className="absolute top-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent opacity-60" />
+        <div className="absolute bottom-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent opacity-60" />
+
+        {/* Trust Badge - Luxury Styled */}
         {trustBadge && (
-          <div className="animate-fade-in-down mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm font-medium">
+          <div className="animate-fade-in-down mb-12">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-br from-gold/20 via-gold/10 to-transparent backdrop-blur-md border-2 border-gold/40 text-white/95 text-sm font-medium shadow-gold-badge hover:shadow-gold-badge-hover hover:border-gold/60 transition-all duration-500 group">
               {trustBadge.icons && (
-                <span className="flex gap-1">
+                <span className="flex gap-1.5">
                   {trustBadge.icons.map((icon, index) => (
-                    <span key={index} className="text-gold">
+                    <span 
+                      key={index} 
+                      className="text-gold text-lg drop-shadow-[0_0_8px_rgba(212,175,55,0.6)] group-hover:scale-110 transition-transform duration-500"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
                       {icon}
                     </span>
                   ))}
                 </span>
               )}
-              {trustBadge.text}
+              <span className="font-body tracking-wider">{trustBadge.text}</span>
             </div>
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Main Heading with Animation */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Main Heading with Luxury Gold Accents */}
           <h1 className="animate-fade-in-up animation-delay-200">
-            <span className="block font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight">
+            <span className="block font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
               {headline.line1}
             </span>
-            <span className="block font-display text-4xl md:text-6xl lg:text-7xl font-bold mt-2 bg-gradient-to-r from-gold via-shiny-gold to-gold bg-clip-text text-transparent animate-gradient">
+            <span className="block font-display text-4xl md:text-6xl lg:text-7xl font-bold mt-3 bg-gradient-to-r from-gold via-shiny-gold to-gold bg-clip-text text-transparent animate-gradient drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] relative">
               {headline.line2}
+              {/* Decorative underline accent */}
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-gold/80 to-transparent opacity-70" />
             </span>
           </h1>
           
+          {/* Luxury Divider */}
+          <div className="animate-fade-in-up animation-delay-300 flex justify-center">
+            <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-gold/60 to-transparent relative">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.6)]" />
+            </div>
+          </div>
+          
           {/* Subtitle with Animation */}
           <div className="animate-fade-in-up animation-delay-400">
-            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-body tracking-wide drop-shadow-[0_1px_5px_rgba(0,0,0,0.3)]">
               {subtitle}
             </p>
           </div>
           
-          {/* CTA Buttons with Animation */}
+          {/* CTA Buttons with Luxury Gold Styling */}
           {buttons && (
-            <div className="animate-fade-in-up animation-delay-600 flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="animate-fade-in-up animation-delay-600 flex flex-col sm:flex-row gap-5 justify-center pt-6">
               {buttons.primary && (
                 <button
                   onClick={buttons.primary.onClick}
-                  className="px-8 py-4 bg-gradient-to-r from-burgundy to-maroon text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                  className="group relative px-10 py-4 bg-gradient-to-r from-burgundy via-burgundy/90 to-maroon text-white font-semibold rounded-full shadow-gold-xl hover:shadow-gold-hover-xl transform hover:-translate-y-1 transition-all duration-500 border-2 border-transparent hover:border-gold/40 overflow-hidden"
                 >
-                  {buttons.primary.text}
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 transition-opacity duration-700" />
+                  <span className="relative z-10 font-body tracking-widest uppercase text-sm">{buttons.primary.text}</span>
                 </button>
               )}
               {buttons.secondary && (
                 <button
                   onClick={buttons.secondary.onClick}
-                  className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold rounded-lg hover:bg-white/20 transition-all duration-300"
+                  className="group relative px-10 py-4 bg-white/5 backdrop-blur-md border-2 border-gold/40 text-white font-semibold rounded-full hover:bg-gold/10 hover:border-gold/60 transition-all duration-500 shadow-gold-lg hover:shadow-gold-hover-lg transform hover:-translate-y-1 overflow-hidden"
                 >
-                  {buttons.secondary.text}
+                  {/* Gold glow on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 transition-opacity duration-700" />
+                  <span className="relative z-10 font-body tracking-widest uppercase text-sm text-white group-hover:text-gold transition-colors duration-500">{buttons.secondary.text}</span>
                 </button>
               )}
             </div>
