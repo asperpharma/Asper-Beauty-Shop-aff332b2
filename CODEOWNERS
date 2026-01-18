@@ -1,0 +1,10 @@
+# CODEOWNERS
+
+# All files in the repository will be owned by the following users or teams:
+* @asperpharma
+
+# Specify additional owners for specific directories or files below.
+
+# For example:
+# /docs/ @team-docs
+# /src/ @team-dev
