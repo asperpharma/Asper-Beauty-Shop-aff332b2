@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
 import { LuxurySectionHeader } from "./LuxurySectionHeader";
 import { CATEGORIES } from "@/lib/categoryMapping";
-import { ChevronRight, Sparkles, Star, Tag, Grid3x3 } from "lucide-react";
+import { ChevronRight, Grid3x3, Sparkles, Star, Tag } from "lucide-react";
 
 // Category icons/images
 import skinCareImg from "@/assets/categories/skin-care.webp";
@@ -14,12 +14,12 @@ import fragrancesImg from "@/assets/categories/fragrances.webp";
 import toolsDevicesImg from "@/assets/categories/tools-devices.webp";
 
 const categoryImages: Record<string, string> = {
-  'skin-care': skinCareImg,
-  'hair-care': hairCareImg,
-  'body-care': bodyCareImg,
-  'make-up': makeUpImg,
-  'fragrances': fragrancesImg,
-  'tools-devices': toolsDevicesImg,
+  "skin-care": skinCareImg,
+  "hair-care": hairCareImg,
+  "body-care": bodyCareImg,
+  "make-up": makeUpImg,
+  "fragrances": fragrancesImg,
+  "tools-devices": toolsDevicesImg,
 };
 
 export const ShopByCategory = () => {
@@ -27,17 +27,39 @@ export const ShopByCategory = () => {
   const isArabic = language === "ar";
 
   // Order categories for display
-  const categoryOrder = ['skin-care', 'make-up', 'hair-care', 'body-care', 'fragrances', 'tools-devices'];
-  const categories = categoryOrder.map(slug => ({
+  const categoryOrder = [
+    "skin-care",
+    "make-up",
+    "hair-care",
+    "body-care",
+    "fragrances",
+    "tools-devices",
+  ];
+  const categories = categoryOrder.map((slug) => ({
     ...CATEGORIES[slug],
     image: categoryImages[slug],
   }));
 
   // Quick navigation links
   const quickLinks = [
-    { name: 'New Arrivals', nameAr: 'وصل حديثاً', href: '/collections?filter=new', icon: Sparkles },
-    { name: 'Best Sellers', nameAr: 'الأكثر مبيعاً', href: '/best-sellers', icon: Star },
-    { name: 'On Sale', nameAr: 'تخفيضات', href: '/collections?filter=sale', icon: Tag },
+    {
+      name: "New Arrivals",
+      nameAr: "وصل حديثاً",
+      href: "/collections?filter=new",
+      icon: Sparkles,
+    },
+    {
+      name: "Best Sellers",
+      nameAr: "الأكثر مبيعاً",
+      href: "/best-sellers",
+      icon: Star,
+    },
+    {
+      name: "On Sale",
+      nameAr: "تخفيضات",
+      href: "/collections?filter=sale",
+      icon: Tag,
+    },
   ];
 
   return (
@@ -52,14 +74,19 @@ export const ShopByCategory = () => {
           scriptTextAr="تسوق حسب الفئة"
           title={isArabic ? "اكتشفي" : "Discover Our"}
           titleHighlight={isArabic ? "مجموعاتنا" : "Collections"}
-          description={isArabic 
-            ? 'كل منتج في مكانه الصحيح. تصفحي مجموعتنا الفاخرة المنظمة بدقة'
-            : 'Every product in its place. Browse our carefully curated luxury collections'}
+          description={isArabic
+            ? "كل منتج في مكانه الصحيح. تصفحي مجموعتنا الفاخرة المنظمة بدقة"
+            : "Every product in its place. Browse our carefully curated luxury collections"}
           iconSize="md"
         />
 
         {/* Quick Navigation Links Bar - Luxury styling */}
-        <AnimatedSection animation="fade-up" delay={100} duration={800} className="mb-16">
+        <AnimatedSection
+          animation="fade-up"
+          delay={100}
+          duration={800}
+          className="mb-16"
+        >
           <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
             {quickLinks.map((link) => {
               const Icon = link.icon;
@@ -85,9 +112,9 @@ export const ShopByCategory = () => {
         {/* Categories Grid - Organized like Ulta/Cult Beauty */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
           {categories.map((category, index) => (
-            <AnimatedSection 
-              key={category.slug} 
-              animation="fade-up" 
+            <AnimatedSection
+              key={category.slug}
+              animation="fade-up"
               delay={index * 100}
               duration={900}
             >
@@ -99,7 +126,7 @@ export const ShopByCategory = () => {
                 <div className="relative overflow-hidden aspect-square border-2 border-gold/20 hover:border-gold/60 transition-all duration-700 bg-cream/30 rounded-xl shadow-lg hover:shadow-2xl hover:shadow-gold/20 group/card">
                   {/* Gold border glow on hover */}
                   <div className="absolute inset-0 border-2 border-gold/0 group-hover/card:border-gold/40 rounded-xl transition-all duration-700 -z-10" />
-                  
+
                   {/* Category Image */}
                   <div className="absolute inset-0 overflow-hidden rounded-xl">
                     <img
@@ -110,17 +137,17 @@ export const ShopByCategory = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent" />
                   </div>
-                  
+
                   {/* Category Info Overlay */}
                   <div className="absolute inset-0 flex flex-col items-center justify-end p-5 lg:p-7 text-center">
                     <h3 className="font-display text-lg lg:text-xl text-cream mb-3 group-hover/card:text-gold transition-colors duration-700 font-semibold drop-shadow-lg">
                       {isArabic ? category.titleAr : category.title}
                     </h3>
-                    
+
                     {/* Luxury Hover Button */}
                     <div className="mt-3 opacity-0 group-hover/card:opacity-100 transition-all duration-700 transform translate-y-4 group-hover/card:translate-y-0">
                       <span className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold to-gold/90 text-burgundy font-body text-xs uppercase tracking-widest rounded-full shadow-gold-button hover:shadow-gold-button-hover transition-all duration-500">
-                        {isArabic ? 'تسوق' : 'Shop'}
+                        {isArabic ? "تسوق" : "Shop"}
                         <ChevronRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -135,12 +162,17 @@ export const ShopByCategory = () => {
         </div>
 
         {/* View All Collections Link */}
-        <AnimatedSection animation="zoom" delay={700} duration={800} className="text-center mt-12">
-          <Link 
-            to="/collections" 
+        <AnimatedSection
+          animation="zoom"
+          delay={700}
+          duration={800}
+          className="text-center mt-12"
+        >
+          <Link
+            to="/collections"
             className="inline-flex items-center gap-2 font-body text-sm text-foreground hover:text-gold transition-colors duration-400 uppercase tracking-widest group border-b border-transparent hover:border-gold pb-1"
           >
-            {isArabic ? 'عرض جميع المجموعات' : 'View All Collections'}
+            {isArabic ? "عرض جميع المجموعات" : "View All Collections"}
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </AnimatedSection>

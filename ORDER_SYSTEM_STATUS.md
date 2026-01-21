@@ -2,7 +2,8 @@
 
 ## Overview
 
-Your Asper Beauty Shop is **ACTIVE and ACCEPTING ORDERS** through two checkout methods:
+Your Asper Beauty Shop is **ACTIVE and ACCEPTING ORDERS** through two checkout
+methods:
 
 1. **Shopify Checkout** - Online payment processing
 2. **Cash on Delivery (COD)** - Direct order acceptance for Jordanian market
@@ -83,6 +84,7 @@ Shopify Checkout → Payment → Order Complete
 ```
 
 **Code Path:**
+
 ```
 CartDrawer.tsx → handleCheckout() → 
 cartStore.createCheckout() → 
@@ -99,6 +101,7 @@ Order Number Generated → Success Message
 ```
 
 **Code Path:**
+
 ```
 CartDrawer.tsx → CODCheckoutForm → handleSubmit() → 
 Supabase insert into cod_orders → 
@@ -110,18 +113,22 @@ Order number generated → Success component
 ## Current Configuration
 
 ### **Free Shipping Threshold:**
+
 - **Amount**: 50 JOD (Jordanian Dinars)
 - **Location**: `CartDrawer.tsx` → `FREE_SHIPPING_THRESHOLD`
 
 ### **Shipping Cost:**
+
 - Default: Calculated based on location
 - Free: Orders ≥ 50 JOD
 
 ### **Order Number Format:**
+
 - **COD Orders**: `ASP-YYYYMMDD-XXXX` (e.g., `ASP-20260116-A1B2`)
 - Generated automatically by database trigger
 
 ### **Order Statuses:**
+
 - `pending` - New order (default)
 - `confirmed` - Order confirmed
 - `fulfilled` - Order shipped/delivered
@@ -134,6 +141,7 @@ Order number generated → Success component
 To verify orders are being accepted:
 
 ### 1. **Test Cart Functionality**
+
 ```
 ✓ Add product to cart
 ✓ View cart drawer
@@ -142,6 +150,7 @@ To verify orders are being accepted:
 ```
 
 ### 2. **Test Shopify Checkout**
+
 ```
 ✓ Click "Checkout" button
 ✓ Verify Shopify checkout URL opens
@@ -149,6 +158,7 @@ To verify orders are being accepted:
 ```
 
 ### 3. **Test COD Checkout**
+
 ```
 ✓ Click "Cash on Delivery" button
 ✓ Fill form (name, phone, address, city)
@@ -158,6 +168,7 @@ To verify orders are being accepted:
 ```
 
 ### 4. **Verify Database**
+
 ```sql
 -- Check recent orders
 SELECT * FROM cod_orders 
@@ -192,18 +203,21 @@ GROUP BY status;
 ## Important Notes
 
 ### **Shopify Configuration:**
+
 - Store: `lovable-project-milns.myshopify.com`
 - API Version: `2025-07`
 - Storefront Token: Configured
 - **Status**: Active ✅
 
 ### **Supabase Configuration:**
+
 - Database: `cod_orders` table
 - Row Level Security: Enabled
 - Insert Policy: Anyone can create orders ✅
 - Admin Access: Required for viewing/updating
 
 ### **Order Processing:**
+
 - **COD Orders**: Stored in Supabase, processed manually
 - **Shopify Orders**: Processed automatically by Shopify
 - **Notifications**: Currently via in-app toasts

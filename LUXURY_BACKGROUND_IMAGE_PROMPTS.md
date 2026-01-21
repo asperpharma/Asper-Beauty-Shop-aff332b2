@@ -1,4 +1,3 @@
-
 # Luxury Beauty Background Image Prompts
 
 ##c Primary Prompt for Hero Section Background
@@ -26,6 +25,7 @@ Beautiful elegant woman profile portrait, luxury beauty style, cream and gold co
 ## Styling Guidelines
 
 ### Image Specifications:
+
 - **Aspect Ratio:** 16:9 or 21:9 (wide format for hero section)
 - **Resolution:** Minimum 3840x2160 (4K), ideally 7680x4320 (8K)
 - **Format:** JPG or WebP (optimized)
@@ -33,12 +33,14 @@ Beautiful elegant woman profile portrait, luxury beauty style, cream and gold co
 - **Placement:** Left or right side of hero (opposite to text content)
 
 ### Color Matching:
+
 - **Base Tones:** Warm cream/ivory (#F3E5DC)
 - **Highlights:** Subtle gold shimmer (#D4AF37 at 20-30% opacity)
 - **Accents:** Deep burgundy hints (#4A0E19 at 10-15% opacity)
 - **Overall Tone:** Warm, muted, sophisticated
 
 ### Composition:
+
 - **Position:** Profile or 3/4 profile view
 - **Focus:** Eyes and face should be sharp
 - **Background:** Soft, blurred, with matching color tones
@@ -46,6 +48,7 @@ Beautiful elegant woman profile portrait, luxury beauty style, cream and gold co
 - **Mood:** Serene, luxurious, sophisticated, elegant
 
 ### Post-Processing Notes:
+
 - Apply subtle sepia filter (20-30%)
 - Reduce saturation slightly (60-70%)
 - Add warm color grading
@@ -55,10 +58,13 @@ Beautiful elegant woman profile portrait, luxury beauty style, cream and gold co
 ## Integration Instructions
 
 ### Step 1: Generate or Prepare Image
+
 Use the prompts above to generate your image, or use a high-quality stock photo.
 
 ### Step 2: Save Image
+
 Save the image as: `public/luxury-beauty-background.jpg`
+
 - Format: JPG or WebP
 - Recommended size: 3840x2160px (4K) or larger
 - File size: Optimize to under 500KB for web
@@ -66,23 +72,29 @@ Save the image as: `public/luxury-beauty-background.jpg`
 ### Step 3: Enable Background (Two Options)
 
 **Option A: Full Page Background (Very Subtle - 3% opacity)**
+
 1. Open `src/index.css`
 2. Find `body::before` section (around line 430)
 3. Uncomment the `background-image` line
 4. The background will appear subtly across the entire website
 
 **Option B: Hero Section Only (More Subtle - 4% opacity)**
+
 1. Open `src/components/ui/animated-shader-hero.tsx`
 2. Find the `hero-portrait-background` div (around line 515)
 3. The class is already there and will automatically use the image
 4. The portrait will only appear in the hero section
 
 ### Step 4: Adjust Opacity (Optional)
+
 If you want to make it more or less visible:
+
 - Full page: Adjust `opacity: 0.03` in `src/index.css` (body::before)
-- Hero only: Adjust `opacity: 0.04` in `src/index.css` (.hero-portrait-background)
+- Hero only: Adjust `opacity: 0.04` in `src/index.css`
+  (.hero-portrait-background)
 
 ### Current Settings:
+
 - **Full page background**: 3% opacity (very subtle, elegant texture)
 - **Hero background**: 4% opacity (slightly more visible on hero)
 - **Color filters**: Sepia, saturation, and brightness adjusted to match palette
@@ -90,7 +102,9 @@ If you want to make it more or less visible:
 
 ## Alternative: Use Stock Photo
 
-If generating AI images is not possible, search for stock photos with these keywords:
+If generating AI images is not possible, search for stock photos with these
+keywords:
+
 - "beautiful woman profile portrait luxury beauty"
 - "elegant female portrait warm tones editorial"
 - "cosmetic beauty model profile warm lighting"

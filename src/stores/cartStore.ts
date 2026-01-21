@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { ShopifyProduct, createStorefrontCheckout } from '@/lib/shopify';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { createStorefrontCheckout, ShopifyProduct } from "@/lib/shopify";
 
 export interface CartItem {
   product: ShopifyProduct;
@@ -23,7 +23,7 @@ interface CartStore {
   checkoutUrl: string | null;
   isLoading: boolean;
   isOpen: boolean;
-  
+
   addItem: (item: CartItem) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
   removeItem: (variantId: string) => void;
@@ -48,15 +48,15 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (item) => {
         const { items } = get();
-        const existingItem = items.find(i => i.variantId === item.variantId);
-        
+        const existingItem = items.find((i) => i.variantId === item.variantId);
+
         if (existingItem) {
           set({
-            items: items.map(i =>
+            items: items.map((i) =>
               i.variantId === item.variantId
                 ? { ...i, quantity: i.quantity + item.quantity }
                 : i
-            )
+            ),
           });
         } else {
           set({ items: [...items, item] });
@@ -68,17 +68,17 @@ export const useCartStore = create<CartStore>()(
           get().removeItem(variantId);
           return;
         }
-        
+
         set({
-          items: get().items.map(item =>
+          items: get().items.map((item) =>
             item.variantId === variantId ? { ...item, quantity } : item
-          )
+          ),
         });
       },
 
       removeItem: (variantId) => {
         set({
-          items: get().items.filter(item => item.variantId !== variantId)
+          items: get().items.filter((item) => item.variantId !== variantId),
         });
       },
 
@@ -98,11 +98,14 @@ export const useCartStore = create<CartStore>()(
         setLoading(true);
         try {
           const checkoutUrl = await createStorefrontCheckout(
-            items.map(item => ({ variantId: item.variantId, quantity: item.quantity }))
+            items.map((item) => ({
+              variantId: item.variantId,
+              quantity: item.quantity,
+            })),
           );
           setCheckoutUrl(checkoutUrl);
         } catch (error) {
-          console.error('Failed to create checkout:', error);
+          console.error("Failed to create checkout:", error);
           throw error;
         } finally {
           setLoading(false);
@@ -114,13 +117,16 @@ export const useCartStore = create<CartStore>()(
       },
 
       getTotalPrice: () => {
-        return get().items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
+        return get().items.reduce(
+          (sum, item) => sum + (parseFloat(item.price.amount) * item.quantity),
+          0,
+        );
       },
     }),
     {
-      name: 'asper-beauty-cart',
+      name: "asper-beauty-cart",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ items: state.items }),
-    }
-  )
+    },
+  ),
 );

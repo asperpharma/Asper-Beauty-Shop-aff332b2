@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
@@ -19,13 +19,18 @@ export const FeaturedDeals = () => {
         setLoading(true);
         // Fetch products and filter for those on sale
         const allProducts = await fetchProducts(50);
-        
+
         const saleProducts = allProducts.filter((product) => {
           const firstVariant = product.node.variants.edges[0]?.node;
           const compareAtPrice = firstVariant?.compareAtPrice;
-          const currentPrice = parseFloat(firstVariant?.price?.amount || product.node.priceRange.minVariantPrice.amount);
-          const originalPrice = compareAtPrice ? parseFloat(compareAtPrice.amount) : null;
-          
+          const currentPrice = parseFloat(
+            firstVariant?.price?.amount ||
+              product.node.priceRange.minVariantPrice.amount,
+          );
+          const originalPrice = compareAtPrice
+            ? parseFloat(compareAtPrice.amount)
+            : null;
+
           return originalPrice && originalPrice > currentPrice;
         });
 
@@ -34,9 +39,16 @@ export const FeaturedDeals = () => {
           .map((product) => {
             const firstVariant = product.node.variants.edges[0]?.node;
             const compareAtPrice = firstVariant?.compareAtPrice;
-            const currentPrice = parseFloat(firstVariant?.price?.amount || product.node.priceRange.minVariantPrice.amount);
-            const originalPrice = compareAtPrice ? parseFloat(compareAtPrice.amount) : null;
-            const discount = originalPrice ? ((originalPrice - currentPrice) / originalPrice) * 100 : 0;
+            const currentPrice = parseFloat(
+              firstVariant?.price?.amount ||
+                product.node.priceRange.minVariantPrice.amount,
+            );
+            const originalPrice = compareAtPrice
+              ? parseFloat(compareAtPrice.amount)
+              : null;
+            const discount = originalPrice
+              ? ((originalPrice - currentPrice) / originalPrice) * 100
+              : 0;
             return { product, discount };
           })
           .sort((a, b) => b.discount - a.discount)
@@ -81,9 +93,9 @@ export const FeaturedDeals = () => {
           scriptTextAr="عروض مميزة"
           title={isArabic ? "خصومات" : "Today's"}
           titleHighlight={isArabic ? "حصريّة" : "Deals"}
-          description={isArabic 
-            ? 'استفيدي من أفضل العروض والتخفيضات على منتجاتنا المميزة'
-            : 'Don\'t miss out on our best offers and discounts on premium products'}
+          description={isArabic
+            ? "استفيدي من أفضل العروض والتخفيضات على منتجاتنا المميزة"
+            : "Don't miss out on our best offers and discounts on premium products"}
           iconSize="md"
         />
 
@@ -102,12 +114,17 @@ export const FeaturedDeals = () => {
         </div>
 
         {/* View All Link */}
-        <AnimatedSection animation="zoom" delay={800} duration={800} className="text-center">
+        <AnimatedSection
+          animation="zoom"
+          delay={800}
+          duration={800}
+          className="text-center"
+        >
           <Link
             to="/collections?filter=sale"
             className="inline-flex items-center gap-2 font-body text-sm text-foreground hover:text-gold transition-colors duration-400 uppercase tracking-widest group border-b border-transparent hover:border-gold pb-1"
           >
-            {isArabic ? 'عرض جميع العروض' : 'View All Deals'}
+            {isArabic ? "عرض جميع العروض" : "View All Deals"}
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </AnimatedSection>

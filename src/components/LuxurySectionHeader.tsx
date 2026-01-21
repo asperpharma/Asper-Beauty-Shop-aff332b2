@@ -52,21 +52,30 @@ export const LuxurySectionHeader = ({
   };
 
   return (
-    <AnimatedSection 
-      className={`text-center mb-12 ${className}`} 
-      animation={animation} 
+    <AnimatedSection
+      className={`text-center mb-12 ${className}`}
+      animation={animation}
       duration={800}
       delay={delay}
     >
       {/* Icon Badge with Luxury Gold Accent */}
       {Icon && (
         <div className="flex justify-center mb-6">
-          <div className={`${iconSizes[iconSize]} relative rounded-full bg-gradient-to-br from-gold/20 via-gold/10 to-transparent border-2 border-gold/40 flex items-center justify-center shadow-gold-badge hover:shadow-gold-badge-hover transition-all duration-500 group`}>
+          <div
+            className={`${
+              iconSizes[iconSize]
+            } relative rounded-full bg-gradient-to-br from-gold/20 via-gold/10 to-transparent border-2 border-gold/40 flex items-center justify-center shadow-gold-badge hover:shadow-gold-badge-hover transition-all duration-500 group`}
+          >
             {/* Inner glow effect */}
             <div className="absolute inset-2 rounded-full bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             {/* Icon */}
             {Icon && (
-              <Icon className={`${iconInnerSizes[iconSize]} text-gold relative z-10 transition-transform duration-500 group-hover:scale-110`} strokeWidth={2} />
+              <Icon
+                className={`${
+                  iconInnerSizes[iconSize]
+                } text-gold relative z-10 transition-transform duration-500 group-hover:scale-110`}
+                strokeWidth={2}
+              />
             )}
             {/* Shine effect on hover */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 transition-opacity duration-700" />
@@ -83,29 +92,35 @@ export const LuxurySectionHeader = ({
 
       {/* Main Title with Gold Highlight */}
       <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight tracking-tight">
-        {isArabic ? (
-          <>
-            {titleAr}
-            {titleHighlightAr && (
-              <> <span className="text-gold relative inline-block">
-                {titleHighlightAr}
-                {/* Elegant underline accent */}
-                <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
-              </span></>
-            )}
-          </>
-        ) : (
-          <>
-            {title}
-            {titleHighlight && (
-              <> <span className="text-gold relative inline-block">
-                {titleHighlight}
-                {/* Elegant underline accent */}
-                <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
-              </span></>
-            )}
-          </>
-        )}
+        {isArabic
+          ? (
+            <>
+              {titleAr}
+              {titleHighlightAr && (
+                <>
+                  <span className="text-gold relative inline-block">
+                    {titleHighlightAr}
+                    {/* Elegant underline accent */}
+                    <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
+                  </span>
+                </>
+              )}
+            </>
+          )
+          : (
+            <>
+              {title}
+              {titleHighlight && (
+                <>
+                  <span className="text-gold relative inline-block">
+                    {titleHighlight}
+                    {/* Elegant underline accent */}
+                    <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
+                  </span>
+                </>
+              )}
+            </>
+          )}
       </h2>
 
       {/* Luxury Divider with Gold Gradient */}

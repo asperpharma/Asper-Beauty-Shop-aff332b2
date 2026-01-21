@@ -5,7 +5,7 @@ import { ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { toast } from "sonner";
-import { ShoppingBag, Eye, Heart, Star, Sparkles } from "lucide-react";
+import { Eye, Heart, ShoppingBag, Sparkles, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QuickViewModal } from "./QuickViewModal";
 import { getLocalizedDescription, translateTitle } from "@/lib/productUtils";
@@ -24,36 +24,38 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const setCartOpen = useCartStore((state) => state.setOpen);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const { t, language } = useLanguage();
-  
+
   const isWishlisted = isInWishlist(node.id);
 
   const firstVariant = node.variants.edges[0]?.node;
   const firstImage = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
-  
+
   // Check for badges based on tags
   const tags = (node as any).tags || [];
-  const isBestseller = Array.isArray(tags) 
-    ? tags.some((tag: string) => tag.toLowerCase().includes('bestseller'))
-    : typeof tags === 'string' && tags.toLowerCase().includes('bestseller');
-  
+  const isBestseller = Array.isArray(tags)
+    ? tags.some((tag: string) => tag.toLowerCase().includes("bestseller"))
+    : typeof tags === "string" && tags.toLowerCase().includes("bestseller");
+
   // Check if product is new (created within last 30 days)
   const createdAt = (node as any).createdAt;
-  const isNewArrival = createdAt 
+  const isNewArrival = createdAt
     ? (Date.now() - new Date(createdAt).getTime()) < 30 * 24 * 60 * 60 * 1000
     : false;
-    
+
   // Check for sale/discount
   const compareAtPrice = firstVariant?.compareAtPrice;
   const currentPrice = parseFloat(firstVariant?.price?.amount || price.amount);
-  const originalPrice = compareAtPrice ? parseFloat(compareAtPrice.amount) : null;
+  const originalPrice = compareAtPrice
+    ? parseFloat(compareAtPrice.amount)
+    : null;
   const isOnSale = originalPrice && originalPrice > currentPrice;
-  const discountPercent = isOnSale 
+  const discountPercent = isOnSale
     ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
     : 0;
 
   // Extract brand from vendor or title
-  const brand = (node as any).vendor || node.title.split(' ')[0];
+  const brand = (node as any).vendor || node.title.split(" ")[0];
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,7 +84,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     e.preventDefault();
     e.stopPropagation();
     toggleItem(product);
-    
+
     if (!isWishlisted) {
       toast.success("Added to wishlist", {
         description: node.title,
@@ -92,46 +94,57 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   // Get category for display
-  const productCategory = categorizeProduct(node.title, node.productType, node.vendor);
+  const productCategory = categorizeProduct(
+    node.title,
+    node.productType,
+    node.vendor,
+  );
 
   return (
     <Link to={`/product/${node.handle}`} className="group block">
       {/* Luxury Card Container - Enhanced with slow, cinematic transitions */}
       <div className="bg-white overflow-hidden transition-all duration-700 ease-in-out border border-gray-100 group-hover:border-gold/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] group-hover:shadow-gold-hover-lg">
-        
         {/* Image Container with slow zoom effect */}
         <div className="aspect-[3/4] bg-secondary overflow-hidden relative">
-          {firstImage ? (
-            <>
-              <OptimizedImage
-                src={firstImage.url}
-                alt={firstImage.altText || node.title}
-                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-                loading="lazy"
-                width={400}
-                height={400}
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          {firstImage
+            ? (
+              <>
+                <OptimizedImage
+                  src={firstImage.url}
+                  alt={firstImage.altText || node.title}
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                  loading="lazy"
+                  width={400}
+                  height={400}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+              </>
+            )
+            : (
+              <ProductImagePlaceholder
+                title={node.title}
+                brand={brand}
+                category={productCategory}
+                className="group-hover:border-gold/20 transition-all duration-700"
               />
-            </>
-          ) : (
-            <ProductImagePlaceholder
-              title={node.title}
-              brand={brand}
-              category={productCategory}
-              className="group-hover:border-gold/20 transition-all duration-700"
-            />
-          )}
+            )}
 
           {/* Gold Badge Icons */}
           {(isBestseller || isNewArrival || isOnSale) && (
             <div className="absolute top-2 md:top-3 left-2 md:left-3 z-20 flex flex-col gap-1.5">
               {isBestseller && (
-                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gold flex items-center justify-center shadow-md" title="Bestseller">
+                <div
+                  className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gold flex items-center justify-center shadow-md"
+                  title="Bestseller"
+                >
                   <Star className="w-3.5 h-3.5 md:w-4 md:h-4 text-burgundy fill-burgundy" />
                 </div>
               )}
               {isNewArrival && !isBestseller && (
-                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gold flex items-center justify-center shadow-md" title="New Arrival">
+                <div
+                  className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gold flex items-center justify-center shadow-md"
+                  title="New Arrival"
+                >
                   <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-burgundy" />
                 </div>
               )}
@@ -147,12 +160,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <button
             onClick={handleWishlistToggle}
             className={`absolute top-2 md:top-3 right-2 md:right-3 z-20 w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center transition-all duration-400 ${
-              isWishlisted 
-                ? 'bg-gold text-burgundy' 
-                : 'bg-white/80 text-muted-foreground md:opacity-0 md:group-hover:opacity-100 hover:bg-gold hover:text-burgundy'
+              isWishlisted
+                ? "bg-gold text-burgundy"
+                : "bg-white/80 text-muted-foreground md:opacity-0 md:group-hover:opacity-100 hover:bg-gold hover:text-burgundy"
             }`}
           >
-            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+            <Heart
+              className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`}
+            />
           </button>
 
           {/* Luxury Quick Add Button - Appears on hover with slow animation */}
@@ -162,7 +177,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               className="w-full bg-[#1A1A1A] text-white hover:bg-gold hover:text-[#1A1A1A] rounded-none py-4 font-serif text-sm tracking-[0.2em] uppercase transition-all duration-500 shadow-gold-button-hover"
             >
               <ShoppingBag className="w-4 h-4 me-2" />
-              {language === 'ar' ? 'إضافة إلى السلة' : `Add to Bag — ${price.currencyCode} ${currentPrice.toFixed(2)}`}
+              {language === "ar"
+                ? "إضافة إلى السلة"
+                : `Add to Bag — ${price.currencyCode} ${
+                  currentPrice.toFixed(2)
+                }`}
             </Button>
           </div>
 
@@ -183,19 +202,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="p-6 md:p-8 bg-white text-center space-y-3">
           {/* Category Badge - Wide Letter Spacing (Luxury Fashion Style) */}
           <p className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
-            {categorizeProduct(node.title, node.productType, node.vendor).replace('-', ' ')}
+            {categorizeProduct(node.title, node.productType, node.vendor)
+              .replace("-", " ")}
           </p>
-          
+
           {/* Brand Name - Minimalist */}
           <p className="font-body text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.15em] opacity-70">
             {brand}
           </p>
-          
+
           {/* Product Title - Serif Font, Hover Gold */}
           <h3 className="font-serif text-base md:text-lg text-[#1A1A1A] group-hover:text-gold transition-colors duration-300 line-clamp-2 leading-relaxed">
             {translateTitle(node.title, language)}
           </h3>
-          
+
           {/* Price - Elegant Display */}
           <div className="flex items-center justify-center gap-3 pt-2">
             {isOnSale && originalPrice && (
@@ -203,11 +223,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 {price.currencyCode} {originalPrice.toFixed(2)}
               </p>
             )}
-            <p className={`font-serif text-lg md:text-xl font-semibold ${isOnSale ? 'text-burgundy' : 'text-[#1A1A1A]'}`}>
+            <p
+              className={`font-serif text-lg md:text-xl font-semibold ${
+                isOnSale ? "text-burgundy" : "text-[#1A1A1A]"
+              }`}
+            >
               {price.currencyCode} {currentPrice.toFixed(2)}
             </p>
           </div>
-          
+
           {/* Optional: Star Rating (Luxury Touch) */}
           <div className="flex justify-center gap-1 opacity-60 pt-1">
             {[...Array(5)].map((_, i) => (
@@ -216,11 +240,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
       </div>
-      
-      <QuickViewModal 
-        product={product} 
-        isOpen={isQuickViewOpen} 
-        onClose={() => setIsQuickViewOpen(false)} 
+
+      <QuickViewModal
+        product={product}
+        isOpen={isQuickViewOpen}
+        onClose={() => setIsQuickViewOpen(false)}
       />
     </Link>
   );

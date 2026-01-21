@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { User, Session, AuthError, Factor } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from "react";
+import { AuthError, Factor, Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthState {
   user: User | null;
@@ -28,13 +28,13 @@ export function useAuth() {
   const checkAdminRole = useCallback(async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .eq('role', 'admin')
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .eq("role", "admin")
         .single();
-      
-      return !error && data?.role === 'admin';
+
+      return !error && data?.role === "admin";
     } catch {
       return false;
     }
@@ -44,7 +44,7 @@ export function useAuth() {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           session,
           user: session?.user ?? null,
@@ -57,17 +57,17 @@ export function useAuth() {
           setTimeout(async () => {
             fetchMFAFactors();
             const isAdmin = await checkAdminRole(session.user.id);
-            setState(prev => ({ ...prev, isAdmin }));
+            setState((prev) => ({ ...prev, isAdmin }));
           }, 0);
         } else {
-          setState(prev => ({ ...prev, isAdmin: false }));
+          setState((prev) => ({ ...prev, isAdmin: false }));
         }
-      }
+      },
     );
 
     // THEN check for existing session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         session,
         user: session?.user ?? null,
@@ -76,7 +76,7 @@ export function useAuth() {
       if (session?.user) {
         fetchMFAFactors();
         const isAdmin = await checkAdminRole(session.user.id);
-        setState(prev => ({ ...prev, isAdmin }));
+        setState((prev) => ({ ...prev, isAdmin }));
       }
     });
 
@@ -93,26 +93,29 @@ export function useAuth() {
         });
       }
     } catch (err) {
-      console.error('Error fetching MFA factors:', err);
+      console.error("Error fetching MFA factors:", err);
     }
   };
 
-  const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName,
+  const signUp = useCallback(
+    async (email: string, password: string, fullName?: string) => {
+      const redirectUrl = `${window.location.origin}/`;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
-    
-    return { data, error };
-  }, []);
+      });
+
+      return { data, error };
+    },
+    [],
+  );
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -122,9 +125,13 @@ export function useAuth() {
 
     // Check if MFA is required
     if (data?.session?.user && !error) {
-      const { data: assuranceData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (assuranceData?.nextLevel === 'aal2' && assuranceData?.currentLevel === 'aal1') {
-        setState(prev => ({ ...prev, mfaRequired: true }));
+      const { data: assuranceData } = await supabase.auth.mfa
+        .getAuthenticatorAssuranceLevel();
+      if (
+        assuranceData?.nextLevel === "aal2" &&
+        assuranceData?.currentLevel === "aal1"
+      ) {
+        setState((prev) => ({ ...prev, mfaRequired: true }));
       }
     }
 
@@ -137,8 +144,9 @@ export function useAuth() {
   }, []);
 
   const verifyMFA = useCallback(async (factorId: string, code: string) => {
-    const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({ factorId });
-    
+    const { data: challengeData, error: challengeError } = await supabase.auth
+      .mfa.challenge({ factorId });
+
     if (challengeError) {
       return { error: challengeError };
     }
@@ -150,7 +158,7 @@ export function useAuth() {
     });
 
     if (!error) {
-      setState(prev => ({ ...prev, mfaRequired: false }));
+      setState((prev) => ({ ...prev, mfaRequired: false }));
     }
 
     return { data, error };
@@ -158,36 +166,40 @@ export function useAuth() {
 
   const enrollTOTP = useCallback(async (friendlyName?: string) => {
     const { data, error } = await supabase.auth.mfa.enroll({
-      factorType: 'totp',
-      friendlyName: friendlyName || 'Authenticator App',
+      factorType: "totp",
+      friendlyName: friendlyName || "Authenticator App",
     });
-    
+
     return { data, error };
   }, []);
 
-  const verifyTOTPEnrollment = useCallback(async (factorId: string, code: string) => {
-    const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({ factorId });
-    
-    if (challengeError) {
-      return { error: challengeError };
-    }
+  const verifyTOTPEnrollment = useCallback(
+    async (factorId: string, code: string) => {
+      const { data: challengeData, error: challengeError } = await supabase.auth
+        .mfa.challenge({ factorId });
 
-    const { data, error } = await supabase.auth.mfa.verify({
-      factorId,
-      challengeId: challengeData.id,
-      code,
-    });
+      if (challengeError) {
+        return { error: challengeError };
+      }
 
-    if (!error) {
-      await fetchMFAFactors();
-    }
+      const { data, error } = await supabase.auth.mfa.verify({
+        factorId,
+        challengeId: challengeData.id,
+        code,
+      });
 
-    return { data, error };
-  }, []);
+      if (!error) {
+        await fetchMFAFactors();
+      }
+
+      return { data, error };
+    },
+    [],
+  );
 
   const unenrollMFA = useCallback(async (factorId: string) => {
     const { error } = await supabase.auth.mfa.unenroll({ factorId });
-    
+
     if (!error) {
       await fetchMFAFactors();
     }

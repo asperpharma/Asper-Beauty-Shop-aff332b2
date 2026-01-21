@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document outlines the luxury design enhancements and category audit system implemented for Asper Beauty Shop, elevating the website to match high-end beauty retailers like Beauty Box and iHerb.
+This document outlines the luxury design enhancements and category audit system
+implemented for Asper Beauty Shop, elevating the website to match high-end
+beauty retailers like Beauty Box and iHerb.
 
 ## Part 1: Category Audit System
 
@@ -42,11 +44,13 @@ npx tsx scripts/audit-categories.ts
 ### Typography Enhancements
 
 **Fonts Already Loaded:**
+
 - `Playfair Display` (serif) - For headings and product titles
 - `Inter` (sans-serif) - For body text
 - `Great Vibes` (script) - For decorative elements
 
 **Luxury Typography Features:**
+
 - Wide letter spacing (`tracking-[0.2em]`) for category badges
 - Serif fonts for product titles (elegant, high-fashion feel)
 - Smooth color transitions on hover
@@ -113,6 +117,7 @@ luxury-charcoal: "#2D2D2D",  // Charcoal for text
 - **Smooth easing**: `ease-out` for natural, refined motion
 
 **Implementation:**
+
 - Card hover: `duration-700 ease-out`
 - Image zoom: `duration-1000 ease-out`
 - Button reveal: `duration-500 ease-out`
@@ -148,6 +153,7 @@ luxury-charcoal: "#2D2D2D",  // Charcoal for text
 ## Comparison: Before vs After
 
 ### Before (Standard E-commerce)
+
 - Fast animations (200-400ms)
 - Rounded buttons
 - Tight spacing
@@ -155,6 +161,7 @@ luxury-charcoal: "#2D2D2D",  // Charcoal for text
 - Standard shadows
 
 ### After (Luxury Beauty)
+
 - Slow animations (700-1000ms)
 - Square buttons
 - Generous spacing
@@ -189,7 +196,8 @@ luxury-charcoal: "#2D2D2D",  // Charcoal for text
 
 2. **Review Report**: Check `category-audit-report.json`
 
-3. **Update Categories**: Manually update products in Shopify Admin based on high-confidence suggestions
+3. **Update Categories**: Manually update products in Shopify Admin based on
+   high-confidence suggestions
 
 4. **Test Design**: View product cards to see luxury enhancements
 
@@ -201,6 +209,7 @@ luxury-charcoal: "#2D2D2D",  // Charcoal for text
 - **iHerb Jordan**: https://jo.iherb.com/
 
 Both sites were used as reference for:
+
 - Product formatting
 - Category organization
 - Price display
@@ -212,11 +221,11 @@ Both sites were used as reference for:
 The website now features:
 
 ✅ **Smart Category Audit System** - Automated product categorization analysis
-✅ **Luxury Typography** - Serif fonts, wide tracking, elegant hierarchy
-✅ **Cinematic Animations** - Slow, smooth transitions (700-1000ms)
-✅ **Gold Accents** - Refined color palette with metallic gold
-✅ **Square Buttons** - Fashion house aesthetic
-✅ **Generous Spacing** - Luxury breathing room
-✅ **Elegant Hover Effects** - Smooth reveals and transitions
+✅ **Luxury Typography** - Serif fonts, wide tracking, elegant hierarchy ✅
+**Cinematic Animations** - Slow, smooth transitions (700-1000ms) ✅ **Gold
+Accents** - Refined color palette with metallic gold ✅ **Square Buttons** -
+Fashion house aesthetic ✅ **Generous Spacing** - Luxury breathing room ✅
+**Elegant Hover Effects** - Smooth reveals and transitions
 
-The design now matches the premium aesthetic of high-end beauty retailers while maintaining the unique identity of Asper Beauty Shop.
+The design now matches the premium aesthetic of high-end beauty retailers while
+maintaining the unique identity of Asper Beauty Shop.
