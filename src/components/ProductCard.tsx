@@ -31,12 +31,16 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
   const firstImage = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
 
-  // Extract stable values for dependencies
+  // Extract stable values for dependencies to minimize recalculations
+  // Using node.id as a stable reference since products don't change
   const tags = (node as any).tags;
   const createdAt = (node as any).createdAt;
   const vendor = (node as any).vendor;
   const compareAtPriceAmount = firstVariant?.compareAtPrice?.amount;
   const variantPriceAmount = firstVariant?.price?.amount;
+  const nodeId = node.id; // Stable reference
+  const nodeTitle = node.title;
+  const nodeProductType = node.productType;
 
   // Memoize all expensive calculations with stable dependencies
   const { isBestseller, isNewArrival, isOnSale, discountPercent, brand, productCategory, currentPrice, originalPrice } = useMemo(() => {
@@ -61,12 +65,12 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       : 0;
 
     // Extract brand from vendor or title
-    const brandName = vendor || node.title.split(" ")[0];
+    const brandName = vendor || nodeTitle.split(" ")[0];
     
     // Get category for display (expensive operation, memoize it)
     const category = categorizeProduct(
-      node.title,
-      node.productType,
+      nodeTitle,
+      nodeProductType,
       vendor,
     );
 
@@ -80,7 +84,7 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       currentPrice: current,
       originalPrice: original,
     };
-  }, [node.title, node.productType, vendor, tags, createdAt, compareAtPriceAmount, variantPriceAmount, price.amount]);
+  }, [nodeId, nodeTitle, nodeProductType, vendor, tags, createdAt, compareAtPriceAmount, variantPriceAmount, price.amount]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

@@ -119,7 +119,7 @@ export const ProductGrid = ({
         observerRef.current.disconnect();
       }
     };
-  }, [pageInfo?.hasNextPage, pageInfo?.endCursor, loadingMore, loadMoreProducts]);
+  }, [pageInfo?.hasNextPage, loadingMore, loadMoreProducts]);
 
   // Filter by category slug if provided - Memoize categorization
   const categoryFilteredProducts = useMemo(() => {
