@@ -97,8 +97,7 @@ export const ProductGrid = ({
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // All conditions are checked in the callback, but dependencies ensure 
-        // observer is recreated when these values change
+        // Check conditions in callback; observer recreates when hasNextPage/loadingMore change
         if (
           entries[0].isIntersecting && 
           pageInfo?.hasNextPage && 
@@ -125,19 +124,19 @@ export const ProductGrid = ({
   const categoryFilteredProducts = useMemo(() => {
     if (!categorySlug) return products;
 
-    // Pre-categorize all products once
-    const categorizedProducts = products.map(product => ({
-      product,
-      category: categorizeProduct(
+    // Filter directly with categorization to avoid intermediate array
+    const filtered: ShopifyProduct[] = [];
+    for (const product of products) {
+      const category = categorizeProduct(
         product.node.title,
         product.node.productType,
         product.node.vendor,
-      ),
-    }));
-
-    return categorizedProducts
-      .filter(({ category }) => category === categorySlug)
-      .map(({ product }) => product);
+      );
+      if (category === categorySlug) {
+        filtered.push(product);
+      }
+    }
+    return filtered;
   }, [products, categorySlug]);
 
   // Extract unique categories and brands
