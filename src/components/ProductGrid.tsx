@@ -97,8 +97,11 @@ export const ProductGrid = ({
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        // Check conditions inside callback to avoid effect dependencies
         if (
-          entries[0].isIntersecting && pageInfo?.hasNextPage && !loadingMore
+          entries[0].isIntersecting && 
+          pageInfo?.hasNextPage && 
+          !loadingMore
         ) {
           loadMoreProducts();
         }
@@ -115,21 +118,25 @@ export const ProductGrid = ({
         observerRef.current.disconnect();
       }
     };
-  }, [loadMoreProducts, pageInfo?.hasNextPage, loadingMore]);
+  }, [pageInfo?.hasNextPage, pageInfo?.endCursor, loadingMore, loadMoreProducts]);
 
-  // Filter by category slug if provided
+  // Filter by category slug if provided - Memoize categorization
   const categoryFilteredProducts = useMemo(() => {
     if (!categorySlug) return products;
 
-    return products.filter((product) => {
-      const { node } = product;
-      const productCategory = categorizeProduct(
-        node.title,
-        node.productType,
-        node.vendor,
-      );
-      return productCategory === categorySlug;
-    });
+    // Pre-categorize all products once
+    const categorizedProducts = products.map(product => ({
+      product,
+      category: categorizeProduct(
+        product.node.title,
+        product.node.productType,
+        product.node.vendor,
+      ),
+    }));
+
+    return categorizedProducts
+      .filter(({ category }) => category === categorySlug)
+      .map(({ product }) => product);
   }, [products, categorySlug]);
 
   // Extract unique categories and brands
