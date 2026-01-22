@@ -31,25 +31,29 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
   const firstImage = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
 
-  // Memoize all expensive calculations with granular dependencies
+  // Extract stable values for dependencies
+  const tags = (node as any).tags;
+  const createdAt = (node as any).createdAt;
+  const vendor = (node as any).vendor;
+  const compareAtPriceAmount = firstVariant?.compareAtPrice?.amount;
+  const variantPriceAmount = firstVariant?.price?.amount;
+
+  // Memoize all expensive calculations with stable dependencies
   const { isBestseller, isNewArrival, isOnSale, discountPercent, brand, productCategory, currentPrice, originalPrice } = useMemo(() => {
     // Check for badges based on tags
-    const tags = (node as any).tags || [];
     const bestseller = Array.isArray(tags)
       ? tags.some((tag: string) => tag.toLowerCase().includes("bestseller"))
       : typeof tags === "string" && tags.toLowerCase().includes("bestseller");
 
     // Check if product is new (created within last 30 days)
-    const createdAt = (node as any).createdAt;
     const newArrival = createdAt
       ? (Date.now() - new Date(createdAt).getTime()) < 30 * 24 * 60 * 60 * 1000
       : false;
 
     // Check for sale/discount and calculate prices
-    const compareAtPrice = firstVariant?.compareAtPrice;
-    const current = parseFloat(firstVariant?.price?.amount || price.amount);
-    const original = compareAtPrice
-      ? parseFloat(compareAtPrice.amount)
+    const current = parseFloat(variantPriceAmount || price.amount);
+    const original = compareAtPriceAmount
+      ? parseFloat(compareAtPriceAmount)
       : null;
     const onSale = original && original > current;
     const discount = onSale
@@ -57,13 +61,13 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       : 0;
 
     // Extract brand from vendor or title
-    const brandName = (node as any).vendor || node.title.split(" ")[0];
+    const brandName = vendor || node.title.split(" ")[0];
     
     // Get category for display (expensive operation, memoize it)
     const category = categorizeProduct(
       node.title,
       node.productType,
-      node.vendor,
+      vendor,
     );
 
     return {
@@ -76,7 +80,7 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       currentPrice: current,
       originalPrice: original,
     };
-  }, [node.title, node.productType, node.vendor, (node as any).tags, (node as any).createdAt, firstVariant?.compareAtPrice, firstVariant?.price?.amount, price.amount]);
+  }, [node.title, node.productType, vendor, tags, createdAt, compareAtPriceAmount, variantPriceAmount, price.amount]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

@@ -97,7 +97,8 @@ export const ProductGrid = ({
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // Check conditions inside callback to avoid effect dependencies
+        // All conditions are checked in the callback, but dependencies ensure 
+        // observer is recreated when these values change
         if (
           entries[0].isIntersecting && 
           pageInfo?.hasNextPage && 
