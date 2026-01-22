@@ -31,8 +31,8 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
   const firstImage = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
 
-  // Memoize badge calculations
-  const { isBestseller, isNewArrival, isOnSale, discountPercent, brand, productCategory } = useMemo(() => {
+  // Memoize all expensive calculations with granular dependencies
+  const { isBestseller, isNewArrival, isOnSale, discountPercent, brand, productCategory, currentPrice, originalPrice } = useMemo(() => {
     // Check for badges based on tags
     const tags = (node as any).tags || [];
     const bestseller = Array.isArray(tags)
@@ -45,21 +45,21 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       ? (Date.now() - new Date(createdAt).getTime()) < 30 * 24 * 60 * 60 * 1000
       : false;
 
-    // Check for sale/discount
+    // Check for sale/discount and calculate prices
     const compareAtPrice = firstVariant?.compareAtPrice;
-    const currentPrice = parseFloat(firstVariant?.price?.amount || price.amount);
-    const originalPrice = compareAtPrice
+    const current = parseFloat(firstVariant?.price?.amount || price.amount);
+    const original = compareAtPrice
       ? parseFloat(compareAtPrice.amount)
       : null;
-    const onSale = originalPrice && originalPrice > currentPrice;
+    const onSale = original && original > current;
     const discount = onSale
-      ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
+      ? Math.round(((original - current) / original) * 100)
       : 0;
 
     // Extract brand from vendor or title
     const brandName = (node as any).vendor || node.title.split(" ")[0];
     
-    // Get category for display (memoize this expensive operation)
+    // Get category for display (expensive operation, memoize it)
     const category = categorizeProduct(
       node.title,
       node.productType,
@@ -73,22 +73,10 @@ export const ProductCard = memo(({ product }: ProductCardProps) => {
       discountPercent: discount,
       brand: brandName,
       productCategory: category,
-    };
-  }, [node, firstVariant, price.amount]);
-
-  // Memoize price calculations
-  const { currentPrice, originalPrice } = useMemo(() => {
-    const compareAtPrice = firstVariant?.compareAtPrice;
-    const current = parseFloat(firstVariant?.price?.amount || price.amount);
-    const original = compareAtPrice
-      ? parseFloat(compareAtPrice.amount)
-      : null;
-    
-    return {
       currentPrice: current,
       originalPrice: original,
     };
-  }, [firstVariant, price.amount]);
+  }, [node.title, node.productType, node.vendor, (node as any).tags, (node as any).createdAt, firstVariant?.compareAtPrice, firstVariant?.price?.amount, price.amount]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
