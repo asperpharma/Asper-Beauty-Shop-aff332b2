@@ -524,7 +524,7 @@ export default function BulkUpload() {
           if (
             errorMessage?.includes("401") || errorMessage?.includes("403") ||
             errorMessage?.includes("Unauthorized") ||
-            error.message?.includes("Forbidden")
+            errorMessage?.includes("Forbidden")
           ) {
             toast.error("Authorization failed. Please log in as an admin.");
             setIsShopifyUploading(false);
@@ -534,7 +534,7 @@ export default function BulkUpload() {
           errors.push({
             sku: product.sku,
             name: product.name,
-            error: error.message || "Unknown error",
+            error: errorMessage || "Unknown error",
           });
           setShopifyProgress((prev) => ({
             ...prev,
