@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface HeroProps {
   trustBadge?: {
@@ -153,7 +153,7 @@ void main(){gl_Position=position;}`;
   constructor(canvas: HTMLCanvasElement, scale: number) {
     this.canvas = canvas;
     this.scale = scale;
-    this.gl = canvas.getContext('webgl2')!;
+    this.gl = canvas.getContext("webgl2")!;
     this.gl.viewport(0, 0, canvas.width * scale, canvas.height * scale);
     this.shaderSource = defaultShaderSource;
   }
@@ -183,7 +183,12 @@ void main(){gl_Position=position;}`;
 
   updateScale(scale: number) {
     this.scale = scale;
-    this.gl.viewport(0, 0, this.canvas.width * scale, this.canvas.height * scale);
+    this.gl.viewport(
+      0,
+      0,
+      this.canvas.width * scale,
+      this.canvas.height * scale,
+    );
   }
 
   compile(shader: WebGLShader, source: string) {
@@ -193,7 +198,7 @@ void main(){gl_Position=position;}`;
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       const error = gl.getShaderInfoLog(shader);
-      console.error('Shader compilation error:', error);
+      console.error("Shader compilation error:", error);
     }
   }
 
@@ -213,7 +218,9 @@ void main(){gl_Position=position;}`;
 
   reset() {
     const gl = this.gl;
-    if (this.program && !gl.getProgramParameter(this.program, gl.DELETE_STATUS)) {
+    if (
+      this.program && !gl.getProgramParameter(this.program, gl.DELETE_STATUS)
+    ) {
       if (this.vs) {
         gl.detachShader(this.program, this.vs);
         gl.deleteShader(this.vs);
@@ -245,38 +252,52 @@ void main(){gl_Position=position;}`;
   init() {
     const gl = this.gl;
     const program = this.program!;
-    
+
     this.buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(this.vertices),
+      gl.STATIC_DRAW,
+    );
 
-    const position = gl.getAttribLocation(program, 'position');
+    const position = gl.getAttribLocation(program, "position");
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-    (program as any).resolution = gl.getUniformLocation(program, 'resolution');
-    (program as any).time = gl.getUniformLocation(program, 'time');
-    (program as any).move = gl.getUniformLocation(program, 'move');
-    (program as any).touch = gl.getUniformLocation(program, 'touch');
-    (program as any).pointerCount = gl.getUniformLocation(program, 'pointerCount');
-    (program as any).pointers = gl.getUniformLocation(program, 'pointers');
+    (program as any).resolution = gl.getUniformLocation(program, "resolution");
+    (program as any).time = gl.getUniformLocation(program, "time");
+    (program as any).move = gl.getUniformLocation(program, "move");
+    (program as any).touch = gl.getUniformLocation(program, "touch");
+    (program as any).pointerCount = gl.getUniformLocation(
+      program,
+      "pointerCount",
+    );
+    (program as any).pointers = gl.getUniformLocation(program, "pointers");
   }
 
   render(now = 0) {
     const gl = this.gl;
     const program = this.program;
-    
+
     if (!program || gl.getProgramParameter(program, gl.DELETE_STATUS)) return;
 
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(program);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-    
-    gl.uniform2f((program as any).resolution, this.canvas.width, this.canvas.height);
+
+    gl.uniform2f(
+      (program as any).resolution,
+      this.canvas.width,
+      this.canvas.height,
+    );
     gl.uniform1f((program as any).time, now * 1e-3);
     gl.uniform2f((program as any).move, ...this.mouseMove as [number, number]);
-    gl.uniform2f((program as any).touch, ...this.mouseCoords as [number, number]);
+    gl.uniform2f(
+      (program as any).touch,
+      ...this.mouseCoords as [number, number],
+    );
     gl.uniform1i((program as any).pointerCount, this.nbrOfPointers);
     gl.uniform2fv((program as any).pointers, this.pointerCoords);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -292,16 +313,23 @@ class PointerHandler {
 
   constructor(element: HTMLCanvasElement, scale: number) {
     this.scale = scale;
-    
-    const map = (el: HTMLCanvasElement, s: number, x: number, y: number) => 
-      [x * s, el.height - y * s];
 
-    element.addEventListener('pointerdown', (e) => {
+    const map = (
+      el: HTMLCanvasElement,
+      s: number,
+      x: number,
+      y: number,
+    ) => [x * s, el.height - y * s];
+
+    element.addEventListener("pointerdown", (e) => {
       this.active = true;
-      this.pointers.set(e.pointerId, map(element, this.getScale(), e.clientX, e.clientY));
+      this.pointers.set(
+        e.pointerId,
+        map(element, this.getScale(), e.clientX, e.clientY),
+      );
     });
 
-    element.addEventListener('pointerup', (e) => {
+    element.addEventListener("pointerup", (e) => {
       if (this.count === 1) {
         this.lastCoords = this.first;
       }
@@ -309,7 +337,7 @@ class PointerHandler {
       this.active = this.pointers.size > 0;
     });
 
-    element.addEventListener('pointerleave', (e) => {
+    element.addEventListener("pointerleave", (e) => {
       if (this.count === 1) {
         this.lastCoords = this.first;
       }
@@ -317,10 +345,13 @@ class PointerHandler {
       this.active = this.pointers.size > 0;
     });
 
-    element.addEventListener('pointermove', (e) => {
+    element.addEventListener("pointermove", (e) => {
       if (!this.active) return;
       this.lastCoords = [e.clientX, e.clientY];
-      this.pointers.set(e.pointerId, map(element, this.getScale(), e.clientX, e.clientY));
+      this.pointers.set(
+        e.pointerId,
+        map(element, this.getScale(), e.clientX, e.clientY),
+      );
       this.moves = [this.moves[0] + e.movementX, this.moves[1] + e.movementY];
     });
   }
@@ -342,8 +373,8 @@ class PointerHandler {
   }
 
   get coords() {
-    return this.pointers.size > 0 
-      ? Array.from(this.pointers.values()).flat() 
+    return this.pointers.size > 0
+      ? Array.from(this.pointers.values()).flat()
       : [0, 0];
   }
 
@@ -360,13 +391,13 @@ const useShaderBackground = () => {
 
   const resize = () => {
     if (!canvasRef.current) return;
-    
+
     const canvas = canvasRef.current;
     const dpr = Math.max(1, 0.5 * window.devicePixelRatio);
-    
+
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
-    
+
     if (rendererRef.current) {
       rendererRef.current.updateScale(dpr);
     }
@@ -374,7 +405,7 @@ const useShaderBackground = () => {
 
   const loop = (now: number) => {
     if (!rendererRef.current || !pointersRef.current) return;
-    
+
     rendererRef.current.updateMouse(pointersRef.current.first);
     rendererRef.current.updatePointerCount(pointersRef.current.count);
     rendererRef.current.updatePointerCoords(pointersRef.current.coords);
@@ -388,25 +419,25 @@ const useShaderBackground = () => {
 
     const canvas = canvasRef.current;
     const dpr = Math.max(1, 0.5 * window.devicePixelRatio);
-    
+
     rendererRef.current = new WebGLRenderer(canvas, dpr);
     pointersRef.current = new PointerHandler(canvas, dpr);
-    
+
     rendererRef.current.setup();
     rendererRef.current.init();
-    
+
     resize();
-    
+
     if (rendererRef.current.test(defaultShaderSource) === null) {
       rendererRef.current.updateShader(defaultShaderSource);
     }
-    
+
     loop(0);
-    
-    window.addEventListener('resize', resize);
-    
+
+    window.addEventListener("resize", resize);
+
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -424,13 +455,16 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
   headline,
   subtitle,
   buttons,
-  className = ""
+  className = "",
 }) => {
   const canvasRef = useShaderBackground();
 
   return (
-    <div className={cn("relative w-full min-h-screen overflow-hidden", className)}>
-      <style>{`
+    <div
+      className={cn("relative w-full min-h-screen overflow-hidden", className)}
+    >
+      <style>
+        {`
         @keyframes fade-in-down {
           from {
             opacity: 0;
@@ -501,19 +535,20 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
         .animate-gold-pulse {
           animation: gold-pulse 3s ease-in-out infinite;
         }
-      `}</style>
-      
+      `}
+      </style>
+
       {/* WebGL Canvas Background */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full z-0"
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: "none" }}
       />
-      
+
       {/* Elegant Portrait Background - Very Subtle Overlay */}
       {/* Uncomment hero-portrait-background class below when image is added to public/luxury-beauty-background.jpg */}
       <div className="hero-portrait-background" />
-      
+
       {/* Hero Content Overlay */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
         {/* Decorative Gold Accent Lines */}
@@ -527,8 +562,8 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
               {trustBadge.icons && (
                 <span className="flex gap-1.5">
                   {trustBadge.icons.map((icon, index) => (
-                    <span 
-                      key={index} 
+                    <span
+                      key={index}
                       className="text-gold text-lg drop-shadow-[0_0_8px_rgba(212,175,55,0.6)] group-hover:scale-110 transition-transform duration-500"
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
@@ -537,7 +572,9 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
                   ))}
                 </span>
               )}
-              <span className="font-body tracking-wider">{trustBadge.text}</span>
+              <span className="font-body tracking-wider">
+                {trustBadge.text}
+              </span>
             </div>
           </div>
         )}
@@ -554,21 +591,21 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
               <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-gold/80 to-transparent opacity-70" />
             </span>
           </h1>
-          
+
           {/* Luxury Divider */}
           <div className="animate-fade-in-up animation-delay-300 flex justify-center">
             <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-gold/60 to-transparent relative">
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.6)]" />
             </div>
           </div>
-          
+
           {/* Subtitle with Animation */}
           <div className="animate-fade-in-up animation-delay-400">
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-body tracking-wide drop-shadow-[0_1px_5px_rgba(0,0,0,0.3)]">
               {subtitle}
             </p>
           </div>
-          
+
           {/* CTA Buttons with Luxury Gold Styling */}
           {buttons && (
             <div className="animate-fade-in-up animation-delay-600 flex flex-col sm:flex-row gap-5 justify-center pt-6">
@@ -579,7 +616,9 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
                 >
                   {/* Shine effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 transition-opacity duration-700" />
-                  <span className="relative z-10 font-body tracking-widest uppercase text-sm">{buttons.primary.text}</span>
+                  <span className="relative z-10 font-body tracking-widest uppercase text-sm">
+                    {buttons.primary.text}
+                  </span>
                 </button>
               )}
               {buttons.secondary && (
@@ -591,7 +630,9 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   {/* Shine effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 transition-opacity duration-700" />
-                  <span className="relative z-10 font-body tracking-widest uppercase text-sm text-white group-hover:text-gold transition-colors duration-500">{buttons.secondary.text}</span>
+                  <span className="relative z-10 font-body tracking-widest uppercase text-sm text-white group-hover:text-gold transition-colors duration-500">
+                    {buttons.secondary.text}
+                  </span>
                 </button>
               )}
             </div>

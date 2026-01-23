@@ -1,153 +1,53 @@
-# Contributing to Asper Beauty Shop
+# Contribution Guidelines for Asper Beauty Shop
 
-Thank you for your interest in contributing to Asper Beauty Shop! This document provides guidelines and instructions for contributing.
+Thank you for considering contributing to Asper Beauty Shop! We welcome
+contributions from the community and appreciate your time and effort. Please
+follow these guidelines to ensure a smooth process.
 
-## 🚀 Getting Started
+## How to Contribute
 
-### Prerequisites
-
-- Node.js 18+ or Bun
-- npm, yarn, or bun
-- Git
-
-### Setup
-
-1. Fork the repository
-2. Clone your fork:
+1. **Fork the Repository**: Start by forking the repository on GitHub to your
+   own account.
+2. **Clone your Fork**: Clone your forked repository to your local machine
+   using:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/asperbeauty.git
-   cd asperbeauty
+   git clone https://github.com/your-username/Asper-Beauty-Shop.git
    ```
-3. Install dependencies:
+3. **Create a Branch**: Create a new branch for your feature or fix:
    ```bash
-   npm install
+   git checkout -b my-feature-branch
    ```
-4. Start the development server:
+4. **Make Changes**: Make your changes and ensure that your code adheres to the
+   coding standards outlined in this repository.
+5. **Test Your Changes**: Run tests to confirm that your changes work as
+   expected.
+6. **Commit Your Changes**: Commit your changes with a clear and descriptive
+   message:
    ```bash
-   npm run dev
+   git commit -m "Add my feature"
    ```
+7. **Push Your Changes**: Push your changes to your forked repository:
+   ```bash
+   git push origin my-feature-branch
+   ```
+8. **Create a Pull Request**: Go to the original repository and create a pull
+   request from your branch.
 
-## 📝 Development Workflow
+## Coding Standards
 
-### Branch Naming
+- Follow the existing code style in the project.
+- Write clear and concise comments in your code.
+- Ensure that your changes do not break existing functionality.
 
-Use descriptive branch names:
-- `feature/add-product-filters` - New features
-- `fix/cart-quantity-bug` - Bug fixes
-- `docs/update-readme` - Documentation updates
-- `style/header-redesign` - UI/styling changes
+## Issue Tracking
 
-### Commit Messages
+- Use the GitHub issues feature to report bugs or request features.
 
-Follow conventional commit format:
-```
-type(scope): description
+## License
 
-[optional body]
-```
+By contributing to this project, you agree that your contributions will be
+licensed under the project's license.
 
-Types:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation
-- `style`: Styling/formatting
-- `refactor`: Code refactoring
-- `test`: Adding tests
-- `chore`: Maintenance
+## Contact
 
-Examples:
-```
-feat(cart): add quantity selector to cart items
-fix(search): resolve dropdown not closing on blur
-docs(readme): update installation instructions
-```
-
-## 🎨 Code Style
-
-### TypeScript
-
-- Use TypeScript for all new code
-- Define proper types and interfaces
-- Avoid `any` type when possible
-
-### React Components
-
-- Use functional components with hooks
-- Keep components small and focused
-- Extract reusable logic into custom hooks
-
-### Styling
-
-- Use Tailwind CSS utility classes
-- Follow the design system tokens defined in `src/index.css`
-- Use semantic color tokens (e.g., `text-foreground`, `bg-primary`)
-- Never use hardcoded colors directly
-
-### File Structure
-
-```
-src/
-├── components/       # Reusable components
-│   └── ui/          # shadcn/ui base components
-├── pages/           # Route pages
-├── hooks/           # Custom hooks
-├── lib/             # Utilities
-├── stores/          # Zustand stores
-└── contexts/        # React contexts
-```
-
-## 🔍 Code Review Guidelines
-
-### Before Submitting
-
-- [ ] Code builds without errors (`npm run build`)
-- [ ] Code follows the project's style guidelines
-- [ ] Components are responsive (mobile, tablet, desktop)
-- [ ] RTL support is maintained for Arabic language
-- [ ] No console errors or warnings
-
-### Pull Request Process
-
-1. Create a pull request with a clear title and description
-2. Link any related issues
-3. Wait for review from maintainers
-4. Address any requested changes
-5. Once approved, your PR will be merged
-
-## 🐛 Reporting Bugs
-
-When reporting bugs, please include:
-
-1. **Description**: Clear description of the issue
-2. **Steps to Reproduce**: How to trigger the bug
-3. **Expected Behavior**: What should happen
-4. **Actual Behavior**: What actually happens
-5. **Screenshots**: If applicable
-6. **Environment**: Browser, OS, device
-
-## 💡 Feature Requests
-
-For feature requests, please provide:
-
-1. **Problem Statement**: What problem does this solve?
-2. **Proposed Solution**: How should it work?
-3. **Alternatives Considered**: Other approaches you've thought about
-4. **Additional Context**: Mockups, examples, etc.
-
-## 📚 Resources
-
-- [React Documentation](https://react.dev)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [shadcn/ui Components](https://ui.shadcn.com)
-- [Zustand State Management](https://zustand-demo.pmnd.rs)
-- [Lovable Documentation](https://docs.lovable.dev)
-
-## 📧 Contact
-
-For questions or support:
-- Create an issue in this repository
-- Join our community on [Discord](https://discord.gg/lovable-dev)
-
----
-
-Thank you for contributing! 🙏
+For any questions, feel free to reach out to the maintainers of this repository.

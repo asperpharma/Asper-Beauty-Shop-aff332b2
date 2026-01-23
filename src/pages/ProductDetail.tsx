@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { fetchProductByHandle, fetchProducts, ShopifyProduct } from "@/lib/shopify";
+import { Link, useParams } from "react-router-dom";
+import {
+  fetchProductByHandle,
+  fetchProducts,
+  ShopifyProduct,
+} from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
-import { Loader2, Minus, Plus, Heart, Star, ChevronDown } from "lucide-react";
+import { ChevronDown, Heart, Loader2, Minus, Plus, Star } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
 import { toast } from "sonner";
-import { getLocalizedDescription, extractKeyBenefits, getLocalizedCategory, translateTitle } from "@/lib/productUtils";
+import {
+  extractKeyBenefits,
+  getLocalizedCategory,
+  getLocalizedDescription,
+  translateTitle,
+} from "@/lib/productUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductImagePlaceholder } from "@/components/ProductImagePlaceholder";
 import { categorizeProduct } from "@/lib/categoryMapping";
@@ -71,12 +80,16 @@ interface ProductData {
 const ProductDetail = () => {
   const { handle } = useParams<{ handle: string }>();
   const { language, t } = useLanguage();
-  const isArabic = language === 'ar';
+  const isArabic = language === "ar";
   const [product, setProduct] = useState<ProductData | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedVariant, setSelectedVariant] = useState<ProductData["variants"]["edges"][0]["node"] | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [selectedVariant, setSelectedVariant] = useState<
+    ProductData["variants"]["edges"][0]["node"] | null
+  >(null);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -94,15 +107,22 @@ const ProductDetail = () => {
           const firstVariant = data.variants.edges[0].node;
           setSelectedVariant(firstVariant);
           const initialOptions: Record<string, string> = {};
-          firstVariant.selectedOptions.forEach((opt: { name: string; value: string }) => {
-            initialOptions[opt.name] = opt.value;
-          });
+          firstVariant.selectedOptions.forEach(
+            (opt: { name: string; value: string }) => {
+              initialOptions[opt.name] = opt.value;
+            },
+          );
           setSelectedOptions(initialOptions);
         }
 
         // Fetch related products
         const related = await fetchProducts(8);
-        setRelatedProducts(related.filter((p: ShopifyProduct) => p.node.handle !== handle).slice(0, 4));
+        setRelatedProducts(
+          related.filter((p: ShopifyProduct) => p.node.handle !== handle).slice(
+            0,
+            4,
+          ),
+        );
       } catch (error) {
         if (import.meta.env.DEV) {
           console.error("Failed to fetch product:", error);
@@ -118,13 +138,13 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (!product) return;
-    
+
     const matchingVariant = product.variants.edges.find((v) =>
       v.node.selectedOptions.every(
-        (opt) => selectedOptions[opt.name] === opt.value
+        (opt) => selectedOptions[opt.name] === opt.value,
       )
     );
-    
+
     if (matchingVariant) {
       setSelectedVariant(matchingVariant.node);
     }
@@ -143,7 +163,11 @@ const ProductDetail = () => {
     });
 
     toast.success(isArabic ? "تمت الإضافة إلى السلة" : "Added to bag", {
-      description: `${product.title}${selectedVariant.title !== "Default Title" ? ` - ${selectedVariant.title}` : ""}`,
+      description: `${product.title}${
+        selectedVariant.title !== "Default Title"
+          ? ` - ${selectedVariant.title}`
+          : ""
+      }`,
       position: "top-center",
     });
 
@@ -165,10 +189,15 @@ const ProductDetail = () => {
 
   // Check for sale
   const compareAtPrice = selectedVariant?.compareAtPrice;
-  const currentPrice = parseFloat(selectedVariant?.price?.amount || product?.priceRange.minVariantPrice.amount || "0");
-  const originalPrice = compareAtPrice ? parseFloat(compareAtPrice.amount) : null;
+  const currentPrice = parseFloat(
+    selectedVariant?.price?.amount ||
+      product?.priceRange.minVariantPrice.amount || "0",
+  );
+  const originalPrice = compareAtPrice
+    ? parseFloat(compareAtPrice.amount)
+    : null;
   const isOnSale = originalPrice && originalPrice > currentPrice;
-  const discountPercent = isOnSale 
+  const discountPercent = isOnSale
     ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
     : 0;
 
@@ -190,10 +219,10 @@ const ProductDetail = () => {
         <Header />
         <div className="flex flex-col items-center justify-center min-h-[60vh] pt-36">
           <h1 className="font-display text-2xl text-foreground mb-4">
-            {isArabic ? 'المنتج غير موجود' : 'Product Not Found'}
+            {isArabic ? "المنتج غير موجود" : "Product Not Found"}
           </h1>
           <Link to="/" className="text-gold hover:underline font-body text-sm">
-            {isArabic ? 'العودة للمتجر' : 'Return to Shop'}
+            {isArabic ? "العودة للمتجر" : "Return to Shop"}
           </Link>
         </div>
         <Footer />
@@ -203,12 +232,13 @@ const ProductDetail = () => {
 
   const images = product.images.edges;
   const hasMultipleVariants = product.variants.edges.length > 1;
-  const currencyCode = selectedVariant?.price.currencyCode || product.priceRange.minVariantPrice.currencyCode;
+  const currencyCode = selectedVariant?.price.currencyCode ||
+    product.priceRange.minVariantPrice.currencyCode;
 
   // Check if option might be a color (for round color circles)
   const isColorOption = (optionName: string) => {
-    const colorNames = ['color', 'colour', 'shade', 'لون'];
-    return colorNames.some(c => optionName.toLowerCase().includes(c));
+    const colorNames = ["color", "colour", "shade", "لون"];
+    return colorNames.some((c) => optionName.toLowerCase().includes(c));
   };
 
   return (
@@ -218,25 +248,30 @@ const ProductDetail = () => {
         <div className="luxury-container">
           {/* Sticky Split-Screen Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-0">
-            
             {/* Left Column - Image Gallery (Sticky) */}
             <div className="lg:sticky lg:top-[100px] lg:self-start lg:pr-8">
               {/* Main Image */}
               <div className="relative aspect-square bg-white rounded-lg overflow-hidden mb-4 group">
-                {images[selectedImage] ? (
-                  <img
-                    src={images[selectedImage].node.url}
-                    alt={images[selectedImage].node.altText || product.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <ProductImagePlaceholder
-                    title={product.title}
-                    brand={product.vendor || product.title.split(' ')[0]}
-                    category={categorizeProduct(product.title, product.productType, product.vendor)}
-                    className="w-full h-full"
-                  />
-                )}
+                {images[selectedImage]
+                  ? (
+                    <img
+                      src={images[selectedImage].node.url}
+                      alt={images[selectedImage].node.altText || product.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )
+                  : (
+                    <ProductImagePlaceholder
+                      title={product.title}
+                      brand={product.vendor || product.title.split(" ")[0]}
+                      category={categorizeProduct(
+                        product.title,
+                        product.productType,
+                        product.vendor,
+                      )}
+                      className="w-full h-full"
+                    />
+                  )}
 
                 {/* Sale Badge */}
                 {isOnSale && (
@@ -245,7 +280,7 @@ const ProductDetail = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Thumbnail Gallery - 4 images */}
               {images.length > 1 && (
                 <div className="grid grid-cols-4 gap-3">
@@ -254,8 +289,8 @@ const ProductDetail = () => {
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
                       className={`aspect-square overflow-hidden rounded-lg border-2 transition-all duration-400 ${
-                        selectedImage === idx 
-                          ? "border-gold ring-2 ring-gold ring-offset-2" 
+                        selectedImage === idx
+                          ? "border-gold ring-2 ring-gold ring-offset-2"
                           : "border-transparent hover:border-gold/50"
                       }`}
                     >
@@ -274,24 +309,32 @@ const ProductDetail = () => {
             <div className="lg:pl-[60px] pt-8 lg:pt-0">
               {/* Breadcrumbs */}
               <nav className="flex items-center gap-2 text-sm mb-6">
-                <Link to="/" className="font-body text-muted-foreground hover:text-gold transition-colors duration-400">
-                  {isArabic ? 'الرئيسية' : 'Home'}
+                <Link
+                  to="/"
+                  className="font-body text-muted-foreground hover:text-gold transition-colors duration-400"
+                >
+                  {isArabic ? "الرئيسية" : "Home"}
                 </Link>
                 <span className="text-muted-foreground">&gt;</span>
-                <Link to="/collections" className="font-body text-muted-foreground hover:text-gold transition-colors duration-400">
-                  {product.productType ? getLocalizedCategory(product.productType, language) : (isArabic ? 'العناية بالبشرة' : 'Skincare')}
+                <Link
+                  to="/collections"
+                  className="font-body text-muted-foreground hover:text-gold transition-colors duration-400"
+                >
+                  {product.productType
+                    ? getLocalizedCategory(product.productType, language)
+                    : (isArabic ? "العناية بالبشرة" : "Skincare")}
                 </Link>
                 <span className="text-muted-foreground">&gt;</span>
                 <span className="font-body text-muted-foreground">
-                  {isArabic ? 'سيروم' : 'Serums'}
+                  {isArabic ? "سيروم" : "Serums"}
                 </span>
               </nav>
-              
+
               {/* Title */}
               <h1 className="font-display text-3xl lg:text-4xl text-foreground mb-4 leading-tight">
                 {translateTitle(product.title, language)}
               </h1>
-              
+
               {/* Price */}
               <div className="flex items-center gap-3 mb-4">
                 <p className="font-display text-2xl lg:text-3xl font-bold text-burgundy">
@@ -312,69 +355,95 @@ const ProductDetail = () => {
                       <Star key={i} className="w-4 h-4 fill-gold text-gold" />
                     ))}
                   </div>
-                  <span className="font-body text-sm text-muted-foreground">(128 Reviews)</span>
+                  <span className="font-body text-sm text-muted-foreground">
+                    (128 Reviews)
+                  </span>
                 </div>
-                <ShareButtons 
-                  url={window.location.href} 
-                  title={`${isArabic ? 'اكتشف' : 'Check out'} ${product.title} ${isArabic ? 'من آسبر بيوتي' : 'from Asper Beauty'}`}
+                <ShareButtons
+                  url={window.location.href}
+                  title={`${
+                    isArabic ? "اكتشف" : "Check out"
+                  } ${product.title} ${
+                    isArabic ? "من آسبر بيوتي" : "from Asper Beauty"
+                  }`}
                 />
               </div>
 
               {/* Short Description */}
-              <p className="font-body text-muted-foreground leading-relaxed mb-8" style={{ lineHeight: '1.6' }}>
-                {getLocalizedDescription(product.description, language, 300) || (isArabic ? 'منتج تجميل فاخر من مجموعتنا المختارة، مصنوع بأجود المكونات للحصول على بشرة مشرقة ونضرة.' : 'A premium beauty product from our curated collection, crafted with the finest ingredients for radiant and youthful skin.')}
+              <p
+                className="font-body text-muted-foreground leading-relaxed mb-8"
+                style={{ lineHeight: "1.6" }}
+              >
+                {getLocalizedDescription(product.description, language, 300) ||
+                  (isArabic
+                    ? "منتج تجميل فاخر من مجموعتنا المختارة، مصنوع بأجود المكونات للحصول على بشرة مشرقة ونضرة."
+                    : "A premium beauty product from our curated collection, crafted with the finest ingredients for radiant and youthful skin.")}
               </p>
 
               {/* Variant Options */}
-              {hasMultipleVariants && product.options.map((option) => (
-                <div key={option.name} className="mb-6">
-                  <label className="font-body text-sm font-medium text-foreground mb-3 block">
-                    {isArabic ? (isColorOption(option.name) ? 'اختر اللون' : 'الحجم') : (isColorOption(option.name) ? 'Select Shade' : option.name)}
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    {option.values.map((value) => {
-                      const isSelected = selectedOptions[option.name] === value;
-                      
-                      // For color options, show round circles
-                      if (isColorOption(option.name)) {
+              {hasMultipleVariants &&
+                product.options.map((option) => (
+                  <div key={option.name} className="mb-6">
+                    <label className="font-body text-sm font-medium text-foreground mb-3 block">
+                      {isArabic
+                        ? (isColorOption(option.name) ? "اختر اللون" : "الحجم")
+                        : (isColorOption(option.name)
+                          ? "Select Shade"
+                          : option.name)}
+                    </label>
+                    <div className="flex flex-wrap gap-3">
+                      {option.values.map((value) => {
+                        const isSelected =
+                          selectedOptions[option.name] === value;
+
+                        // For color options, show round circles
+                        if (isColorOption(option.name)) {
+                          return (
+                            <button
+                              key={value}
+                              onClick={() =>
+                                setSelectedOptions({
+                                  ...selectedOptions,
+                                  [option.name]: value,
+                                })}
+                              className={`w-10 h-10 rounded-full transition-all duration-400 ${
+                                isSelected
+                                  ? "ring-2 ring-gold ring-offset-2"
+                                  : "hover:ring-2 hover:ring-gold/50 hover:ring-offset-1"
+                              }`}
+                              style={{ backgroundColor: value.toLowerCase() }}
+                              title={value}
+                            />
+                          );
+                        }
+
+                        // For size/other options, show outlined buttons
                         return (
                           <button
                             key={value}
-                            onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: value })}
-                            className={`w-10 h-10 rounded-full transition-all duration-400 ${
+                            onClick={() =>
+                              setSelectedOptions({
+                                ...selectedOptions,
+                                [option.name]: value,
+                              })}
+                            className={`px-5 py-2.5 rounded-lg border-2 font-body text-sm transition-all duration-400 ${
                               isSelected
-                                ? "ring-2 ring-gold ring-offset-2"
-                                : "hover:ring-2 hover:ring-gold/50 hover:ring-offset-1"
+                                ? "border-gold ring-2 ring-gold text-foreground"
+                                : "border-gold/30 text-foreground hover:border-gold"
                             }`}
-                            style={{ backgroundColor: value.toLowerCase() }}
-                            title={value}
-                          />
+                          >
+                            {value}
+                          </button>
                         );
-                      }
-                      
-                      // For size/other options, show outlined buttons
-                      return (
-                        <button
-                          key={value}
-                          onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: value })}
-                          className={`px-5 py-2.5 rounded-lg border-2 font-body text-sm transition-all duration-400 ${
-                            isSelected
-                              ? "border-gold ring-2 ring-gold text-foreground"
-                              : "border-gold/30 text-foreground hover:border-gold"
-                          }`}
-                        >
-                          {value}
-                        </button>
-                      );
-                    })}
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
               {/* Quantity */}
               <div className="mb-8">
                 <label className="font-body text-sm font-medium text-foreground mb-3 block">
-                  {isArabic ? 'الكمية' : 'Quantity'}
+                  {isArabic ? "الكمية" : "Quantity"}
                 </label>
                 <div className="flex items-center">
                   <button
@@ -384,7 +453,9 @@ const ProductDetail = () => {
                     <Minus className="w-4 h-4" />
                   </button>
                   <div className="w-16 h-12 flex items-center justify-center border-t border-b border-gold/30">
-                    <span className="font-display text-lg text-foreground">{quantity}</span>
+                    <span className="font-display text-lg text-foreground">
+                      {quantity}
+                    </span>
                   </div>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
@@ -402,64 +473,73 @@ const ProductDetail = () => {
                   disabled={!selectedVariant?.availableForSale}
                   className="flex-1 py-4 px-8 bg-burgundy text-white font-display text-sm tracking-widest uppercase transition-all duration-400 hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
-                  {selectedVariant?.availableForSale 
-                    ? (isArabic ? 'أضف إلى السلة' : 'Add to Bag') 
-                    : (isArabic ? 'نفذ من المخزون' : 'Sold Out')
-                  }
+                  {selectedVariant?.availableForSale
+                    ? (isArabic ? "أضف إلى السلة" : "Add to Bag")
+                    : (isArabic ? "نفذ من المخزون" : "Sold Out")}
                 </button>
                 <button
                   onClick={handleWishlistToggle}
                   className={`w-14 h-14 flex items-center justify-center rounded-lg border transition-all duration-400 ${
                     isWishlisted
-                      ? 'bg-gold border-gold text-burgundy'
-                      : 'border-gold/30 text-gold hover:border-gold hover:bg-gold/10'
+                      ? "bg-gold border-gold text-burgundy"
+                      : "border-gold/30 text-gold hover:border-gold hover:bg-gold/10"
                   }`}
                 >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+                  <Heart
+                    className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`}
+                  />
                 </button>
               </div>
 
               {/* Information Accordions */}
               <div className="border-t border-gold">
                 <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="ingredients" className="border-b border-gold">
+                  <AccordionItem
+                    value="ingredients"
+                    className="border-b border-gold"
+                  >
                     <AccordionTrigger className="py-4 font-display text-sm text-foreground hover:no-underline hover:text-gold transition-colors duration-400">
-                      {isArabic ? 'المكونات والفوائد' : 'Ingredients & Benefits'}
+                      {isArabic
+                        ? "المكونات والفوائد"
+                        : "Ingredients & Benefits"}
                     </AccordionTrigger>
                     <AccordionContent className="pb-4">
                       <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                        {isArabic 
-                          ? 'مكونات طبيعية فاخرة تعمل على ترطيب البشرة وتجديدها. تحتوي على فيتامين سي وحمض الهيالورونيك والنياسيناميد لبشرة مشرقة وصحية.'
-                          : 'Premium natural ingredients that hydrate and rejuvenate the skin. Contains Vitamin C, Hyaluronic Acid, and Niacinamide for a radiant, healthy complexion.'
-                        }
+                        {isArabic
+                          ? "مكونات طبيعية فاخرة تعمل على ترطيب البشرة وتجديدها. تحتوي على فيتامين سي وحمض الهيالورونيك والنياسيناميد لبشرة مشرقة وصحية."
+                          : "Premium natural ingredients that hydrate and rejuvenate the skin. Contains Vitamin C, Hyaluronic Acid, and Niacinamide for a radiant, healthy complexion."}
                       </p>
                     </AccordionContent>
                   </AccordionItem>
-                  
-                  <AccordionItem value="how-to-use" className="border-b border-gold">
+
+                  <AccordionItem
+                    value="how-to-use"
+                    className="border-b border-gold"
+                  >
                     <AccordionTrigger className="py-4 font-display text-sm text-foreground hover:no-underline hover:text-gold transition-colors duration-400">
-                      {isArabic ? 'طريقة الاستخدام' : 'How to Use'}
+                      {isArabic ? "طريقة الاستخدام" : "How to Use"}
                     </AccordionTrigger>
                     <AccordionContent className="pb-4">
                       <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                        {isArabic 
-                          ? 'ضعي كمية مناسبة على البشرة النظيفة صباحاً ومساءً. دلكي بلطف بحركات دائرية حتى يمتص المنتج بالكامل. للحصول على أفضل النتائج، استخدميه بانتظام.'
-                          : 'Apply an appropriate amount to clean skin morning and evening. Gently massage in circular motions until fully absorbed. For best results, use consistently as part of your daily skincare routine.'
-                        }
+                        {isArabic
+                          ? "ضعي كمية مناسبة على البشرة النظيفة صباحاً ومساءً. دلكي بلطف بحركات دائرية حتى يمتص المنتج بالكامل. للحصول على أفضل النتائج، استخدميه بانتظام."
+                          : "Apply an appropriate amount to clean skin morning and evening. Gently massage in circular motions until fully absorbed. For best results, use consistently as part of your daily skincare routine."}
                       </p>
                     </AccordionContent>
                   </AccordionItem>
-                  
-                  <AccordionItem value="shipping" className="border-b border-gold">
+
+                  <AccordionItem
+                    value="shipping"
+                    className="border-b border-gold"
+                  >
                     <AccordionTrigger className="py-4 font-display text-sm text-foreground hover:no-underline hover:text-gold transition-colors duration-400">
-                      {isArabic ? 'الشحن والإرجاع' : 'Shipping & Returns'}
+                      {isArabic ? "الشحن والإرجاع" : "Shipping & Returns"}
                     </AccordionTrigger>
                     <AccordionContent className="pb-4">
                       <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                        {isArabic 
-                          ? 'شحن مجاني للطلبات فوق 50 دينار. التوصيل خلال 2-5 أيام عمل داخل عمان. سياسة إرجاع سهلة خلال 30 يوم من الاستلام.'
-                          : 'Free shipping on orders over 50 JOD. Delivery within 2-5 business days in Amman. Easy 30-day return policy from the date of receipt.'
-                        }
+                        {isArabic
+                          ? "شحن مجاني للطلبات فوق 50 دينار. التوصيل خلال 2-5 أيام عمل داخل عمان. سياسة إرجاع سهلة خلال 30 يوم من الاستلام."
+                          : "Free shipping on orders over 50 JOD. Delivery within 2-5 business days in Amman. Easy 30-day return policy from the date of receipt."}
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -473,7 +553,7 @@ const ProductDetail = () => {
             <section className="mt-20">
               <div className="text-center mb-12">
                 <h2 className="font-display text-2xl lg:text-3xl text-foreground mb-2">
-                  {isArabic ? 'قد يعجبك أيضاً' : 'You May Also Like'}
+                  {isArabic ? "قد يعجبك أيضاً" : "You May Also Like"}
                 </h2>
                 <div className="w-16 h-px bg-gold mx-auto mt-4" />
               </div>
@@ -495,11 +575,13 @@ const ProductDetail = () => {
             onClick={handleWishlistToggle}
             className={`w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg border transition-all duration-400 ${
               isWishlisted
-                ? 'bg-gold border-gold text-burgundy'
-                : 'border-gold/30 text-gold'
+                ? "bg-gold border-gold text-burgundy"
+                : "border-gold/30 text-gold"
             }`}
           >
-            <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+            <Heart
+              className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`}
+            />
           </button>
           <div className="flex-shrink-0">
             <p className="font-display text-xl text-burgundy">
@@ -511,10 +593,9 @@ const ProductDetail = () => {
             disabled={!selectedVariant?.availableForSale}
             className="flex-1 py-3 px-4 bg-burgundy text-white font-display text-sm tracking-wider uppercase transition-all duration-400 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
           >
-            {selectedVariant?.availableForSale 
-              ? (isArabic ? 'أضف إلى السلة' : 'Add to Bag') 
-              : (isArabic ? 'نفذ' : 'Sold Out')
-            }
+            {selectedVariant?.availableForSale
+              ? (isArabic ? "أضف إلى السلة" : "Add to Bag")
+              : (isArabic ? "نفذ" : "Sold Out")}
           </button>
         </div>
       </div>

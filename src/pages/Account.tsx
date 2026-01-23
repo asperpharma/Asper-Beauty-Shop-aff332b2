@@ -1,15 +1,29 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { toast } from 'sonner';
-import { Loader2, Lock, LogOut, Shield, ShieldCheck, Trash2, QrCode } from 'lucide-react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import {
+  Loader2,
+  Lock,
+  LogOut,
+  QrCode,
+  Shield,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 import {
   Table,
   TableBody,
@@ -28,52 +42,54 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 export default function Account() {
   const navigate = useNavigate();
-  const { 
-    user, 
-    loading, 
-    factors, 
-    signOut, 
-    enrollTOTP, 
-    verifyTOTPEnrollment, 
+  const {
+    user,
+    loading,
+    factors,
+    signOut,
+    enrollTOTP,
+    verifyTOTPEnrollment,
     unenrollMFA,
-    refreshFactors 
+    refreshFactors,
   } = useAuth();
 
   // MFA enrollment state
   const [isEnrolling, setIsEnrolling] = useState(false);
-  const [enrollmentData, setEnrollmentData] = useState<{ id: string; qr: string; secret: string } | null>(null);
-  const [verifyCode, setVerifyCode] = useState('');
+  const [enrollmentData, setEnrollmentData] = useState<
+    { id: string; qr: string; secret: string } | null
+  >(null);
+  const [verifyCode, setVerifyCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [factorToDelete, setFactorToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/auth');
+      navigate("/auth");
     }
   }, [user, loading, navigate]);
 
   const handleSignOut = async () => {
     const { error } = await signOut();
     if (error) {
-      toast.error('Failed to sign out');
+      toast.error("Failed to sign out");
     } else {
-      toast.success('Signed out successfully');
-      navigate('/');
+      toast.success("Signed out successfully");
+      navigate("/");
     }
   };
 
   const handleEnrollMFA = async () => {
     setIsEnrolling(true);
-    const { data, error } = await enrollTOTP('Asper Beauty');
+    const { data, error } = await enrollTOTP("Asper Beauty");
     setIsEnrolling(false);
 
     if (error) {
-      toast.error('Failed to start MFA enrollment');
+      toast.error("Failed to start MFA enrollment");
       return;
     }
 
@@ -94,18 +110,18 @@ export default function Account() {
     setIsVerifying(false);
 
     if (error) {
-      toast.error('Invalid verification code');
-      setVerifyCode('');
+      toast.error("Invalid verification code");
+      setVerifyCode("");
     } else {
-      toast.success('MFA enabled successfully!');
+      toast.success("MFA enabled successfully!");
       setEnrollmentData(null);
-      setVerifyCode('');
+      setVerifyCode("");
     }
   };
 
   const handleCancelEnrollment = () => {
     setEnrollmentData(null);
-    setVerifyCode('');
+    setVerifyCode("");
   };
 
   const handleUnenrollMFA = async (factorId: string) => {
@@ -113,9 +129,9 @@ export default function Account() {
     setFactorToDelete(null);
 
     if (error) {
-      toast.error('Failed to remove authenticator');
+      toast.error("Failed to remove authenticator");
     } else {
-      toast.success('Authenticator removed');
+      toast.success("Authenticator removed");
     }
   };
 
@@ -130,7 +146,7 @@ export default function Account() {
   if (!user) return null;
 
   const allFactors = [...factors.totp, ...factors.phone];
-  const hasMFAEnabled = allFactors.some(f => f.status === 'verified');
+  const hasMFAEnabled = allFactors.some((f) => f.status === "verified");
 
   return (
     <div className="min-h-screen bg-background">
@@ -149,7 +165,11 @@ export default function Account() {
                 <p className="font-medium">{user.email}</p>
               </div>
               <Separator />
-              <Button variant="outline" onClick={handleSignOut} className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={handleSignOut}
+                className="w-full sm:w-auto"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
               </Button>
@@ -170,7 +190,10 @@ export default function Account() {
                   </CardDescription>
                 </div>
                 {hasMFAEnabled && (
-                  <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">
+                  <Badge
+                    variant="outline"
+                    className="bg-green-500/10 text-green-600 border-green-500/30"
+                  >
                     <ShieldCheck className="mr-1 h-3 w-3" />
                     Enabled
                   </Badge>
@@ -179,162 +202,195 @@ export default function Account() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Enrollment Flow */}
-              {enrollmentData ? (
-                <div className="space-y-6">
-                  <div className="text-center space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
-                    </p>
-                    <div className="flex justify-center">
-                      <img 
-                        src={enrollmentData.qr} 
-                        alt="QR Code for MFA setup" 
-                        className="w-48 h-48 border rounded-lg"
-                      />
+              {enrollmentData
+                ? (
+                  <div className="space-y-6">
+                    <div className="text-center space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Scan this QR code with your authenticator app (Google
+                        Authenticator, Authy, etc.)
+                      </p>
+                      <div className="flex justify-center">
+                        <img
+                          src={enrollmentData.qr}
+                          alt="QR Code for MFA setup"
+                          className="w-48 h-48 border rounded-lg"
+                        />
+                      </div>
+                      <div className="bg-muted p-3 rounded-lg">
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Or enter this code manually:
+                        </p>
+                        <code className="text-sm font-mono break-all">
+                          {enrollmentData.secret}
+                        </code>
+                      </div>
                     </div>
-                    <div className="bg-muted p-3 rounded-lg">
-                      <p className="text-xs text-muted-foreground mb-1">Or enter this code manually:</p>
-                      <code className="text-sm font-mono break-all">{enrollmentData.secret}</code>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="verify-code">
+                          Enter Verification Code
+                        </Label>
+                        <Input
+                          id="verify-code"
+                          type="text"
+                          inputMode="numeric"
+                          value={verifyCode}
+                          onChange={(e) =>
+                            setVerifyCode(
+                              e.target.value.replace(/\D/g, "").slice(0, 6),
+                            )}
+                          placeholder="000000"
+                          className="text-center text-xl tracking-widest"
+                          maxLength={6}
+                        />
+                      </div>
+                      <div className="flex gap-3">
+                        <Button
+                          onClick={handleVerifyEnrollment}
+                          disabled={isVerifying || verifyCode.length !== 6}
+                          className="flex-1"
+                        >
+                          {isVerifying
+                            ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Verifying...
+                              </>
+                            )
+                            : (
+                              "Verify & Enable"
+                            )}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={handleCancelEnrollment}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
                   </div>
+                )
+                : (
+                  <>
+                    {/* Existing Factors List */}
+                    {allFactors.length > 0 && (
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-sm">
+                          Your Authenticators
+                        </h4>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead className="w-[80px]"></TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {allFactors.map((factor) => (
+                              <TableRow key={factor.id}>
+                                <TableCell className="font-medium">
+                                  {factor.friendly_name || "Authenticator"}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant="secondary"
+                                    className="uppercase text-xs"
+                                  >
+                                    {factor.factor_type}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant="outline"
+                                    className={factor.status === "verified"
+                                      ? "bg-green-500/10 text-green-600 border-green-500/30"
+                                      : "bg-yellow-500/10 text-yellow-600 border-yellow-500/30"}
+                                  >
+                                    {factor.status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive hover:text-destructive"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                          Remove Authenticator
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to remove this
+                                          authenticator? You'll need to set up a
+                                          new one to use two-factor
+                                          authentication.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                          Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() =>
+                                            handleUnenrollMFA(factor.id)}
+                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        >
+                                          Remove
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
 
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="verify-code">Enter Verification Code</Label>
-                      <Input
-                        id="verify-code"
-                        type="text"
-                        inputMode="numeric"
-                        value={verifyCode}
-                        onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        placeholder="000000"
-                        className="text-center text-xl tracking-widest"
-                        maxLength={6}
-                      />
-                    </div>
-                    <div className="flex gap-3">
-                      <Button 
-                        onClick={handleVerifyEnrollment}
-                        disabled={isVerifying || verifyCode.length !== 6}
-                        className="flex-1"
-                      >
-                        {isVerifying ? (
+                    {/* Add New Authenticator Button */}
+                    <Button
+                      onClick={handleEnrollMFA}
+                      disabled={isEnrolling}
+                      variant={allFactors.length > 0 ? "outline" : "default"}
+                      className="w-full"
+                    >
+                      {isEnrolling
+                        ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Verifying...
+                            Setting up...
                           </>
-                        ) : (
-                          'Verify & Enable'
+                        )
+                        : (
+                          <>
+                            <QrCode className="mr-2 h-4 w-4" />
+                            {allFactors.length > 0
+                              ? "Add Another Authenticator"
+                              : "Set Up Authenticator App"}
+                          </>
                         )}
-                      </Button>
-                      <Button variant="outline" onClick={handleCancelEnrollment}>
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* Existing Factors List */}
-                  {allFactors.length > 0 && (
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-sm">Your Authenticators</h4>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="w-[80px]"></TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {allFactors.map((factor) => (
-                            <TableRow key={factor.id}>
-                              <TableCell className="font-medium">
-                                {factor.friendly_name || 'Authenticator'}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="secondary" className="uppercase text-xs">
-                                  {factor.factor_type}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant="outline" 
-                                  className={
-                                    factor.status === 'verified' 
-                                      ? 'bg-green-500/10 text-green-600 border-green-500/30'
-                                      : 'bg-yellow-500/10 text-yellow-600 border-yellow-500/30'
-                                  }
-                                >
-                                  {factor.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="icon"
-                                      className="text-destructive hover:text-destructive"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>Remove Authenticator</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        Are you sure you want to remove this authenticator? You'll need to set up a new one to use two-factor authentication.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction 
-                                        onClick={() => handleUnenrollMFA(factor.id)}
-                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                      >
-                                        Remove
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
+                    </Button>
 
-                  {/* Add New Authenticator Button */}
-                  <Button 
-                    onClick={handleEnrollMFA} 
-                    disabled={isEnrolling}
-                    variant={allFactors.length > 0 ? 'outline' : 'default'}
-                    className="w-full"
-                  >
-                    {isEnrolling ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Setting up...
-                      </>
-                    ) : (
-                      <>
-                        <QrCode className="mr-2 h-4 w-4" />
-                        {allFactors.length > 0 ? 'Add Another Authenticator' : 'Set Up Authenticator App'}
-                      </>
+                    {allFactors.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center">
+                        Use an authenticator app like Google Authenticator or
+                        Authy for enhanced security
+                      </p>
                     )}
-                  </Button>
-
-                  {allFactors.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center">
-                      Use an authenticator app like Google Authenticator or Authy for enhanced security
-                    </p>
-                  )}
-                </>
-              )}
+                  </>
+                )}
             </CardContent>
           </Card>
         </div>

@@ -1,6 +1,8 @@
 # Product Reference Guide - Beauty Box & iHerb
 
-This document provides reference information from Beauty Box (beautyboxjo.com) and iHerb Jordan (jo.iherb.com) to help format products that don't have images and to use as a reference for product information, pricing, and styling.
+This document provides reference information from Beauty Box (beautyboxjo.com)
+and iHerb Jordan (jo.iherb.com) to help format products that don't have images
+and to use as a reference for product information, pricing, and styling.
 
 ## Reference Websites
 
@@ -21,6 +23,7 @@ This document provides reference information from Beauty Box (beautyboxjo.com) a
 ### From Beauty Box Style:
 
 **Product Card Format:**
+
 ```
 - Product Image (or elegant placeholder)
 - Brand Name (uppercase, tracking-widest)
@@ -34,6 +37,7 @@ This document provides reference information from Beauty Box (beautyboxjo.com) a
 ```
 
 **Product Detail Page Format:**
+
 ```
 - Large Product Image Gallery (sticky left column)
 - Product Title (h1, large)
@@ -61,7 +65,8 @@ This document provides reference information from Beauty Box (beautyboxjo.com) a
    - Examples: Eucerin, Vichy, La Roche-Posay, Cetaphil
 
 3. **Product Categories**
-   - Skin Care: Cleansers, Moisturizers, Serums, Sunscreen, Creams, Eye Cream, Toner, Mask, Scrub, Peeling
+   - Skin Care: Cleansers, Moisturizers, Serums, Sunscreen, Creams, Eye Cream,
+     Toner, Mask, Scrub, Peeling
    - Make Up: Face, Eye, Lip, Cheek
    - Hair Care: Shampoo, Conditioner, Hair Mask, Leave-in, Styling
    - Body Care: Body Wash, Body Lotion, Hand Care, Foot Care
@@ -81,7 +86,8 @@ This document provides reference information from Beauty Box (beautyboxjo.com) a
 
 ## Product Without Image Formatting
 
-When products don't have images, use elegant placeholders matching Beauty Box/iHerb style:
+When products don't have images, use elegant placeholders matching Beauty
+Box/iHerb style:
 
 ### Placeholder Design Elements:
 
@@ -105,6 +111,7 @@ When products don't have images, use elegant placeholders matching Beauty Box/iH
 ### Implementation:
 
 The `ProductImagePlaceholder` component is already created and automatically:
+
 - Extracts brand initials from product title or vendor
 - Shows category badge when available
 - Applies luxury gold-accented styling
@@ -229,6 +236,7 @@ If product information is missing, reference these sites:
 ## Integration Notes
 
 The product display system automatically:
+
 - ✅ Formats products without images using elegant placeholders
 - ✅ Shows brand names and categories
 - ✅ Displays prices in JOD format

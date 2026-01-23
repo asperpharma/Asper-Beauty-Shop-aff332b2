@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import AnimatedShaderHero from "@/components/ui/animated-shader-hero";
@@ -25,7 +25,7 @@ const Index = () => {
 
   useEffect(() => {
     const handleLoad = () => setIsLoading(false);
-    
+
     // Hide skeleton once window loads or timeout finishes (whichever comes last for safety)
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -51,22 +51,22 @@ const Index = () => {
         <AnimatedShaderHero
           trustBadge={{
             text: "Trusted by 50,000+ Beauty Enthusiasts",
-            icons: ["✨", "💎", "🌟"]
+            icons: ["✨", "💎", "🌟"],
           }}
           headline={{
             line1: "Discover Luxury",
-            line2: "Beauty & Skincare"
+            line2: "Beauty & Skincare",
           }}
           subtitle="Curated collections of premium beauty products from the world's most prestigious brands. Experience the art of self-care."
           buttons={{
             primary: {
               text: "Explore Collections",
-              onClick: () => navigate("/collections")
+              onClick: () => navigate("/collections"),
             },
             secondary: {
               text: "Shop Best Sellers",
-              onClick: () => navigate("/best-sellers")
-            }
+              onClick: () => navigate("/best-sellers"),
+            },
           }}
         />
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
@@ -19,10 +19,10 @@ export const NewArrivals = () => {
         setLoading(true);
         // Fetch products and filter for new arrivals (created within last 30 days)
         const allProducts = await fetchProducts(50);
-        
+
         const now = Date.now();
         const thirtyDaysAgo = 30 * 24 * 60 * 60 * 1000;
-        
+
         const newProducts = allProducts.filter((product) => {
           const createdAt = (product.node as any).createdAt;
           if (!createdAt) return false;
@@ -62,50 +62,63 @@ export const NewArrivals = () => {
           scriptTextAr="وصل حديثاً"
           title={isArabic ? "وصل حديثاً" : "New"}
           titleHighlight={isArabic ? "أحدث الإطلالات" : "Arrivals"}
-          description={isArabic 
-            ? 'اكتشفي أحدث المنتجات التي وصلت إلى مجموعتنا الفاخرة'
-            : 'Discover the latest additions to our luxury collection'}
+          description={isArabic
+            ? "اكتشفي أحدث المنتجات التي وصلت إلى مجموعتنا الفاخرة"
+            : "Discover the latest additions to our luxury collection"}
           iconSize="md"
         />
 
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-gold" />
-          </div>
-        ) : products.length > 0 ? (
-          <>
-            {/* Products Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
-              {products.map((product, index) => (
-                <AnimatedSection
-                  key={product.node.id}
-                  animation="fade-up"
-                  delay={index * 100}
-                  duration={800}
-                >
-                  <ProductCard product={product} />
-                </AnimatedSection>
-              ))}
+        {loading
+          ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-gold" />
             </div>
+          )
+          : products.length > 0
+          ? (
+            <>
+              {/* Products Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+                {products.map((product, index) => (
+                  <AnimatedSection
+                    key={product.node.id}
+                    animation="fade-up"
+                    delay={index * 100}
+                    duration={800}
+                  >
+                    <ProductCard product={product} />
+                  </AnimatedSection>
+                ))}
+              </div>
 
-            {/* View All Link */}
-            <AnimatedSection animation="zoom" delay={800} duration={800} className="text-center">
-              <Link
-                to="/collections"
-                className="inline-flex items-center gap-2 font-body text-sm text-foreground hover:text-gold transition-colors duration-400 uppercase tracking-widest group border-b border-transparent hover:border-gold pb-1"
+              {/* View All Link */}
+              <AnimatedSection
+                animation="zoom"
+                delay={800}
+                duration={800}
+                className="text-center"
               >
-                {isArabic ? 'عرض جميع المنتجات الجديدة' : 'View All New Arrivals'}
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </AnimatedSection>
-          </>
-        ) : (
-          <div className="text-center py-12">
-            <p className="font-body text-muted-foreground">
-              {isArabic ? 'لا توجد منتجات جديدة حالياً' : 'No new arrivals at the moment'}
-            </p>
-          </div>
-        )}
+                <Link
+                  to="/collections"
+                  className="inline-flex items-center gap-2 font-body text-sm text-foreground hover:text-gold transition-colors duration-400 uppercase tracking-widest group border-b border-transparent hover:border-gold pb-1"
+                >
+                  {isArabic
+                    ? "عرض جميع المنتجات الجديدة"
+                    : "View All New Arrivals"}
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </AnimatedSection>
+            </>
+          )
+          : (
+            <div className="text-center py-12">
+              <p className="font-body text-muted-foreground">
+                {isArabic
+                  ? "لا توجد منتجات جديدة حالياً"
+                  : "No new arrivals at the moment"}
+              </p>
+            </div>
+          )}
       </div>
     </section>
   );
