@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -14,9 +19,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['Inter', 'Lato', 'sans-serif'],
-        script: ['Great Vibes', 'cursive'],
+        display: ["Playfair Display", "serif"],
+        body: ["Inter", "Lato", "sans-serif"],
+        script: ["Great Vibes", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -105,7 +110,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       transitionDuration: {
-        '400': '400ms',
+        "400": "400ms",
       },
       keyframes: {
         "accordion-down": {
@@ -137,18 +142,30 @@ export default {
         "scale-in": "scaleIn 0.5s ease-out forwards",
       },
       boxShadow: {
-        "gold-sm": "0 2px 8px -2px rgba(212, 175, 55, 0.15), 0 1px 4px -1px rgba(212, 175, 55, 0.08)",
-        "gold-md": "0 4px 16px -4px rgba(212, 175, 55, 0.2), 0 2px 8px -2px rgba(212, 175, 55, 0.1)",
-        "gold-lg": "0 8px 24px -4px rgba(212, 175, 55, 0.25), 0 4px 12px -2px rgba(212, 175, 55, 0.15)",
-        "gold-xl": "0 12px 32px -4px rgba(212, 175, 55, 0.3), 0 6px 16px -2px rgba(212, 175, 55, 0.2)",
-        "gold-2xl": "0 16px 40px -4px rgba(212, 175, 55, 0.35), 0 8px 20px -2px rgba(212, 175, 55, 0.25)",
-        "gold-hover": "0 8px 32px -4px rgba(212, 175, 55, 0.4), 0 4px 16px -2px rgba(212, 175, 55, 0.25)",
-        "gold-hover-lg": "0 12px 40px -4px rgba(212, 175, 55, 0.45), 0 6px 20px -2px rgba(212, 175, 55, 0.3)",
-        "gold-hover-xl": "0 16px 48px -4px rgba(212, 175, 55, 0.5), 0 8px 24px -2px rgba(212, 175, 55, 0.35)",
-        "gold-badge": "0 4px 20px rgba(212, 175, 55, 0.2), 0 2px 8px rgba(212, 175, 55, 0.15)",
-        "gold-badge-hover": "0 6px 30px rgba(212, 175, 55, 0.3), 0 3px 12px rgba(212, 175, 55, 0.2)",
-        "gold-button": "0 4px 16px rgba(212, 175, 55, 0.25), 0 2px 8px rgba(212, 175, 55, 0.15)",
-        "gold-button-hover": "0 8px 24px rgba(212, 175, 55, 0.35), 0 4px 12px rgba(212, 175, 55, 0.25)",
+        "gold-sm":
+          "0 2px 8px -2px rgba(212, 175, 55, 0.15), 0 1px 4px -1px rgba(212, 175, 55, 0.08)",
+        "gold-md":
+          "0 4px 16px -4px rgba(212, 175, 55, 0.2), 0 2px 8px -2px rgba(212, 175, 55, 0.1)",
+        "gold-lg":
+          "0 8px 24px -4px rgba(212, 175, 55, 0.25), 0 4px 12px -2px rgba(212, 175, 55, 0.15)",
+        "gold-xl":
+          "0 12px 32px -4px rgba(212, 175, 55, 0.3), 0 6px 16px -2px rgba(212, 175, 55, 0.2)",
+        "gold-2xl":
+          "0 16px 40px -4px rgba(212, 175, 55, 0.35), 0 8px 20px -2px rgba(212, 175, 55, 0.25)",
+        "gold-hover":
+          "0 8px 32px -4px rgba(212, 175, 55, 0.4), 0 4px 16px -2px rgba(212, 175, 55, 0.25)",
+        "gold-hover-lg":
+          "0 12px 40px -4px rgba(212, 175, 55, 0.45), 0 6px 20px -2px rgba(212, 175, 55, 0.3)",
+        "gold-hover-xl":
+          "0 16px 48px -4px rgba(212, 175, 55, 0.5), 0 8px 24px -2px rgba(212, 175, 55, 0.35)",
+        "gold-badge":
+          "0 4px 20px rgba(212, 175, 55, 0.2), 0 2px 8px rgba(212, 175, 55, 0.15)",
+        "gold-badge-hover":
+          "0 6px 30px rgba(212, 175, 55, 0.3), 0 3px 12px rgba(212, 175, 55, 0.2)",
+        "gold-button":
+          "0 4px 16px rgba(212, 175, 55, 0.25), 0 2px 8px rgba(212, 175, 55, 0.15)",
+        "gold-button-hover":
+          "0 8px 24px rgba(212, 175, 55, 0.35), 0 4px 12px rgba(212, 175, 55, 0.25)",
       },
     },
   },

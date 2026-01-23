@@ -7,24 +7,27 @@ interface ProductImagePlaceholderProps {
   className?: string;
 }
 
-export const ProductImagePlaceholder = ({ 
-  title, 
-  brand, 
+export const ProductImagePlaceholder = ({
+  title,
+  brand,
   category,
-  className = "" 
+  className = "",
 }: ProductImagePlaceholderProps) => {
   // Extract first letter of title or brand for elegant monogram
   const firstLetter = (brand || title).charAt(0).toUpperCase();
-  
+
   // Get initials from brand if available (e.g., "La Roche Posay" -> "LR")
-  const brandInitials = brand 
-    ? brand.split(' ').slice(0, 2).map(word => word.charAt(0).toUpperCase()).join('')
+  const brandInitials = brand
+    ? brand.split(" ").slice(0, 2).map((word) => word.charAt(0).toUpperCase())
+      .join("")
     : firstLetter;
 
   return (
-    <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br from-cream via-cream/80 to-cream/60 relative overflow-hidden border border-gold/10 ${className}`}>
+    <div
+      className={`w-full h-full flex items-center justify-center bg-gradient-to-br from-cream via-cream/80 to-cream/60 relative overflow-hidden border border-gold/10 ${className}`}
+    >
       {/* Decorative Pattern - Subtle Elegant Texture */}
-      <div 
+      <div
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `repeating-linear-gradient(
@@ -36,7 +39,7 @@ export const ProductImagePlaceholder = ({
           )`,
         }}
       />
-      
+
       {/* Elegant Monogram Circle - Like Beauty Box/iHerb Style */}
       <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-6">
         {/* Brand/Product Initials Circle */}
@@ -45,14 +48,14 @@ export const ProductImagePlaceholder = ({
             {brandInitials.slice(0, 2)}
           </span>
         </div>
-        
+
         {/* Decorative Elements */}
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-gold/40" />
           <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
           <ShoppingBag className="w-4 h-4 text-gold/40" />
         </div>
-        
+
         {/* Category Indicator (if available) */}
         {category && (
           <span className="font-body text-xs text-gold/60 uppercase tracking-widest text-center px-3 py-1 bg-gold/5 rounded-full border border-gold/10">
@@ -63,7 +66,7 @@ export const ProductImagePlaceholder = ({
 
       {/* Subtle Gold Glow on Hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-gold/0 via-gold/0 to-gold/0 group-hover:from-gold/5 group-hover:via-gold/3 group-hover:to-gold/0 transition-all duration-500 pointer-events-none" />
-      
+
       {/* Corner Accent - Elegant Touch */}
       <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-gold/5 to-transparent pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tl from-gold/5 to-transparent pointer-events-none" />

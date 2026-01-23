@@ -1,0 +1,8 @@
+{
+  "lint": {
+    "exclude": ["src", "public", "scripts", "node_modules", "dist", "*.xlsx"],
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  }
+}
