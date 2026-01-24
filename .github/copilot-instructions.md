@@ -33,6 +33,7 @@ QueryClientProvider → LanguageProvider → TooltipProvider → BrowserRouter �
 - **Pages**: `src/pages/*` (Index, Collections, ProductDetail, Brands, Auth, Account, etc.)
 - **Reusable UI**: `src/components/*` (Header, Footer, ProductCard, CartDrawer, BeautyAssistant, etc.)
 - **Design system**: `src/components/ui/*` (shadcn/ui primitives — Button, Dialog, Drawer, Toast, etc.)
+- **Scripts**: `scripts/*` — TypeScript utilities (audit-categories.ts for product analysis, data processing tools)
 
 **Hooks**: `src/hooks/` — custom hooks use `useX` naming (useAuth, useToast, useMobile, useScrollAnimation).
 
@@ -105,6 +106,9 @@ QueryClientProvider → LanguageProvider → TooltipProvider → BrowserRouter �
 **Local dev**: `npm install` → `npm run dev` (Vite dev server on http://localhost:8080)
 **Lint**: `npm run lint` (ESLint with React hooks plugin, TypeScript ESLint)
 **Build**: `npm run build` (production) → `npm run preview` (preview prod bundle locally)
+**Scripts**: `npx tsx scripts/<script-name>.ts` — run TypeScript utilities (category auditing, data processing)
+**Deno**: `deno lint` (additional linting for non-src files) — see `deno.json` config
+**CI/CD**: GitHub Actions on push/PR (`.github/workflows/deno.yml`) runs Deno lint and test
 **Verify changes**: Run build and preview to validate (no unit tests in repo)
 
 ## Safety Notes
