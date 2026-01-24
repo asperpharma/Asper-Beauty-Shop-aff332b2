@@ -34,7 +34,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   // Check for badges based on tags
   const tags = node.tags || [];
   const isBestseller = Array.isArray(tags)
-    ? tags.some((tag: string) => tag.toLowerCase().includes("bestseller"))
+    ? tags.some((tag) => typeof tag === 'string' && tag.toLowerCase().includes("bestseller"))
     : false;
 
   // Check if product is new (created within last 30 days)

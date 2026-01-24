@@ -156,7 +156,7 @@ export const CODCheckoutForm = (
         ? "فشل في إرسال الطلب. حاول مرة أخرى."
         : "Failed to place order. Please try again.";
 
-      if (error && typeof error === 'object' && 'message' in error) {
+      if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
         if (
           error.message.includes("duplicate") ||
           error.message.includes("unique")

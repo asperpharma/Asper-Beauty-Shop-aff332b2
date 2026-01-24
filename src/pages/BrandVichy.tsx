@@ -93,7 +93,7 @@ export default function BrandVichy() {
     return products.filter((product) => {
       const title = product.node.title.toLowerCase();
       const tags = Array.isArray(product.node.tags) 
-        ? product.node.tags.join(' ').toLowerCase() 
+        ? product.node.tags.filter((tag): tag is string => typeof tag === 'string').join(' ').toLowerCase() 
         : "";
       return range.keywords!.some((keyword) =>
         title.includes(keyword.toLowerCase()) ||
