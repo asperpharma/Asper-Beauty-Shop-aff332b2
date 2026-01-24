@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
@@ -28,7 +28,7 @@ const FeaturedProductsCategory = (
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const categoryInfo = CATEGORIES[categorySlug];
+  const categoryInfo = useMemo(() => CATEGORIES[categorySlug], [categorySlug]);
 
   useEffect(() => {
     const loadProducts = async () => {
