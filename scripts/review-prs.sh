@@ -82,7 +82,7 @@ BRANCHES=(
 
 for branch in "${BRANCHES[@]}"; do
     MATCHING_PR=$(echo "$PR_LIST" | jq -r ".[] | select(.headRefName == \"$branch\") | \"PR #\(.number): \(.title)\n  Branch: \(.headRefName)\n  Updated: \(.updatedAt)\n\"")
-    if [ ! -z "$MATCHING_PR" ]; then
+    if [[ -n "$MATCHING_PR" ]]; then
         echo "$MATCHING_PR"
     fi
 done
@@ -106,7 +106,8 @@ echo ""
 # Offer interactive closure
 read -p "Would you like to review PRs interactively? (y/n): " interactive
 
-if [ "$interactive" = "y" ]; then
+# Normalize to lowercase and handle y/Y
+if [[ "${interactive,,}" == "y" ]]; then
     echo ""
     echo "Opening PR list in browser..."
     gh pr list --web

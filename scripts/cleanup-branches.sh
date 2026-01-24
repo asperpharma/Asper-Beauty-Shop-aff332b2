@@ -73,6 +73,9 @@ echo ""
 echo -e "${RED}WARNING: This will permanently delete these branches from the remote repository!${NC}"
 read -p "Are you sure you want to continue? (type 'yes' to proceed): " confirmation
 
+# Trim whitespace
+confirmation=$(echo "$confirmation" | xargs)
+
 if [ "$confirmation" != "yes" ]; then
     echo -e "${YELLOW}Cleanup cancelled.${NC}"
     exit 0

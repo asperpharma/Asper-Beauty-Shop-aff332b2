@@ -65,6 +65,13 @@ These were created for specific tasks and are no longer needed:
 #### Revert Chain Branches
 - `revert-24-revert-23-revert-22-revert-21-revert-20-revert-18-copilot/fix-issue-with-c`
 
+**Note about revert chain**: This extremely long revert chain suggests a problematic merge/revert history. This typically happens when:
+1. Multiple attempts were made to revert changes
+2. Each revert was itself reverted, creating a chain
+3. This indicates confusion about which state the code should be in
+
+This branch should be deleted as it represents a problematic workflow that has likely been resolved in a different way. If you need to understand what this branch was trying to achieve, check the git history and associated PRs (PRs #18-24) before deletion.
+
 ### Step 2: Review and Close Unnecessary Pull Requests
 
 Review the 32+ open PRs and close those that are:
