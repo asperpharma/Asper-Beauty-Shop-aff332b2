@@ -287,10 +287,19 @@ fi
 if npm audit --audit-level=high &> /tmp/audit-output.txt; then
     check_pass "No high/critical security vulnerabilities"
 else
-    CRITICAL=$(grep -c "critical" /tmp/audit-output.txt || echo "0")
-    HIGH=$(grep -c "high" /tmp/audit-output.txt || echo "0")
+    # Count vulnerabilities more reliably
+    CRITICAL="0"
+    HIGH="0"
     
-    if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+    if grep -q "critical" /tmp/audit-output.txt 2>/dev/null; then
+        CRITICAL=$(grep -o "critical" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
+    fi
+    
+    if grep -q "high" /tmp/audit-output.txt 2>/dev/null; then
+        HIGH=$(grep -o "high" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
+    fi
+    
+    if [ "$CRITICAL" != "0" ] || [ "$HIGH" != "0" ]; then
         check_fail "Security vulnerabilities found: $CRITICAL critical, $HIGH high (run: npm audit)"
     else
         check_warn "Some security vulnerabilities found (run: npm audit for details)"
