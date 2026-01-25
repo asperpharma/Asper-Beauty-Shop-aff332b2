@@ -13,10 +13,16 @@ follow these guidelines to ensure a smooth process.
    ```bash
    git clone https://github.com/your-username/Asper-Beauty-Shop.git
    ```
-3. **Create a Branch**: Create a new branch for your feature or fix:
+3. **Create a Branch**: Create a new branch for your feature or fix using our naming convention:
    ```bash
-   git checkout -b my-feature-branch
+   git checkout -b <type>/<description>
+   # Examples:
+   # git checkout -b feature/add-payment-integration
+   # git checkout -b fix/cart-calculation-bug
+   # git checkout -b docs/update-api-guide
    ```
+   See [BRANCH_MANAGEMENT.md](BRANCH_MANAGEMENT.md) for complete branch naming guidelines.
+
 4. **Make Changes**: Make your changes and ensure that your code adheres to the
    coding standards outlined in this repository.
 5. **Test Your Changes**: Run tests to confirm that your changes work as
@@ -31,7 +37,17 @@ follow these guidelines to ensure a smooth process.
    git push origin my-feature-branch
    ```
 8. **Create a Pull Request**: Go to the original repository and create a pull
-   request from your branch.
+   request from your branch. Follow our [PR guidelines](PR_MANAGEMENT.md) for best practices.
+
+## Branch & PR Guidelines
+
+We have comprehensive documentation for managing branches and pull requests:
+
+- **[Branch Management Guide](BRANCH_MANAGEMENT.md)** - Branch naming, lifecycle, and cleanup
+- **[PR Management Guide](PR_MANAGEMENT.md)** - Pull request creation, review, and lifecycle
+- **[Quick Reference](CLEANUP_QUICKSTART.md)** - Fast lookup for common commands
+
+Please review these guides to ensure your contributions follow our processes.
 
 ## Coding Standards
 

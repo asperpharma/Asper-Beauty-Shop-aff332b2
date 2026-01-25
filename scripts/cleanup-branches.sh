@@ -2,6 +2,13 @@
 
 # Branch Cleanup Helper Script
 # This script helps identify and clean up stale branches in the repository
+#
+# Requirements:
+#   - git (version 2.0+)
+#   - bash (version 4.0+)
+#   - Platform: Linux, macOS, or Windows with WSL
+#
+# Note: Uses GNU date on Linux and BSD date on macOS for date calculations
 
 set -e
 
