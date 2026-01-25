@@ -287,27 +287,37 @@ fi
 if npm audit --audit-level=high &> /tmp/audit-output.txt; then
     check_pass "No high/critical security vulnerabilities"
 else
-    # Count vulnerabilities more reliably
+    # Parse npm audit output more reliably by looking for actual vulnerability counts
+    # npm audit output typically shows: "X vulnerabilities (Y severity1, Z severity2)"
     CRITICAL="0"
     HIGH="0"
     
-    if grep -q "critical" /tmp/audit-output.txt 2>/dev/null; then
-        CRITICAL=$(grep -o "critical" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
-    fi
-    
-    if grep -q "high" /tmp/audit-output.txt 2>/dev/null; then
-        HIGH=$(grep -o "high" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
+    # Look for specific patterns in npm audit JSON output
+    if npm audit --json > /tmp/audit-json.txt 2>&1; then
+        if command -v jq &> /dev/null; then
+            # Use jq if available for accurate parsing
+            CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' /tmp/audit-json.txt 2>/dev/null || echo "0")
+            HIGH=$(jq '.metadata.vulnerabilities.high // 0' /tmp/audit-json.txt 2>/dev/null || echo "0")
+        else
+            # Fallback: parse the summary line
+            if grep -q "vulnerabilities" /tmp/audit-output.txt; then
+                # Count severity keywords in context
+                CRITICAL=$(grep -i "critical severity" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
+                HIGH=$(grep -i "high severity" /tmp/audit-output.txt 2>/dev/null | wc -l | tr -d ' ')
+            fi
+        fi
     fi
     
     if [ "$CRITICAL" != "0" ] || [ "$HIGH" != "0" ]; then
-        check_fail "Security vulnerabilities found: $CRITICAL critical, $HIGH high (run: npm audit)"
+        check_fail "Security vulnerabilities found: $CRITICAL critical, $HIGH high (run: npm audit for details)"
     else
         check_warn "Some security vulnerabilities found (run: npm audit for details)"
     fi
 fi
 
 # Check for console.log in production code (basic check)
-if grep -r "console\.log" src/ --include="*.tsx" --include="*.ts" | grep -v "// console" | grep -v "//" > /dev/null; then
+# Exclude comments by checking for console.log that's not preceded by //
+if grep -rn "console\.log" src/ --include="*.tsx" --include="*.ts" | grep -v "^\s*//" | grep -v "^\s*\*" > /dev/null; then
     check_warn "console.log statements found in src/ (consider removing for production)"
 else
     check_pass "No console.log statements in production code"
