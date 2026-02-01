@@ -139,13 +139,25 @@ export const CODCheckoutForm = ({ onSuccess, onCancel }: CODCheckoutFormProps) =
       // Provide more specific error messages
       let errorMessage = isArabic ? "فشل في إرسال الطلب. حاول مرة أخرى." : "Failed to place order. Please try again.";
       
-      if (error?.message) {
+      // Type narrow the error to safely access message property
+      if (error instanceof Error) {
         if (error.message.includes('duplicate') || error.message.includes('unique')) {
           errorMessage = isArabic ? "حدث خطأ. يرجى المحاولة مرة أخرى." : "An error occurred. Please try again.";
         } else if (error.message.includes('RLS') || error.message.includes('permission')) {
           errorMessage = isArabic ? "خطأ في الصلاحيات. يرجى التحقق من الإعدادات." : "Permission error. Please check settings.";
         } else {
           errorMessage = error.message;
+        }
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
+        const msg = (error as { message: unknown }).message;
+        if (typeof msg === 'string') {
+          if (msg.includes('duplicate') || msg.includes('unique')) {
+            errorMessage = isArabic ? "حدث خطأ. يرجى المحاولة مرة أخرى." : "An error occurred. Please try again.";
+          } else if (msg.includes('RLS') || msg.includes('permission')) {
+            errorMessage = isArabic ? "خطأ في الصلاحيات. يرجى التحقق من الإعدادات." : "Permission error. Please check settings.";
+          } else {
+            errorMessage = msg;
+          }
         }
       }
       
