@@ -35,7 +35,7 @@ npm run preview     # Preview production build
 **State**: Zustand, React Router v6  
 **Backend**: Supabase (auth, serverless functions)  
 **E-commerce**: Shopify Storefront API v2025-07  
-**Deployment**: Lovable Platform  
+**Deployment**: Lovable Platform, Vercel (ready)  
 
 ---
 
@@ -115,7 +115,8 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 📚 Documentation
 
-- [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
+- [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup (Lovable/Vercel)
+- [Vercel Deployment](VERCEL_DEPLOYMENT.md) - Complete Vercel setup guide
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
@@ -125,14 +126,23 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 🚀 Deployment
 
+### Lovable (Current)
 **Automatic**: Push to `main` → Lovable deploys → Live at www.asperbeautyshop.com
 
-**Manual**: `npm run build` → Upload `dist/` folder
-
-**DNS Setup** (for custom domain):
+**DNS Setup**:
 ```
 Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```
+
+### Vercel (Available)
+**Quick Deploy**:
+1. Import repository at [vercel.com/new](https://vercel.com/new)
+2. Configure environment variables (see [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md))
+3. Deploy with auto-detected Vite settings
+
+**Manual**: `npm run build` → Upload `dist/` folder
+
+See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for complete setup instructions.
 
 ---
 
