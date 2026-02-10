@@ -93,7 +93,6 @@ vercel --prod
 - [ ] Products load from Shopify
 - [ ] Shopping cart works
 - [ ] Beauty Assistant chatbot responds
-- [ ] Language switching works (EN/AR)
 - [ ] Mobile view is responsive
 - [ ] All images load
 
