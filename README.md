@@ -122,6 +122,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
+- [Pre-Publish Checklist](PRE_PUBLISH_CHECKLIST.md) - **Complete checklist before publishing**
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
@@ -148,7 +149,17 @@ Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```bash
 npm run lint                     # ESLint
 ./verify-connections.sh          # Verify integrations (48 checks)
+./pre-publish-verify.sh          # Pre-publishing verification (100+ checks)
 npm run build && npm run preview # Test production
+```
+
+### Before Publishing
+
+Run the comprehensive pre-publishing verification:
+
+```bash
+./pre-publish-verify.sh          # Automated checks
+# Then review: PRE_PUBLISH_CHECKLIST.md for manual checks
 ```
 
 ---
