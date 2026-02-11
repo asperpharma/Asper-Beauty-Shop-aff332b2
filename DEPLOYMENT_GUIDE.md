@@ -127,17 +127,23 @@ git push origin main
 If you want to use a dedicated deployment branch (e.g., `deploy/asper-updates`):
 
 ```bash
-# Create or switch to the deployment branch
-git checkout -b deploy/asper-updates
-# Or if it already exists:
+# 1) Start from an up-to-date main branch
+git checkout main
+git pull origin main
+
+# 2) Create or reset the deployment branch from main
+# This will create deploy/asper-updates (or reset it) based on the current main
+git checkout -B deploy/asper-updates
+
+# If the deployment branch already exists remotely and you ONLY want to switch to it:
 # git checkout deploy/asper-updates
 # git pull origin deploy/asper-updates
 
-# Make your changes and commit
+# 3) Make your changes and commit
 git add .
 git commit -m "Your deployment message"
 
-# Push to the deployment branch
+# 4) Push to the deployment branch
 git push origin deploy/asper-updates
 ```
 
