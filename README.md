@@ -115,6 +115,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 📚 Documentation
 
+- [Quick Deploy Reference](QUICK_DEPLOY.md) - Fast deployment commands
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Branch Deployment Guide](BRANCH_DEPLOYMENT_GUIDE.md) - Multi-branch deployment workflows
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
