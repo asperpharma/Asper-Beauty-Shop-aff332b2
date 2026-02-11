@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
-import { ProductCard } from "./ProductCard";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { categorizeProduct } from "@/lib/categoryMapping";
 import { CATEGORIES } from "@/lib/categoryMapping";
 import {
   ChevronRight,
   Droplets,
-  Heart,
   Loader2,
   Scissors,
   Sparkles,
@@ -27,9 +24,6 @@ const FeaturedProductsCategory = (
   const isArabic = language === "ar";
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const categoryInfo = CATEGORIES[categorySlug];
-  if (!categoryInfo) return null;
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -59,6 +53,9 @@ const FeaturedProductsCategory = (
 
     loadProducts();
   }, [categorySlug, limit]);
+
+  const categoryInfo = CATEGORIES[categorySlug];
+  if (!categoryInfo) return null;
 
   if (loading) {
     return (
