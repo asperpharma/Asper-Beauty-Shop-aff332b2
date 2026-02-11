@@ -20,7 +20,7 @@ follow these guidelines to ensure a smooth process.
 4. **Make Changes**: Make your changes and ensure that your code adheres to the
    coding standards outlined in this repository.
 5. **Test Your Changes**: Run tests to confirm that your changes work as
-   expected.
+   expected. See the Testing section below.
 6. **Commit Your Changes**: Commit your changes with a clear and descriptive
    message:
    ```bash
@@ -38,6 +38,36 @@ follow these guidelines to ensure a smooth process.
 - Follow the existing code style in the project.
 - Write clear and concise comments in your code.
 - Ensure that your changes do not break existing functionality.
+
+## Testing & CI
+
+Before submitting a pull request:
+
+1. **Run Linters**:
+   ```bash
+   npm run lint        # ESLint for frontend code
+   deno fmt            # Format Deno files (auto-fix)
+   deno lint           # Lint Deno files
+   ```
+
+2. **Verify Integrations**:
+   ```bash
+   ./verify-connections.sh  # Check all integrations (48 tests)
+   ```
+
+3. **Build & Preview**:
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+**Automated CI Checks**: All pull requests automatically run GitHub Actions that:
+- Check code formatting with `deno fmt --check`
+- Run linting with `deno lint`
+- Type-check Supabase edge functions
+- Run the Deno test suite
+
+Ensure these checks pass before requesting review.
 
 ## Issue Tracking
 
