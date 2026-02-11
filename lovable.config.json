@@ -1,43 +1,43 @@
 {
-    "projectId": "asper-beauty-shop",
-    "customDomain": "www.asperbeautyshop.com",
-    "primaryDomain": "asperbeautyshop.lovable.app",
-    "framework": "vite",
-    "buildCommand": "npm run build",
-    "outputDirectory": "dist",
-    "devCommand": "npm run dev",
-    "devPort": 8080,
-    "environmentVariables": {
-        "VITE_SUPABASE_URL": "https://rgehleqcubtmcwyipyvi.supabase.co",
-        "VITE_SUPABASE_PROJECT_ID": "rgehleqcubtmcwyipyvi"
+  "projectId": "asper-beauty-shop",
+  "customDomain": "www.asperbeautyshop.com",
+  "primaryDomain": "asperbeautyshop.lovable.app",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "devPort": 8080,
+  "environmentVariables": {
+    "VITE_SUPABASE_URL": "https://rgehleqcubtmcwyipyvi.supabase.co",
+    "VITE_SUPABASE_PROJECT_ID": "rgehleqcubtmcwyipyvi"
+  },
+  "integrations": {
+    "shopify": {
+      "storeDomain": "lovable-project-milns.myshopify.com",
+      "apiVersion": "2025-07"
     },
-    "integrations": {
-        "shopify": {
-            "storeDomain": "lovable-project-milns.myshopify.com",
-            "apiVersion": "2025-07"
-        },
-        "supabase": {
-            "projectRef": "rgehleqcubtmcwyipyvi",
-            "functions": [
-                "beauty-assistant",
-                "bulk-product-upload"
-            ]
-        }
-    },
-    "seo": {
-        "siteName": "Asper Beauty Shop",
-        "defaultTitle": "Asper Beauty Shop | Luxury Skincare & Beauty Essentials",
-        "defaultDescription": "Discover premium skincare and beauty products at Asper Beauty Shop. Curated luxury essentials for your daily beauty ritual.",
-        "siteUrl": "https://www.asperbeautyshop.com",
-        "twitterHandle": "@AsperBeauty"
-    },
-    "features": {
-        "pwa": true,
-        "i18n": true,
-        "languages": [
-            "en",
-            "ar"
-        ],
-        "analytics": true
+    "supabase": {
+      "projectRef": "rgehleqcubtmcwyipyvi",
+      "functions": [
+        "beauty-assistant",
+        "bulk-product-upload"
+      ]
     }
+  },
+  "seo": {
+    "siteName": "Asper Beauty Shop",
+    "defaultTitle": "Asper Beauty Shop | Luxury Skincare & Beauty Essentials",
+    "defaultDescription": "Discover premium skincare and beauty products at Asper Beauty Shop. Curated luxury essentials for your daily beauty ritual.",
+    "siteUrl": "https://www.asperbeautyshop.com",
+    "twitterHandle": "@AsperBeauty"
+  },
+  "features": {
+    "pwa": true,
+    "i18n": true,
+    "languages": [
+      "en",
+      "ar"
+    ],
+    "analytics": true
+  }
 }

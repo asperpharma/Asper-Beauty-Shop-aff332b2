@@ -58,7 +58,8 @@ const socialLinks = [
     name: "Instagram",
     icon: InstagramIcon,
     url: "https://www.instagram.com/asper.beauty.shop/",
-    color: "hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400",
+    color:
+      "hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400",
   },
   {
     name: "Facebook",

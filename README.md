@@ -1,8 +1,9 @@
 # 🌟 Asper Beauty Shop
 
-> **Premium Beauty E-commerce Platform** - Luxury skincare and beauty essentials for the modern customer
+> **Premium Beauty E-commerce Platform** - Luxury skincare and beauty essentials
+> for the modern customer
 
-🔗 **Live**: [www.asperbeautyshop.com](https://www.asperbeautyshop.com)  
+🔗 **Live**: [www.asperbeautyshop.com](https://www.asperbeautyshop.com)\
 🔗 **Dev**: [asperbeautyshop.lovable.app](https://asperbeautyshop.lovable.app)
 
 ---
@@ -23,7 +24,8 @@ npm run preview     # Preview production build
 - 🛍️ **Shopify Integration** - Full e-commerce with checkout
 - 🌐 **Bilingual** - English & Arabic (RTL support)
 - 🤖 **AI Beauty Assistant** - Powered by Gemini 2.5 Flash
-- 📱 **9 Social Platforms** - Instagram, Facebook, TikTok, WhatsApp, X, YouTube, LinkedIn, Snapchat, Pinterest
+- 📱 **9 Social Platforms** - Instagram, Facebook, TikTok, WhatsApp, X, YouTube,
+  LinkedIn, Snapchat, Pinterest
 - 🎨 **Luxury Design** - Responsive, animated, PWA-ready
 - 💾 **Smart Cart** - Persistent shopping with Zustand
 
@@ -31,11 +33,11 @@ npm run preview     # Preview production build
 
 ## 🛠️ Tech Stack
 
-**Frontend**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui  
-**State**: Zustand, React Router v6  
-**Backend**: Supabase (auth, serverless functions)  
-**E-commerce**: Shopify Storefront API v2025-07  
-**Deployment**: Lovable Platform  
+**Frontend**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui\
+**State**: Zustand, React Router v6\
+**Backend**: Supabase (auth, serverless functions)\
+**E-commerce**: Shopify Storefront API v2025-07\
+**Deployment**: Lovable Platform
 
 ---
 
@@ -60,14 +62,17 @@ public/             # Static (sitemap, robots, manifest, redirects)
 ## 🔗 Integrations
 
 ### Shopify
+
 - Store: lovable-project-milns.myshopify.com
 - API: v2025-07 | Read-only public token
 
 ### Supabase
+
 - Project: rgehleqcubtmcwyipyvi
 - Functions: Beauty assistant AI, bulk upload
 
 ### Lovable
+
 - Hot reload with component tagger
 - Custom domain: www.asperbeautyshop.com
 
@@ -75,12 +80,12 @@ public/             # Static (sitemap, robots, manifest, redirects)
 
 ## 🎨 Design Tokens
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--maroon` | `#800020` | Primary |
-| `--soft-ivory` | `#F8F8FF` | Background |
-| `--shiny-gold` | `#C5A028` | Accent |
-| `--dark-charcoal` | `#333333` | Text |
+| Token             | Value     | Usage      |
+| ----------------- | --------- | ---------- |
+| `--maroon`        | `#800020` | Primary    |
+| `--soft-ivory`    | `#F8F8FF` | Background |
+| `--shiny-gold`    | `#C5A028` | Accent     |
+| `--dark-charcoal` | `#333333` | Text       |
 
 **Fonts**: Playfair Display (headings), Montserrat (body), Tajawal (Arabic)
 
@@ -88,15 +93,15 @@ public/             # Static (sitemap, robots, manifest, redirects)
 
 ## 📱 Key Routes
 
-| Route | Description |
-|-------|-------------|
-| `/` | Home with hero & featured products |
-| `/product/:handle` | Product details |
+| Route                | Description                              |
+| -------------------- | ---------------------------------------- |
+| `/`                  | Home with hero & featured products       |
+| `/product/:handle`   | Product details                          |
 | `/collections/:slug` | Collections (skin-care, hair-care, etc.) |
-| `/brands` | All brands |
-| `/contact` | Contact & social links |
-| `/wishlist` | Saved products |
-| `/admin/*` | Admin tools (protected) |
+| `/brands`            | All brands                               |
+| `/contact`           | Contact & social links                   |
+| `/wishlist`          | Saved products                           |
+| `/admin/*`           | Admin tools (protected)                  |
 
 ---
 
@@ -125,11 +130,13 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 🚀 Deployment
 
-**Automatic**: Push to `main` → Lovable deploys → Live at www.asperbeautyshop.com
+**Automatic**: Push to `main` → Lovable deploys → Live at
+www.asperbeautyshop.com
 
 **Manual**: `npm run build` → Upload `dist/` folder
 
 **DNS Setup** (for custom domain):
+
 ```
 Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```
