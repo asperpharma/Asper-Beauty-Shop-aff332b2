@@ -129,10 +129,19 @@ void main(void) {
   O = vec4(col, 1);
 }`;
 
+interface ExtendedWebGLProgram extends WebGLProgram {
+  resolution?: WebGLUniformLocation | null;
+  time?: WebGLUniformLocation | null;
+  move?: WebGLUniformLocation | null;
+  touch?: WebGLUniformLocation | null;
+  pointerCount?: WebGLUniformLocation | null;
+  pointers?: WebGLUniformLocation | null;
+}
+
 class WebGLRenderer {
   private canvas: HTMLCanvasElement;
   private gl: WebGL2RenderingContext;
-  private program: WebGLProgram | null = null;
+  private program: ExtendedWebGLProgram | null = null;
   private vs: WebGLShader | null = null;
   private fs: WebGLShader | null = null;
   private buffer: WebGLBuffer | null = null;
@@ -265,15 +274,15 @@ void main(){gl_Position=position;}`;
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-    (program as any).resolution = gl.getUniformLocation(program, "resolution");
-    (program as any).time = gl.getUniformLocation(program, "time");
-    (program as any).move = gl.getUniformLocation(program, "move");
-    (program as any).touch = gl.getUniformLocation(program, "touch");
-    (program as any).pointerCount = gl.getUniformLocation(
+    program.resolution = gl.getUniformLocation(program, "resolution");
+    program.time = gl.getUniformLocation(program, "time");
+    program.move = gl.getUniformLocation(program, "move");
+    program.touch = gl.getUniformLocation(program, "touch");
+    program.pointerCount = gl.getUniformLocation(
       program,
       "pointerCount",
     );
-    (program as any).pointers = gl.getUniformLocation(program, "pointers");
+    program.pointers = gl.getUniformLocation(program, "pointers");
   }
 
   render(now = 0) {
@@ -288,18 +297,18 @@ void main(){gl_Position=position;}`;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 
     gl.uniform2f(
-      (program as any).resolution,
+      program.resolution,
       this.canvas.width,
       this.canvas.height,
     );
-    gl.uniform1f((program as any).time, now * 1e-3);
-    gl.uniform2f((program as any).move, ...this.mouseMove as [number, number]);
+    gl.uniform1f(program.time, now * 1e-3);
+    gl.uniform2f(program.move, ...this.mouseMove as [number, number]);
     gl.uniform2f(
-      (program as any).touch,
+      program.touch,
       ...this.mouseCoords as [number, number],
     );
-    gl.uniform1i((program as any).pointerCount, this.nbrOfPointers);
-    gl.uniform2fv((program as any).pointers, this.pointerCoords);
+    gl.uniform1i(program.pointerCount, this.nbrOfPointers);
+    gl.uniform2fv(program.pointers, this.pointerCoords);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 }

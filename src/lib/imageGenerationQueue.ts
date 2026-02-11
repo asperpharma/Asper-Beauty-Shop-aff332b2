@@ -49,7 +49,18 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+interface QueueEventData {
+  itemUpdate: QueueItem;
+  statsUpdate: QueueStats;
+  batchComplete: { completed: number; total: number };
+  queueComplete: { stats: QueueStats };
+  error: { message: string; item?: QueueItem };
+  paused: Record<string, never>;
+  resumed: Record<string, never>;
+}
+
+type QueueEventCallback<T extends QueueEventType> = (data: QueueEventData[T]) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -57,7 +68,7 @@ class ImageGenerationQueue {
   private isProcessing: boolean = false;
   private isPaused: boolean = false;
   private processingTimes: number[] = [];
-  private eventListeners: Map<QueueEventType, QueueEventCallback[]> = new Map();
+  private eventListeners: Map<QueueEventType, Array<QueueEventCallback<QueueEventType>>> = new Map();
   private abortController: AbortController | null = null;
 
   constructor(config: Partial<QueueConfig> = {}) {
@@ -65,26 +76,26 @@ class ImageGenerationQueue {
   }
 
   // Event handling
-  on(event: QueueEventType, callback: QueueEventCallback) {
+  on<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
-    this.eventListeners.get(event)!.push(callback);
+    this.eventListeners.get(event)!.push(callback as QueueEventCallback<QueueEventType>);
     return () => this.off(event, callback);
   }
 
-  off(event: QueueEventType, callback: QueueEventCallback) {
+  off<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      const index = listeners.indexOf(callback);
+      const index = listeners.indexOf(callback as QueueEventCallback<QueueEventType>);
       if (index > -1) listeners.splice(index, 1);
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emit<T extends QueueEventType>(event: T, data: QueueEventData[T]) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      listeners.forEach((callback) => callback(data));
+      listeners.forEach((callback) => callback(data as QueueEventData[QueueEventType]));
     }
   }
 
@@ -311,11 +322,12 @@ class ImageGenerationQueue {
       }
 
       return { success: false, error: "No image URL returned" };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Exception processing ${item.name}:`, err);
-      const isRateLimited = err.message?.includes("429") ||
-        err.message?.includes("rate");
-      return { success: false, error: err.message, rateLimited: isRateLimited };
+      const errMessage = err instanceof Error ? err.message : "Unknown error";
+      const isRateLimited = errMessage?.includes("429") ||
+        errMessage?.includes("rate");
+      return { success: false, error: errMessage, rateLimited: isRateLimited };
     }
   }
 
