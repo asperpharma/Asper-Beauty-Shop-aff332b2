@@ -50,17 +50,21 @@ type QueueEventType =
   | "paused"
   | "resumed";
 
-// Event-specific data types for better type safety
-type QueueEventData = 
-  | { event: "itemUpdate"; data: QueueItem }
-  | { event: "statsUpdate"; data: QueueStats }
-  | { event: "batchComplete"; data: { batch: QueueItem[], stats: QueueStats } }
-  | { event: "queueComplete"; data: QueueStats }
-  | { event: "error"; data: { type: string; item: QueueItem } }
-  | { event: "paused"; data: { reason: string } }
-  | { event: "resumed"; data: Record<string, never> };
+// Extract data types for each event
+type QueueEventDataMap = {
+  itemUpdate: QueueItem;
+  statsUpdate: QueueStats;
+  batchComplete: { batch: QueueItem[]; stats: QueueStats };
+  queueComplete: QueueStats;
+  error: { type: string; item: QueueItem };
+  paused: { reason: string };
+  resumed: Record<string, never>;
+};
 
-type QueueEventCallback = (eventData: any) => void;
+// Type-safe callback that accepts the data for the event type
+type QueueEventCallback<T extends QueueEventType = QueueEventType> = (
+  eventData: QueueEventDataMap[T]
+) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -76,23 +80,23 @@ class ImageGenerationQueue {
   }
 
   // Event handling
-  on(event: QueueEventType, callback: QueueEventCallback) {
+  on<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
-    this.eventListeners.get(event)!.push(callback);
+    this.eventListeners.get(event)!.push(callback as QueueEventCallback);
     return () => this.off(event, callback);
   }
 
-  off(event: QueueEventType, callback: QueueEventCallback) {
+  off<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      const index = listeners.indexOf(callback);
+      const index = listeners.indexOf(callback as QueueEventCallback);
       if (index > -1) listeners.splice(index, 1);
     }
   }
 
-  private emit(event: QueueEventType, eventData: any) {
+  private emit<T extends QueueEventType>(event: T, eventData: QueueEventDataMap[T]) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       listeners.forEach((callback) => callback(eventData));
