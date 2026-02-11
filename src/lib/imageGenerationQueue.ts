@@ -62,6 +62,8 @@ type QueueEventDataMap = {
 };
 
 // Type-safe callback that accepts the data for the event type
+// Note: Internal storage uses QueueEventCallback (without generic) due to TypeScript Map limitations,
+// but the public API (on/emit methods) enforces type safety through generic constraints
 type QueueEventCallback<T extends QueueEventType = QueueEventType> = (
   eventData: QueueEventDataMap[T]
 ) => void;
