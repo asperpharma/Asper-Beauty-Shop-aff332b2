@@ -1,6 +1,7 @@
 # 🚀 Next Steps - Deploy Your Site!
 
-Your Asper Beauty Shop is **100% production-ready**. Follow these simple steps to go live:
+Your Asper Beauty Shop is **100% production-ready**. Follow these simple steps
+to go live:
 
 ---
 
@@ -49,6 +50,7 @@ TTL: 3600
    - Redirects from non-www automatically
 
 **Test checklist:**
+
 - [ ] Homepage loads
 - [ ] Products display correctly
 - [ ] Shopping cart works
@@ -75,16 +77,20 @@ TTL: 3600
 **Lovable Dashboard**: Check deployment status and logs
 
 **Run verification locally:**
+
 ```bash
 ./verify-connections.sh
 ```
+
 Expected: 48/48 checks passed
 
 **Test build locally:**
+
 ```bash
 npm run build
 npm run preview
 ```
+
 Then open http://localhost:4173
 
 ---
@@ -92,12 +98,15 @@ Then open http://localhost:4173
 ## Post-Deployment Tasks 📝
 
 ### Search Engine Optimization
-- [ ] Submit sitemap to [Google Search Console](https://search.google.com/search-console)
+
+- [ ] Submit sitemap to
+      [Google Search Console](https://search.google.com/search-console)
   - URL: https://www.asperbeautyshop.com/sitemap.xml
 - [ ] Submit sitemap to [Bing Webmaster Tools](https://www.bing.com/webmasters)
   - URL: https://www.asperbeautyshop.com/sitemap.xml
 
 ### Social Media Verification
+
 - [ ] Test all 9 social media links:
   - Instagram: @asper.beauty.shop
   - Facebook: asper.beauty.shop
@@ -110,6 +119,7 @@ Then open http://localhost:4173
   - Pinterest: asperbeautyshop
 
 ### E-commerce Testing
+
 - [ ] Add product to cart
 - [ ] Update quantities
 - [ ] Remove items
@@ -120,6 +130,7 @@ Then open http://localhost:4173
 - [ ] Test collection filters
 
 ### Performance Monitoring
+
 - [ ] Run [PageSpeed Insights](https://pagespeed.web.dev/)
 - [ ] Check [Core Web Vitals](https://web.dev/vitals/)
 - [ ] Monitor with [Google Analytics](https://analytics.google.com) (optional)
@@ -129,22 +140,26 @@ Then open http://localhost:4173
 ## Quick Reference 📚
 
 ### Documentation Files
-| File | Purpose |
-|------|---------|
-| [README.md](README.md) | Quick start guide |
-| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Detailed deployment instructions |
-| [CONNECTION_STATUS.md](CONNECTION_STATUS.md) | Integration verification |
-| [SOCIAL_MEDIA_INTEGRATION.md](SOCIAL_MEDIA_INTEGRATION.md) | Social media platform documentation |
-| [FINAL_SUMMARY.md](FINAL_SUMMARY.md) | Complete project status |
-| [.github/copilot-instructions.md](.github/copilot-instructions.md) | AI agent guide |
+
+| File                                                               | Purpose                             |
+| ------------------------------------------------------------------ | ----------------------------------- |
+| [README.md](README.md)                                             | Quick start guide                   |
+| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)                         | Detailed deployment instructions    |
+| [CONNECTION_STATUS.md](CONNECTION_STATUS.md)                       | Integration verification            |
+| [SOCIAL_MEDIA_INTEGRATION.md](SOCIAL_MEDIA_INTEGRATION.md)         | Social media platform documentation |
+| [FINAL_SUMMARY.md](FINAL_SUMMARY.md)                               | Complete project status             |
+| [.github/copilot-instructions.md](.github/copilot-instructions.md) | AI agent guide                      |
 
 ### Environment Variables
+
 All configured in:
+
 - `.env` (development)
 - `.env.production` (production)
 - `lovable.config.json` (Lovable platform)
 
 ### Integrations
+
 - **Shopify**: lovable-project-milns.myshopify.com (API v2025-07)
 - **Supabase**: rgehleqcubtmcwyipyvi.supabase.co
 - **AI Gateway**: ai.gateway.lovable.dev (Gemini 2.5 Flash)
@@ -154,11 +169,12 @@ All configured in:
 
 ## Support & Contact 💬
 
-**Email**: asperpharma@gmail.com  
-**Phone**: +962 79 065 6666  
+**Email**: asperpharma@gmail.com\
+**Phone**: +962 79 065 6666\
 **Location**: Amman, Jordan
 
 **Social Media**:
+
 - Instagram: [@asper.beauty.shop](https://www.instagram.com/asper.beauty.shop/)
 - WhatsApp: [+962 79 065 6666](https://wa.me/962790656666)
 
@@ -167,22 +183,29 @@ All configured in:
 ## Troubleshooting 🔧
 
 ### Issue: Site not deploying after merge
+
 **Solution**: Check Lovable dashboard for build logs
 
 ### Issue: DNS not resolving
-**Solution**: 
+
+**Solution**:
+
 - Verify CNAME record: `dig www.asperbeautyshop.com`
 - Wait up to 48 hours for propagation
 - Use https://dnschecker.org to check status
 
 ### Issue: 404 on page refresh
+
 **Solution**: Already fixed with `public/_redirects` (SPA routing)
 
 ### Issue: Build errors
+
 **Solution**: Run locally:
+
 ```bash
 npm run build
 ```
+
 Check console output for errors
 
 ---
@@ -190,6 +213,7 @@ Check console output for errors
 ## 🎯 You're All Set!
 
 Your Asper Beauty Shop has:
+
 - ✅ 9 social media platforms integrated
 - ✅ Shopify e-commerce connected
 - ✅ Lovable platform configured
@@ -203,5 +227,5 @@ Your Asper Beauty Shop has:
 
 ---
 
-*Built with ❤️ by Asper Pharma*  
-*Powered by [Lovable Platform](https://lovable.dev)*
+_Built with ❤️ by Asper Pharma_\
+_Powered by [Lovable Platform](https://lovable.dev)_

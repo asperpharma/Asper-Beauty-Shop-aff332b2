@@ -178,10 +178,13 @@ const ProductDetail = () => {
     if (!product) return;
     toggleItem({ node: product });
     if (!isInWishlist(product.id)) {
-      toast.success(isArabic ? "تمت الإضافة إلى المفضلة" : "Added to wishlist", {
-        description: product.title,
-        position: "top-center",
-      });
+      toast.success(
+        isArabic ? "تمت الإضافة إلى المفضلة" : "Added to wishlist",
+        {
+          description: product.title,
+          position: "top-center",
+        },
+      );
     }
   };
 
