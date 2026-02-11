@@ -132,29 +132,23 @@ export const ProductGrid = ({
     });
   }, [products, categorySlug]);
 
-  // Extract unique categories and brands
-  const { availableCategories, availableBrands, maxPrice } = useMemo(() => {
-    const categories = [
-      ...new Set(
-        categoryFilteredProducts.map((p) => p.node.productType).filter(Boolean),
-      ),
-    ];
-    const brands = [
-      ...new Set(
-        categoryFilteredProducts.map((p) => p.node.vendor).filter(Boolean),
-      ),
-    ];
-    const max = categoryFilteredProducts.length > 0
-      ? Math.ceil(
-        Math.max(...categoryFilteredProducts.map((p) =>
-          parseFloat(p.node.priceRange.minVariantPrice.amount)
-        )),
-      )
-      : 5000;
+  // Extract unique categories, brands, and max price in one pass for efficiency
+  const filterMetadata = useMemo(() => {
+    const categories = new Set<string>();
+    const brands = new Set<string>();
+    let maxPrice = 0;
+
+    categoryFilteredProducts.forEach((p) => {
+      if (p.node.productType) categories.add(p.node.productType);
+      if (p.node.vendor) brands.add(p.node.vendor);
+      const price = parseFloat(p.node.priceRange.minVariantPrice.amount);
+      if (price > maxPrice) maxPrice = price;
+    });
+
     return {
-      availableCategories: categories,
-      availableBrands: brands,
-      maxPrice: max,
+      availableCategories: Array.from(categories),
+      availableBrands: Array.from(brands),
+      maxPrice: categoryFilteredProducts.length > 0 ? Math.ceil(maxPrice) : 5000,
     };
   }, [categoryFilteredProducts]);
 
@@ -217,9 +211,9 @@ export const ProductGrid = ({
             {/* Filters Sidebar */}
             {showFilters && (
               <ProductFilters
-                availableCategories={availableCategories}
-                availableBrands={availableBrands}
-                maxPrice={maxPrice}
+                availableCategories={filterMetadata.availableCategories}
+                availableBrands={filterMetadata.availableBrands}
+                maxPrice={filterMetadata.maxPrice}
                 filters={filters}
                 onFiltersChange={setFilters}
               />

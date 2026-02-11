@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShopifyProduct } from "@/lib/shopify";
@@ -17,7 +17,7 @@ interface ProductCardProps {
   product: ShopifyProduct;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { node } = product;
   const addItem = useCartStore((state) => state.addItem);
@@ -57,7 +57,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   // Extract brand from vendor or title
   const brand = (node as any).vendor || node.title.split(" ")[0];
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -78,9 +78,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     });
 
     setCartOpen(true);
-  };
+  }, [firstVariant, product, addItem, node.title, setCartOpen, t.addedToBag]);
 
-  const handleWishlistToggle = (e: React.MouseEvent) => {
+  const handleWishlistToggle = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     toggleItem(product);
@@ -91,7 +91,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         position: "top-center",
       });
     }
-  };
+  }, [product, toggleItem, isWishlisted, node.title]);
 
   // Get category for display
   const productCategory = categorizeProduct(
@@ -249,3 +249,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     </Link>
   );
 };
+
+// Memoize ProductCard to prevent unnecessary re-renders
+export default memo(ProductCard);
+export { ProductCard };

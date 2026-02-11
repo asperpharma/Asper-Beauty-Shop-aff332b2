@@ -45,8 +45,9 @@ export const Header = () => {
   const adminMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
+  // Use selectors to prevent unnecessary re-renders
   const totalItems = useCartStore((state) => state.getTotalItems());
-  const wishlistItems = useWishlistStore((state) => state.items);
+  const wishlistCount = useWishlistStore((state) => state.items.length);
   const setCartOpen = useCartStore((state) => state.setOpen);
   const setWishlistOpen = useWishlistStore((state) => state.setOpen);
   const { language, isRTL } = useLanguage();
@@ -323,13 +324,13 @@ export const Header = () => {
                 className="relative p-2 text-gold hover:text-gold-light transition-colors duration-400"
               >
                 <Heart className="w-5 h-5" strokeWidth={1.5} />
-                {wishlistItems.length > 0 && (
+                {wishlistCount > 0 && (
                   <span
                     className={`absolute -top-0.5 ${
                       isRTL ? "-left-0.5" : "-right-0.5"
                     } h-4 w-4 rounded-full bg-gold text-burgundy text-[10px] flex items-center justify-center font-body font-semibold`}
                   >
-                    {wishlistItems.length}
+                    {wishlistCount}
                   </span>
                 )}
               </button>

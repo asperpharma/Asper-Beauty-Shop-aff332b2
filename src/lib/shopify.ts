@@ -7,6 +7,10 @@ const SHOPIFY_STOREFRONT_URL =
 // Note: Shopify Storefront tokens are designed for client-side use with read-only access to public data
 const SHOPIFY_STOREFRONT_TOKEN = "9daedc472c5910e742ec88bdaad108e2";
 
+// Request deduplication cache to prevent duplicate API calls
+const requestCache = new Map<string, Promise<any>>();
+const CACHE_TTL = 30000; // 30 seconds cache
+
 // Sanitize search input to prevent GraphQL injection
 function sanitizeSearchTerm(term: string): string {
   // Remove special characters that could break GraphQL queries
@@ -67,40 +71,64 @@ export async function storefrontApiRequest(
   query: string,
   variables: Record<string, unknown> = {},
 ) {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
-
-  if (response.status === 402) {
-    toast.error("Shopify: Payment required", {
-      description: "Your store needs to be upgraded to a paid plan.",
-    });
-    return null;
+  // Create cache key from query and variables
+  const cacheKey = JSON.stringify({ query, variables });
+  
+  // Check if request is already in flight
+  const cachedRequest = requestCache.get(cacheKey);
+  if (cachedRequest) {
+    return cachedRequest;
   }
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
+  // Create new request
+  const requestPromise = (async () => {
+    try {
+      const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+      });
 
-  const data = await response.json();
+      if (response.status === 402) {
+        toast.error("Shopify: Payment required", {
+          description: "Your store needs to be upgraded to a paid plan.",
+        });
+        return null;
+      }
 
-  if (data.errors) {
-    throw new Error(
-      `Error calling Shopify: ${
-        data.errors.map((e: { message: string }) => e.message).join(", ")
-      }`,
-    );
-  }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-  return data;
+      const data = await response.json();
+
+      if (data.errors) {
+        throw new Error(
+          `Error calling Shopify: ${
+            data.errors.map((e: { message: string }) => e.message).join(", ")
+          }`,
+        );
+      }
+
+      return data;
+    } finally {
+      // Clear cache entry after TTL
+      setTimeout(() => {
+        requestCache.delete(cacheKey);
+      }, CACHE_TTL);
+    }
+  })();
+
+  // Store request promise in cache
+  requestCache.set(cacheKey, requestPromise);
+
+  return requestPromise;
 }
 
 // Paginated query for large catalogs (2000+ products)

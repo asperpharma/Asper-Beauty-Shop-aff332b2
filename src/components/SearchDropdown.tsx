@@ -56,9 +56,11 @@ export const SearchDropdown = ({
       }
     }, 300);
 
+    // Cleanup: clear timeout on unmount or query change
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
+        debounceRef.current = undefined;
       }
     };
   }, [searchQuery]);
