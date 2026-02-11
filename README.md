@@ -116,6 +116,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 ## 📚 Documentation
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
+- [Branch Deployment Guide](BRANCH_DEPLOYMENT_GUIDE.md) - Multi-branch deployment workflows
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
@@ -125,7 +126,10 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 🚀 Deployment
 
-**Automatic**: Push to `main` → Lovable deploys → Live at www.asperbeautyshop.com
+**Automatic**: Push to `main` or `deploy/asper-updates` → Lovable deploys → Live
+
+**Production**: `main` branch → www.asperbeautyshop.com  
+**Preview**: `deploy/asper-updates` branch → Staging environment
 
 **Manual**: `npm run build` → Upload `dist/` folder
 
@@ -133,6 +137,12 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 ```
 Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```
+
+**Branch Workflows**:
+- `main`: Production-ready code (protected, requires PR)
+- `deploy/asper-updates`: Rapid updates & content changes
+
+See [BRANCH_DEPLOYMENT_GUIDE.md](BRANCH_DEPLOYMENT_GUIDE.md) for detailed workflows.
 
 ---
 

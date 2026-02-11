@@ -1,0 +1,96 @@
+# Netlify Configuration
+# Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+  
+  # Environment variables (set in Netlify UI for sensitive values)
+  # VITE_SUPABASE_URL
+  # VITE_SUPABASE_PROJECT_ID
+  # VITE_SUPABASE_PUBLISHABLE_KEY
+  # VITE_SHOPIFY_STORE_DOMAIN
+  # VITE_SHOPIFY_STOREFRONT_TOKEN
+  # VITE_SHOPIFY_API_VERSION
+
+# Production context: triggered by pushes to main branch
+[context.production]
+  branch = "main"
+  command = "npm run build"
+  publish = "dist"
+
+# Deploy preview context: triggered by pushes to deploy/asper-updates
+[context.deploy-asper-updates]
+  branch = "deploy/asper-updates"
+  command = "npm run build"
+  publish = "dist"
+
+# Branch deploy context: for all other branches
+[context.branch-deploy]
+  command = "npm run build"
+  publish = "dist"
+
+# Deploy preview context: for pull requests
+[context.deploy-preview]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA redirect rules
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Force HTTPS
+[[redirects]]
+  from = "http://asperbeautyshop.netlify.app/*"
+  to = "https://asperbeautyshop.netlify.app/:splat"
+  status = 301
+  force = true
+
+# Redirect non-www to www (if custom domain configured)
+[[redirects]]
+  from = "https://asperbeautyshop.com/*"
+  to = "https://www.asperbeautyshop.com/:splat"
+  status = 301
+  force = true
+
+# Headers for security and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+  [plugins.inputs.thresholds]
+    performance = 0.9
+    accessibility = 0.9
+    best-practices = 0.9
+    seo = 0.9
+
+[[plugins]]
+  package = "netlify-plugin-cache"
+  
+  [plugins.inputs]
+    paths = ["node_modules", ".cache"]

@@ -10,9 +10,9 @@ name: Deno
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "deploy/asper-updates"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "deploy/asper-updates"]
 
 permissions:
   contents: read

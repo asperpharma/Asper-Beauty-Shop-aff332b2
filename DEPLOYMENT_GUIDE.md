@@ -71,15 +71,32 @@ To properly connect your custom domain to Lovable:
 
 ## 📦 Deployment Workflow
 
+### Supported Deployment Branches
+
+This repository supports deployment from multiple branches:
+
+- **`main`** - Primary production branch (protected, requires PR approval)
+- **`deploy/asper-updates`** - Alternative deployment branch for Asper-specific updates
+
+For detailed branch deployment strategies, see [BRANCH_DEPLOYMENT_GUIDE.md](./BRANCH_DEPLOYMENT_GUIDE.md).
+
 ### Automatic Deployment (via Lovable)
 
-1. Push changes to `main` branch
+**Option 1: Deploy via `main` branch (Production)**
+
+1. Push changes to `main` branch (or merge PR)
 2. Lovable automatically:
    - Detects changes via Git webhook
    - Runs `npm run build`
    - Deploys to asperbeautyshop.lovable.app
    - Deploys to <www.asperbeautyshop.com> (custom domain)
    - Invalidates CDN cache
+
+**Option 2: Deploy via `deploy/asper-updates` branch**
+
+1. Push changes to `deploy/asper-updates` branch
+2. Lovable automatically deploys to preview/staging environment
+3. Useful for rapid iterations and content updates
 
 ### Manual Deployment
 
@@ -97,6 +114,9 @@ lovable deploy --production
 git add .
 git commit -m "Deploy to production"
 git push origin main
+
+# Or push to deploy/asper-updates for staging deployment
+git push origin deploy/asper-updates
 ```
 
 ### Environment Variables
