@@ -82,51 +82,49 @@ export async function storefrontApiRequest(
 
   // Create new request
   const requestPromise = (async () => {
-    try {
-      const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-        },
-        body: JSON.stringify({
-          query,
-          variables,
-        }),
+    const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    if (response.status === 402) {
+      toast.error("Shopify: Payment required", {
+        description: "Your store needs to be upgraded to a paid plan.",
       });
-
-      if (response.status === 402) {
-        toast.error("Shopify: Payment required", {
-          description: "Your store needs to be upgraded to a paid plan.",
-        });
-        return null;
-      }
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.errors) {
-        throw new Error(
-          `Error calling Shopify: ${
-            data.errors.map((e: { message: string }) => e.message).join(", ")
-          }`,
-        );
-      }
-
-      return data;
-    } finally {
-      // Clear cache entry after TTL
-      setTimeout(() => {
-        requestCache.delete(cacheKey);
-      }, CACHE_TTL);
+      return null;
     }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.errors) {
+      throw new Error(
+        `Error calling Shopify: ${
+          data.errors.map((e: { message: string }) => e.message).join(", ")
+        }`,
+      );
+    }
+
+    return data;
   })();
 
   // Store request promise in cache
   requestCache.set(cacheKey, requestPromise);
+  
+  // Clear cache entry after TTL (from when request was initiated, not completed)
+  setTimeout(() => {
+    requestCache.delete(cacheKey);
+  }, CACHE_TTL);
 
   return requestPromise;
 }

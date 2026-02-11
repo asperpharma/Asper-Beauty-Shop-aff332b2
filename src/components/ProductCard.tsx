@@ -250,6 +250,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   );
 };
 
-// Memoize ProductCard to prevent unnecessary re-renders
-export default memo(ProductCard);
-export { ProductCard };
+// Export memoized version as default and named export for backward compatibility
+const MemoizedProductCard = memo(ProductCard);
+export { MemoizedProductCard as ProductCard };
+export default MemoizedProductCard;
