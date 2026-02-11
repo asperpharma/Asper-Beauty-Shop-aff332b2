@@ -49,7 +49,18 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+// Event-specific data types for better type safety
+type QueueEventData = 
+  | { event: "itemUpdate"; data: QueueItem }
+  | { event: "statsUpdate"; data: QueueStats }
+  | { event: "batchComplete"; data: { batch: QueueItem[], stats: QueueStats } }
+  | { event: "queueComplete"; data: QueueStats }
+  | { event: "error"; data: { type: string; item: QueueItem } }
+  | { event: "paused"; data: { reason: string } }
+  | { event: "resumed"; data: Record<string, never> };
+
+type QueueEventCallback = (eventData: any) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -81,10 +92,10 @@ class ImageGenerationQueue {
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emit(event: QueueEventType, eventData: any) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      listeners.forEach((callback) => callback(data));
+      listeners.forEach((callback) => callback(eventData));
     }
   }
 

@@ -95,7 +95,7 @@ export async function storefrontApiRequest(
   if (data.errors) {
     throw new Error(
       `Error calling Shopify: ${
-        data.errors.map((e: { message: string }) => e.message).join(", ")
+        data.errors.map((shopifyError: { message: string }) => shopifyError.message).join(", ")
       }`,
     );
   }
