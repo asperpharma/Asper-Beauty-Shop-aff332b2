@@ -61,7 +61,7 @@ const PinterestIcon = ({ className }: { className?: string }) => (
 export const Footer = () => {
   const [email, setEmail] = useState("");
   const {
-    language
+    language,
   } = useLanguage();
   const isArabic = language === "ar";
   const handleSubmit = (e: React.FormEvent) => {
@@ -70,193 +70,229 @@ export const Footer = () => {
     setEmail("");
   };
   const conciergLinks = [{
-    name: isArabic ? 'تتبع الطلب' : 'Track Order',
-    href: '/tracking'
+    name: isArabic ? "تتبع الطلب" : "Track Order",
+    href: "/tracking",
   }, {
-    name: isArabic ? 'سياسة الشحن' : 'Shipping Policy',
-    href: '/shipping'
+    name: isArabic ? "سياسة الشحن" : "Shipping Policy",
+    href: "/shipping",
   }, {
-    name: isArabic ? 'الإرجاع والاستبدال' : 'Returns & Exchanges',
-    href: '/returns'
+    name: isArabic ? "الإرجاع والاستبدال" : "Returns & Exchanges",
+    href: "/returns",
   }, {
-    name: isArabic ? 'استشارة البشرة' : 'Skin Consultation',
-    href: '/consultation'
+    name: isArabic ? "استشارة البشرة" : "Skin Consultation",
+    href: "/consultation",
   }];
 
   const aboutLinks = [{
-    name: isArabic ? 'فلسفتنا' : 'Our Philosophy',
-    href: '/philosophy'
+    name: isArabic ? "فلسفتنا" : "Our Philosophy",
+    href: "/philosophy",
   }, {
-    name: isArabic ? 'اتصل بنا' : 'Contact Us',
-    href: '/contact'
+    name: isArabic ? "اتصل بنا" : "Contact Us",
+    href: "/contact",
   }];
-  return <footer className="bg-burgundy" style={{
-    borderTop: '1px solid hsl(var(--gold))'
-  }}>
-    {/* Main Footer Content */}
-    <div className="luxury-container py-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-
-        {/* Column 1 - Brand Identity */}
-        <div>
-          <Link to="/" className="inline-block mb-6">
-            <img src={asperLogo} alt="Asper Beauty Shop" className="h-16 rounded" />
-          </Link>
-          <p className="font-body text-cream mb-6">
-            {isArabic ? 'إعادة تعريف الجمال في الأردن.' : 'Redefining Beauty in Jordan.'}
-          </p>
-
-          {/* Social Icons - Gold Outlines with Full Platform Coverage */}
-          <div className="flex items-center gap-3 flex-wrap">
-            <a
-              href="https://www.instagram.com/asper.beauty.shop/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400 hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.facebook.com/asper.beauty.shop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#1877F2] hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="Facebook"
-            >
-              <FacebookIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@asper.beauty.shop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-black hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="TikTok"
-            >
-              <TikTokIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://wa.me/962790656666"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#25D366] hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="WhatsApp"
-            >
-              <WhatsAppIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://twitter.com/asperbeautyshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-black hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="X (Twitter)"
-            >
-              <XIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.youtube.com/@asperbeautyshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#FF0000] hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="YouTube"
-            >
-              <YouTubeIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/asper-beauty-shop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#0A66C2] hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="LinkedIn"
-            >
-              <LinkedInIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.snapchat.com/add/asperbeautyshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#FFFC00] hover:border-transparent hover:text-black transition-all duration-400"
-              aria-label="Snapchat"
-            >
-              <SnapchatIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.pinterest.com/asperbeautyshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#E60023] hover:border-transparent hover:text-white transition-all duration-400"
-              aria-label="Pinterest"
-            >
-              <PinterestIcon className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-
-        {/* Column 2 - Concierge */}
-        <div>
-          <h3 className="font-display text-lg text-white mb-6">
-            {isArabic ? 'خدمة العملاء' : 'Concierge'}
-          </h3>
-          <ul className="space-y-3">
-            {conciergLinks.map(item => <li key={item.href}>
-              <Link to={item.href} className="font-body text-sm text-cream hover:text-gold transition-colors duration-400">
-                {item.name}
-              </Link>
-            </li>)}
-          </ul>
-        </div>
-
-        {/* Column 3 - About */}
-        <div>
-          <h3 className="font-display text-lg text-white mb-6">
-            {isArabic ? 'عن آسبر' : 'About Asper'}
-          </h3>
-          <ul className="space-y-3 mb-8">
-            {aboutLinks.map(item => <li key={item.href}>
-              <Link to={item.href} className="font-body text-sm text-cream hover:text-gold transition-colors duration-400">
-                {item.name}
-              </Link>
-            </li>)}
-          </ul>
-
-          <h4 className="font-display text-sm text-white mb-3">
-            {isArabic ? 'زورونا' : 'Visit Us'}
-          </h4>
-          <div className="space-y-2">
-            <p className="font-body text-sm text-cream">
-              {isArabic ? 'عمّان، الأردن' : 'Amman, Jordan'}
+  return (
+    <footer
+      className="bg-burgundy"
+      style={{
+        borderTop: "1px solid hsl(var(--gold))",
+      }}
+    >
+      {/* Main Footer Content */}
+      <div className="luxury-container py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          {/* Column 1 - Brand Identity */}
+          <div>
+            <Link to="/" className="inline-block mb-6">
+              <img
+                src={asperLogo}
+                alt="Asper Beauty Shop"
+                className="h-16 rounded"
+              />
+            </Link>
+            <p className="font-body text-cream mb-6">
+              {isArabic
+                ? "إعادة تعريف الجمال في الأردن."
+                : "Redefining Beauty in Jordan."}
             </p>
-            <a href="tel:+962790656666" className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block">
-              +962 79 065 6666
-            </a>
-            <a href="mailto:asperpharma@gmail.com" className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block">
-              asperpharma@gmail.com
-            </a>
+
+            {/* Social Icons - Gold Outlines with Full Platform Coverage */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <a
+                href="https://www.instagram.com/asper.beauty.shop/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400 hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="Instagram"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/asper.beauty.shop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#1877F2] hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="Facebook"
+              >
+                <FacebookIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@asper.beauty.shop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-black hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="TikTok"
+              >
+                <TikTokIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://wa.me/962790656666"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#25D366] hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://twitter.com/asperbeautyshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-black hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="X (Twitter)"
+              >
+                <XIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.youtube.com/@asperbeautyshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#FF0000] hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="YouTube"
+              >
+                <YouTubeIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/asper-beauty-shop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#0A66C2] hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="LinkedIn"
+              >
+                <LinkedInIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.snapchat.com/add/asperbeautyshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#FFFC00] hover:border-transparent hover:text-black transition-all duration-400"
+                aria-label="Snapchat"
+              >
+                <SnapchatIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.pinterest.com/asperbeautyshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#E60023] hover:border-transparent hover:text-white transition-all duration-400"
+                aria-label="Pinterest"
+              >
+                <PinterestIcon className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* Column 2 - Concierge */}
+          <div>
+            <h3 className="font-display text-lg text-white mb-6">
+              {isArabic ? "خدمة العملاء" : "Concierge"}
+            </h3>
+            <ul className="space-y-3">
+              {conciergLinks.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    to={item.href}
+                    className="font-body text-sm text-cream hover:text-gold transition-colors duration-400"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3 - About */}
+          <div>
+            <h3 className="font-display text-lg text-white mb-6">
+              {isArabic ? "عن آسبر" : "About Asper"}
+            </h3>
+            <ul className="space-y-3 mb-8">
+              {aboutLinks.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    to={item.href}
+                    className="font-body text-sm text-cream hover:text-gold transition-colors duration-400"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <h4 className="font-display text-sm text-white mb-3">
+              {isArabic ? "زورونا" : "Visit Us"}
+            </h4>
+            <div className="space-y-2">
+              <p className="font-body text-sm text-cream">
+                {isArabic ? "عمّان، الأردن" : "Amman, Jordan"}
+              </p>
+              <a
+                href="tel:+962790656666"
+                className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block"
+              >
+                +962 79 065 6666
+              </a>
+              <a
+                href="mailto:asperpharma@gmail.com"
+                className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block"
+              >
+                asperpharma@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {/* Column 4 - VIP Club */}
+          <div>
+            <h3 className="font-display text-lg text-white mb-6">
+              {isArabic ? "اكتشف الحصريات" : "Unlock Exclusives"}
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={isArabic ? "بريدك الإلكتروني" : "Your email"}
+                className="w-full px-4 py-3 bg-transparent border border-white text-white font-body text-sm placeholder:text-white/50 focus:outline-none focus:border-gold transition-colors duration-400 rounded"
+              />
+              <button
+                type="submit"
+                className="w-full px-6 py-3 bg-gold text-burgundy font-display text-sm tracking-wider hover:bg-gold-light transition-colors duration-400 rounded"
+              >
+                {isArabic ? "اشترك" : "Subscribe"}
+              </button>
+            </form>
           </div>
         </div>
+      </div>
 
-        {/* Column 4 - VIP Club */}
-        <div>
-          <h3 className="font-display text-lg text-white mb-6">
-            {isArabic ? 'اكتشف الحصريات' : 'Unlock Exclusives'}
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={isArabic ? 'بريدك الإلكتروني' : 'Your email'} className="w-full px-4 py-3 bg-transparent border border-white text-white font-body text-sm placeholder:text-white/50 focus:outline-none focus:border-gold transition-colors duration-400 rounded" />
-            <button type="submit" className="w-full px-6 py-3 bg-gold text-burgundy font-display text-sm tracking-wider hover:bg-gold-light transition-colors duration-400 rounded">
-              {isArabic ? 'اشترك' : 'Subscribe'}
-            </button>
-          </form>
+      {/* Copyright Bar */}
+      <div className="border-t border-gold/30">
+        <div className="luxury-container py-6">
+          <p className="font-body text-xs text-cream/50 text-center">
+            © 2026 Asper Beauty Shop.{" "}
+            {isArabic ? "جميع الحقوق محفوظة." : "All Rights Reserved."}
+          </p>
         </div>
       </div>
-    </div>
-
-    {/* Copyright Bar */}
-    <div className="border-t border-gold/30">
-      <div className="luxury-container py-6">
-        <p className="font-body text-xs text-cream/50 text-center">
-          © 2026 Asper Beauty Shop. {isArabic ? 'جميع الحقوق محفوظة.' : 'All Rights Reserved.'}
-        </p>
-      </div>
-    </div>
-  </footer>;
+    </footer>
+  );
 };

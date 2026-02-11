@@ -1,7 +1,6 @@
 # Deployment & Domain Setup Guide
 
-**Last Updated**: January 23, 2026
-**Status**: ✅ Fully Connected
+**Last Updated**: January 23, 2026 **Status**: ✅ Fully Connected
 
 ## 🌐 Domain Configuration
 
@@ -49,7 +48,8 @@ To properly connect your custom domain to Lovable:
 - **Store**: lovable-project-milns.myshopify.com
 - **API Version**: 2025-07
 - **Storefront Token**: Configured (public read-only)
-- **Functions**: fetchProducts, fetchProductsPaginated, searchProducts, createStorefrontCheckout
+- **Functions**: fetchProducts, fetchProductsPaginated, searchProducts,
+  createStorefrontCheckout
 - **Status**: ✅ Connected and operational
 
 ### ✅ Supabase Backend
@@ -113,8 +113,8 @@ Set in Lovable dashboard under Settings → Environment Variables:
 - `VITE_SHOPIFY_STOREFRONT_TOKEN`
 - `VITE_SHOPIFY_API_VERSION`
 
-**Local Development**: Uses `.env` file
-**Production**: Uses `.env.production` file (deployed with build)
+**Local Development**: Uses `.env` file **Production**: Uses `.env.production`
+file (deployed with build)
 
 ## 🔍 SEO Configuration
 
@@ -180,7 +180,10 @@ To add analytics to your site:
 
    ```html
    <!-- Add to index.html before </head> -->
-   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+   <script
+     async
+     src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+   ></script>
    ```
 
 2. **Facebook Pixel**:
@@ -258,6 +261,5 @@ For automated testing and deployment:
 
 ---
 
-**Need Help?**
-Refer to Lovable documentation: <https://docs.lovable.dev>
-Or contact: <support@lovable.dev>
+**Need Help?** Refer to Lovable documentation: <https://docs.lovable.dev> Or
+contact: <support@lovable.dev>

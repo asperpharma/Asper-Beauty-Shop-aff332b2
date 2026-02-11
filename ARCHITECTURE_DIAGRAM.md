@@ -58,6 +58,7 @@
 ## 🔄 Data Flow Patterns
 
 ### Pattern 1: Product Catalog Display
+
 ```
 ┌──────────┐
 │  User    │
@@ -109,6 +110,7 @@
 ```
 
 ### Pattern 2: Shopping Cart Flow
+
 ```
 ┌──────────────┐
 │  User clicks │
@@ -158,6 +160,7 @@
 ```
 
 ### Pattern 3: AI Beauty Assistant
+
 ```
 ┌──────────────┐
 │  User opens  │
@@ -211,6 +214,7 @@
 ```
 
 ### Pattern 4: Authentication Flow
+
 ```
 ┌──────────────┐
 │  User clicks │
@@ -257,6 +261,7 @@
 ## 🔌 Integration Points
 
 ### 1. Lovable Platform Integration
+
 ```
 ┌────────────────────────────────┐
 │  vite.config.ts                │
@@ -278,6 +283,7 @@
 ```
 
 ### 2. State Persistence
+
 ```
 ┌────────────────┐
 │  Zustand Store │
@@ -298,6 +304,7 @@
 ```
 
 ### 3. API Request Flow
+
 ```
 ┌──────────────────┐
 │  Component       │
@@ -394,6 +401,7 @@ App.tsx
 ## 🎯 Key Takeaways
 
 ### ✅ Properly Connected
+
 1. **Vite** ↔️ **Lovable Platform** (component tagger enabled)
 2. **React App** ↔️ **Shopify API** (GraphQL queries)
 3. **React App** ↔️ **Supabase** (Auth + Functions)
@@ -402,6 +410,7 @@ App.tsx
 6. **React Router** ↔️ **Page Components** (navigation)
 
 ### 🔄 Data Flows
+
 - Products: Shopify → Components
 - Cart/Wishlist: Zustand ↔️ localStorage
 - Auth: Supabase ↔️ localStorage
@@ -409,6 +418,7 @@ App.tsx
 - Checkout: Component → Shopify → External URL
 
 ### 🎨 Patterns Used
+
 - **Container/Presentation**: Page components + UI components
 - **Hooks**: Custom hooks for reusable logic
 - **Context**: Language/i18n management
