@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vite temporary files
+*.timestamp-*
+
+# Build artifacts
+.cache
+build
+out

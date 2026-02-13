@@ -29,9 +29,10 @@ const FeaturedProductsCategory = (
   const [loading, setLoading] = useState(true);
 
   const categoryInfo = CATEGORIES[categorySlug];
-  if (!categoryInfo) return null;
 
   useEffect(() => {
+    // Early return inside useEffect instead of before it
+    if (!categoryInfo) return;
     const loadProducts = async () => {
       try {
         setLoading(true);
@@ -58,7 +59,10 @@ const FeaturedProductsCategory = (
     };
 
     loadProducts();
-  }, [categorySlug, limit]);
+  }, [categorySlug, limit, categoryInfo]);
+
+  // Early returns after hooks
+  if (!categoryInfo) return null;
 
   if (loading) {
     return (
