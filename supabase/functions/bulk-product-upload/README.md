@@ -5,8 +5,8 @@ Admin-only function for bulk product operations including categorization, image 
 ## Overview
 
 This Edge Function provides powerful admin tools for managing large product catalogs:
-- Automatic product categorization using keyword matching or AI
-- AI-powered product image generation via Lovable AI Gateway
+- Automatic product categorization using keyword matching or AI (Gemini 3.0 Flash Preview)
+- AI-powered product image generation via Lovable AI Gateway (Gemini 2.5 Flash Image Preview)
 - Shopify product creation via Admin API
 - Batch processing support
 
@@ -241,7 +241,7 @@ Use AI for smarter product categorization (experimental).
 ```
 
 **Notes:**
-- Uses Gemini 3 Flash Preview model
+- Uses Gemini 3.0 Flash Preview model (google/gemini-3-flash-preview)
 - More accurate than keyword matching
 - Higher API cost than simple categorization
 
