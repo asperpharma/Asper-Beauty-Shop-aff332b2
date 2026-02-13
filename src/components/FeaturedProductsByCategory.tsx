@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
@@ -28,7 +28,8 @@ const FeaturedProductsCategory = (
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const categoryInfo = CATEGORIES[categorySlug];
+  // Memoize categoryInfo to prevent recalculation on every render
+  const categoryInfo = useMemo(() => CATEGORIES[categorySlug], [categorySlug]);
 
   useEffect(() => {
     // Early return inside useEffect instead of before it
@@ -59,7 +60,7 @@ const FeaturedProductsCategory = (
     };
 
     loadProducts();
-  }, [categorySlug, limit, categoryInfo]);
+  }, [categorySlug, limit]); // categoryInfo not needed as it's memoized from categorySlug
 
   // Early returns after hooks
   if (!categoryInfo) return null;
