@@ -107,13 +107,22 @@ public/             # Static (sitemap, robots, manifest, redirects)
 
 ## 🔐 Environment
 
-Create `.env` and `.env.production`:
+Create `.env` and `.env.production` (see `.env.example` for template):
 
 ```env
+# Supabase
 VITE_SUPABASE_URL=https://rgehleqcubtmcwyipyvi.supabase.co
 VITE_SUPABASE_PROJECT_ID=rgehleqcubtmcwyipyvi
 VITE_SUPABASE_PUBLISHABLE_KEY=<your-key>
+
+# Shopify
+VITE_SHOPIFY_STORE_DOMAIN=lovable-project-milns.myshopify.com
+VITE_SHOPIFY_STOREFRONT_TOKEN=<your-token>
+VITE_SHOPIFY_API_VERSION=2025-07
+
+# Site URLs
 VITE_SITE_URL=https://www.asperbeautyshop.com
+VITE_LOVABLE_URL=https://asperbeautyshop.lovable.app
 ```
 
 ---
