@@ -1,7 +1,7 @@
 # 📱 Social Media Integration - Complete
 
-**Last Updated**: January 23, 2026\
-**Status**: ✅ All platforms connected with brand-accurate icons
+**Last Updated**: February 17, 2026\
+**Status**: ✅ All platforms connected with brand-accurate icons (Updated for Gorgias Integration)
 
 ---
 
@@ -15,7 +15,7 @@ pixel-perfect brand-representative SVG icons.
 | Platform        | URL                                                                | Icon Status | Brand Color                   |
 | --------------- | ------------------------------------------------------------------ | ----------- | ----------------------------- |
 | **Instagram**   | [@asper.beauty.shop](https://www.instagram.com/asper.beauty.shop/) | ✅ SVG      | Gradient (Purple→Pink→Orange) |
-| **Facebook**    | [Asper Beauty Shop](https://www.facebook.com/asper.beauty.shop)    | ✅ SVG      | #1877F2 (Facebook Blue)       |
+| **Facebook**    | [AsperBeautyShop](https://www.facebook.com/AsperBeautyShop)        | ✅ SVG      | #1877F2 (Facebook Blue)       |
 | **TikTok**      | [@asper.beauty.shop](https://www.tiktok.com/@asper.beauty.shop)    | ✅ SVG      | Black                         |
 | **WhatsApp**    | [+962 79 065 6666](https://wa.me/962790656666)                     | ✅ SVG      | #25D366 (WhatsApp Green)      |
 | **X (Twitter)** | [@asperbeautyshop](https://twitter.com/asperbeautyshop)            | ✅ SVG      | Black                         |
@@ -179,7 +179,7 @@ Each platform has its authentic brand color applied on hover:
 
 ```tsx
 <a
-  href="https://www.facebook.com/asper.beauty.shop"
+  href="https://www.facebook.com/AsperBeautyShop"
   target="_blank"
   rel="noopener noreferrer"
   className="group flex items-center bg-foreground/90 
@@ -260,3 +260,54 @@ All social media icons are now live on:
 **File Size**: 1.34 MB (gzipped: 405 KB)
 
 Ready for deployment! 🚀
+
+---
+
+## 🔗 Gorgias & Shopify Integration Ready
+
+**Date Updated**: February 17, 2026\
+**Integration Status**: ✅ Frontend URLs Configured
+
+### What's Been Done
+
+1. **Facebook Business Page URL Corrected**:
+   - ✅ Updated from `asper.beauty.shop` to `AsperBeautyShop`
+   - ✅ Applied across all 4 components (Footer, FloatingSocials, Header, Contact)
+   - ✅ Ready for Gorgias Facebook integration
+
+2. **Social Media Channels Verified**:
+   - ✅ Instagram: `instagram.com/asper.beauty.shop`
+   - ✅ Facebook: `facebook.com/AsperBeautyShop` **(CORRECTED)**
+   - ✅ WhatsApp: `wa.me/962790656666`
+   - ✅ Contact Email: `asperpharma@gmail.com`
+   - ✅ Phone: `+962 79 065 6666`
+
+### Next Steps for Complete Integration
+
+#### 1. Shopify Admin Setup
+Navigate to **Shopify Admin → Sales Channels**:
+- [ ] Install "Facebook & Instagram" (Meta) app
+- [ ] Install "TikTok" app
+- [ ] Verify product catalog syncing
+- [ ] Test price updates sync automatically
+
+#### 2. Gorgias Setup (The "One Inbox")
+In Gorgias dashboard:
+- [ ] Install Gorgias from Shopify App Store
+- [ ] Go to Settings → Integrations
+- [ ] Connect Instagram & Facebook business pages
+- [ ] Connect WhatsApp Business (+962 79 065 6666)
+- [ ] Connect Email (asperpharma@gmail.com)
+
+#### 3. AI Follow-Me Logic (Optional Enhancement)
+- [ ] Configure cross-channel follow-ups in Gorgias/ManyChat
+- [ ] Set up "Skin Quiz" bot with Dr. Sami persona
+- [ ] Test DM responses on Instagram
+- [ ] Verify WhatsApp follow-ups work
+
+### Contact Information
+- **Email**: asperpharma@gmail.com
+- **Phone**: +962 79 065 6666
+- **Location**: Amman, Jordan
+
+All frontend social media links are now properly configured and ready for backend integrations! 🎉
