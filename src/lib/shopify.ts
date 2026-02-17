@@ -90,17 +90,17 @@ export async function storefrontApiRequest(
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  const data = await response.json();
+  const graphqlResponse = await response.json();
 
-  if (data.errors) {
+  if (graphqlResponse.errors) {
     throw new Error(
       `Error calling Shopify: ${
-        data.errors.map((e: { message: string }) => e.message).join(", ")
+        graphqlResponse.errors.map((shopifyError: { message: string }) => shopifyError.message).join(", ")
       }`,
     );
   }
 
-  return data;
+  return graphqlResponse;
 }
 
 // Paginated query for large catalogs (2000+ products)
@@ -297,13 +297,13 @@ export async function fetchProductsPaginated(
   after?: string | null,
   query?: string,
 ): Promise<PaginatedProductsResponse> {
-  const data = await storefrontApiRequest(STOREFRONT_PRODUCTS_PAGINATED_QUERY, {
+  const apiResponse = await storefrontApiRequest(STOREFRONT_PRODUCTS_PAGINATED_QUERY, {
     first,
     after: after || null,
     query,
   });
 
-  if (!data) {
+  if (!apiResponse) {
     return {
       products: [],
       pageInfo: {
@@ -316,8 +316,8 @@ export async function fetchProductsPaginated(
   }
 
   return {
-    products: data.data.products.edges,
-    pageInfo: data.data.products.pageInfo,
+    products: apiResponse.data.products.edges,
+    pageInfo: apiResponse.data.products.pageInfo,
   };
 }
 
@@ -326,12 +326,12 @@ export async function fetchProducts(
   first: number = 24,
   query?: string,
 ): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest(STOREFRONT_PRODUCTS_QUERY, {
+  const apiResponse = await storefrontApiRequest(STOREFRONT_PRODUCTS_QUERY, {
     first,
     query,
   });
-  if (!data) return [];
-  return data.data.products.edges;
+  if (!apiResponse) return [];
+  return apiResponse.data.products.edges;
 }
 
 export async function searchProducts(
@@ -342,20 +342,20 @@ export async function searchProducts(
   const sanitized = sanitizeSearchTerm(searchTerm);
   if (!sanitized) return [];
   const query = `title:*${sanitized}* OR vendor:*${sanitized}*`;
-  const data = await storefrontApiRequest(STOREFRONT_PRODUCTS_QUERY, {
+  const apiResponse = await storefrontApiRequest(STOREFRONT_PRODUCTS_QUERY, {
     first,
     query,
   });
-  if (!data) return [];
-  return data.data.products.edges;
+  if (!apiResponse) return [];
+  return apiResponse.data.products.edges;
 }
 
 export async function fetchProductByHandle(handle: string) {
-  const data = await storefrontApiRequest(STOREFRONT_PRODUCT_BY_HANDLE_QUERY, {
+  const apiResponse = await storefrontApiRequest(STOREFRONT_PRODUCT_BY_HANDLE_QUERY, {
     handle,
   });
-  if (!data) return null;
-  return data.data.productByHandle;
+  if (!apiResponse) return null;
+  return apiResponse.data.productByHandle;
 }
 
 const CART_CREATE_MUTATION = `
@@ -388,25 +388,25 @@ export async function createStorefrontCheckout(
     merchandiseId: item.variantId,
   }));
 
-  const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
+  const cartApiResponse = await storefrontApiRequest(CART_CREATE_MUTATION, {
     input: { lines },
   });
 
-  if (!cartData) {
+  if (!cartApiResponse) {
     throw new Error("Failed to create checkout");
   }
 
-  if (cartData.data.cartCreate.userErrors.length > 0) {
+  if (cartApiResponse.data.cartCreate.userErrors.length > 0) {
     throw new Error(
       `Cart creation failed: ${
-        cartData.data.cartCreate.userErrors.map((e: { message: string }) =>
-          e.message
+        cartApiResponse.data.cartCreate.userErrors.map((userError: { message: string }) =>
+          userError.message
         ).join(", ")
       }`,
     );
   }
 
-  const cart = cartData.data.cartCreate.cart;
+  const cart = cartApiResponse.data.cartCreate.cart;
 
   if (!cart.checkoutUrl) {
     throw new Error("No checkout URL returned from Shopify");

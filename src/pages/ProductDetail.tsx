@@ -101,15 +101,15 @@ const ProductDetail = () => {
     const loadProduct = async () => {
       if (!handle) return;
       try {
-        const data = await fetchProductByHandle(handle);
-        setProduct(data);
-        if (data?.variants.edges[0]) {
-          const firstVariant = data.variants.edges[0].node;
+        const productData = await fetchProductByHandle(handle);
+        setProduct(productData);
+        if (productData?.variants.edges[0]) {
+          const firstVariant = productData.variants.edges[0].node;
           setSelectedVariant(firstVariant);
           const initialOptions: Record<string, string> = {};
           firstVariant.selectedOptions.forEach(
-            (opt: { name: string; value: string }) => {
-              initialOptions[opt.name] = opt.value;
+            (option: { name: string; value: string }) => {
+              initialOptions[option.name] = option.value;
             },
           );
           setSelectedOptions(initialOptions);

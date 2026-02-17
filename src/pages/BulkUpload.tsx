@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import { QueueItem, useImageQueue } from "@/lib/imageGenerationQueue";
 
-interface ProcessedProduct {
+interface CategorizedProduct {
   sku: string;
   name: string;
   category: string;
@@ -58,7 +58,7 @@ interface UploadSummary {
   brands: Record<string, number>;
 }
 
-interface RawProduct {
+interface ExcelRowData {
   sku: string;
   name: string;
   costPrice: number;
@@ -74,14 +74,14 @@ const COLUMN_MAPPINGS = {
 };
 
 // Find the matching column name from the headers
-function findColumn(headers: string[], possibleNames: string[]): string | null {
-  for (const name of possibleNames) {
-    const found = headers.find((h) =>
-      h.toLowerCase().trim() === name.toLowerCase().trim() ||
-      h.includes(name) ||
-      name.includes(h)
+function findColumn(excelHeaders: string[], candidateColumnNames: string[]): string | null {
+  for (const candidateName of candidateColumnNames) {
+    const matchedHeader = excelHeaders.find((header) =>
+      header.toLowerCase().trim() === candidateName.toLowerCase().trim() ||
+      header.includes(candidateName) ||
+      candidateName.includes(header)
     );
-    if (found) return found;
+    if (matchedHeader) return matchedHeader;
   }
   return null;
 }
@@ -90,14 +90,14 @@ export default function BulkUpload() {
   const [step, setStep] = useState<
     "upload" | "categorize" | "images" | "review" | "shopify"
   >("upload");
-  const [products, setProducts] = useState<ProcessedProduct[]>([]);
+  const [products, setProducts] = useState<CategorizedProduct[]>([]);
   const [summary, setSummary] = useState<UploadSummary | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0, stage: "" });
-  const [rawData, setRawData] = useState<RawProduct[]>([]);
+  const [rawData, setRawData] = useState<ExcelRowData[]>([]);
   const [fileName, setFileName] = useState<string>("");
   const [parseError, setParseError] = useState<string>("");
-  const [previewData, setPreviewData] = useState<RawProduct[]>([]);
+  const [previewData, setPreviewData] = useState<ExcelRowData[]>([]);
   const [showSettings, setShowSettings] = useState(false);
 
   // Use the queue system for image generation
@@ -202,7 +202,7 @@ export default function BulkUpload() {
         }
 
         // Parse products
-        const parsedProducts: RawProduct[] = jsonData
+        const parsedProducts: ExcelRowData[] = jsonData
           .map((row, index) => {
             const name = String(row[nameCol] || "").trim();
             if (!name) return null;
@@ -218,7 +218,7 @@ export default function BulkUpload() {
               ) || 0,
             };
           })
-          .filter((p): p is RawProduct => p !== null && p.name.length > 0);
+          .filter((p): p is ExcelRowData => p !== null && p.name.length > 0);
 
         if (parsedProducts.length === 0) {
           throw new Error("No valid products found in the file");
@@ -286,7 +286,7 @@ export default function BulkUpload() {
         );
       }
 
-      const parsedProducts: RawProduct[] = jsonData
+      const parsedProducts: ExcelRowData[] = jsonData
         .map((row, index) => {
           const name = String(row[nameCol] || "").trim();
           if (!name) return null;
@@ -302,7 +302,7 @@ export default function BulkUpload() {
             ) || 0,
           };
         })
-        .filter((p): p is RawProduct => p !== null && p.name.length > 0);
+        .filter((p): p is ExcelRowData => p !== null && p.name.length > 0);
 
       if (parsedProducts.length === 0) {
         throw new Error("No valid products found in the file");
@@ -550,7 +550,7 @@ export default function BulkUpload() {
     }
   }, [products]);
 
-  const getStatusIcon = (status: ProcessedProduct["status"]) => {
+  const getStatusIcon = (status: CategorizedProduct["status"]) => {
     switch (status) {
       case "completed":
         return <CheckCircle2 className="w-4 h-4 text-green-500" />;
@@ -706,7 +706,7 @@ export default function BulkUpload() {
                         variant="outline"
                         size="lg"
                         onClick={() => {
-                          const sampleData: RawProduct[] = [
+                          const sampleData: ExcelRowData[] = [
                             {
                               sku: "777284",
                               name: "BLACK HAIR PINS",
