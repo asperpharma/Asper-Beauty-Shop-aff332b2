@@ -153,6 +153,35 @@ npm run build && npm run preview # Test production
 
 ---
 
+## 🔀 Development Workflow
+
+### Fetch All Pull Requests
+
+To fetch all PR branches for local review and development:
+
+```bash
+./scripts/fetch-all-prs.sh       # Fetch all PRs and branches
+```
+
+This script:
+- Fetches all remote branches
+- Fetches all pull request refs (as `origin/pr/<number>`)
+- Shows available branches and PRs
+
+**Example usage:**
+```bash
+# Fetch all PRs
+./scripts/fetch-all-prs.sh
+
+# Checkout a specific PR locally
+git checkout -b review-pr-50 origin/pr/50
+
+# List all available PRs
+git branch -r | grep 'pr/'
+```
+
+---
+
 ## 📞 Contact
 
 - **Email**: asperpharma@gmail.com
