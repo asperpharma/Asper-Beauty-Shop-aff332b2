@@ -126,6 +126,11 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
 
+### Serverless Functions Documentation
+- [**Quick Reference**](docs/SERVERLESS_FUNCTION_QUICKREF.md) - Quick start guide for creating functions
+- [**Complete Specification Guide**](docs/SERVERLESS_FUNCTION_SPEC.md) - Comprehensive function specification template
+- [**Example: process-webhook**](docs/FUNCTION_EXAMPLE_process-webhook.md) - Full webhook handler implementation
+
 ---
 
 ## 🚀 Deployment
