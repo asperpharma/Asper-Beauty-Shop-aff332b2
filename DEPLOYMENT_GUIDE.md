@@ -99,6 +99,98 @@ git commit -m "Deploy to production"
 git push origin main
 ```
 
+### Deploying from Your Machine
+
+If Vercel/Netlify/Lovable is connected to the repository, you can deploy directly from your local machine using one of the following methods:
+
+#### Method 1: Direct Push to Main (if you have permissions)
+
+If your GitHub account has write permissions to the `main` branch:
+
+```bash
+# Ensure you're on the main branch and up to date
+git checkout main
+git pull origin main
+
+# Make your changes and commit
+git add .
+git commit -m "Your deployment message"
+
+# Push directly to main to trigger deployment
+git push origin main
+```
+
+**Note**: This method requires that `main` is not protected or that your account has bypass permissions.
+
+#### Method 2: Deploy via Feature/Deploy Branch
+
+If you want to use a dedicated deployment branch (e.g., `deploy/asper-updates`):
+
+```bash
+# 1) Start from an up-to-date main branch
+git checkout main
+git pull origin main
+
+# 2) Create or reset the deployment branch from main
+# This will create deploy/asper-updates (or reset it) based on the current main
+git checkout -B deploy/asper-updates
+
+# If the deployment branch already exists remotely and you ONLY want to switch to it:
+# git checkout deploy/asper-updates
+# git pull origin deploy/asper-updates
+
+# 3) Make your changes and commit
+git add .
+git commit -m "Your deployment message"
+
+# 4) Push to the deployment branch
+git push origin deploy/asper-updates
+```
+
+This approach is useful when:
+- The `main` branch is protected
+- You want to stage changes before merging to production
+- `deploy/asper-updates` is configured as an allowed branch for deployment
+
+#### Method 3: Merge Locally and Push
+
+If you've been working on the `deploy/asper-updates` branch and want to merge to `main`:
+
+```bash
+# Ensure both branches are up to date
+git checkout deploy/asper-updates
+git pull origin deploy/asper-updates
+
+git checkout main
+git pull origin main
+
+# Merge the deployment branch into main
+git merge deploy/asper-updates
+
+# Resolve any conflicts if they occur
+# Then push to trigger deployment
+git push origin main
+```
+
+**Use this method only if**:
+- The `main` branch is pushable from your account
+- You have resolved any merge conflicts locally
+- You want to combine multiple commits from the deployment branch
+
+#### Branch Protection Considerations
+
+Depending on your repository settings:
+
+- **Protected Main Branch**: If `main` requires pull request reviews, you'll need to create a PR instead of pushing directly
+- **Required Status Checks**: Ensure all CI/CD checks pass before merging
+- **Required Reviews**: You may need approval from repository maintainers
+- **Allowed Push Branches**: Check if `deploy/asper-updates` or other branches are configured for direct deployment
+
+To check branch protection rules:
+1. Go to GitHub repository → Settings → Branches
+2. View protection rules for `main` or other branches
+3. Verify your account has necessary permissions
+
 ### Environment Variables
 
 Set in Lovable dashboard under Settings → Environment Variables:
