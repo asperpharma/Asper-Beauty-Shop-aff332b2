@@ -9,7 +9,9 @@
   "devPort": 8080,
   "environmentVariables": {
     "VITE_SUPABASE_URL": "https://rgehleqcubtmcwyipyvi.supabase.co",
-    "VITE_SUPABASE_PROJECT_ID": "rgehleqcubtmcwyipyvi"
+    "VITE_SUPABASE_PROJECT_ID": "rgehleqcubtmcwyipyvi",
+    "VITE_SHOPIFY_STORE_DOMAIN": "lovable-project-milns.myshopify.com",
+    "VITE_SHOPIFY_API_VERSION": "2025-07"
   },
   "integrations": {
     "shopify": {
