@@ -21,7 +21,7 @@ const actionTypes = {
 
 let count = 0;
 
-function genId() {
+function generateToastId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER;
   return count.toString();
 }
@@ -52,7 +52,7 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const addToRemoveQueue = (toastId: string) => {
+const scheduleToastRemoval = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
     return;
   }
@@ -90,10 +90,10 @@ export const reducer = (state: State, action: Action): State => {
       // ! Side effects ! - This could be extracted into a dismissToast() action,
       // but I'll keep it here for simplicity
       if (toastId) {
-        addToRemoveQueue(toastId);
+        scheduleToastRemoval(toastId);
       } else {
         state.toasts.forEach((toast) => {
-          addToRemoveQueue(toast.id);
+          scheduleToastRemoval(toast.id);
         });
       }
 
@@ -137,7 +137,7 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, "id">;
 
 function toast({ ...props }: Toast) {
-  const id = genId();
+  const id = generateToastId();
 
   const update = (props: ToasterToast) =>
     dispatch({

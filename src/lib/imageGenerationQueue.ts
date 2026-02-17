@@ -49,7 +49,18 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+interface QueueEventData {
+  itemUpdate: QueueItem;
+  statsUpdate: QueueStats;
+  batchComplete: { batch: QueueItem[]; stats: QueueStats };
+  queueComplete: QueueStats;
+  error: { type: string; item?: QueueItem };
+  paused: { reason: "manual" | "rateLimit" };
+  resumed: Record<string, never>;
+}
+
+type QueueEventCallback<T extends QueueEventType> = (data: QueueEventData[T]) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -57,7 +68,7 @@ class ImageGenerationQueue {
   private isProcessing: boolean = false;
   private isPaused: boolean = false;
   private processingTimes: number[] = [];
-  private eventListeners: Map<QueueEventType, QueueEventCallback[]> = new Map();
+  private eventListeners: Map<QueueEventType, QueueEventCallback<any>[]> = new Map();
   private abortController: AbortController | null = null;
 
   constructor(config: Partial<QueueConfig> = {}) {
@@ -65,7 +76,7 @@ class ImageGenerationQueue {
   }
 
   // Event handling
-  on(event: QueueEventType, callback: QueueEventCallback) {
+  on<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
@@ -73,7 +84,7 @@ class ImageGenerationQueue {
     return () => this.off(event, callback);
   }
 
-  off(event: QueueEventType, callback: QueueEventCallback) {
+  off<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       const index = listeners.indexOf(callback);
@@ -81,7 +92,7 @@ class ImageGenerationQueue {
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emitQueueEvent<T extends QueueEventType>(event: T, data: QueueEventData[T]) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       listeners.forEach((callback) => callback(data));
@@ -138,7 +149,7 @@ class ImageGenerationQueue {
   }
 
   private emitStats() {
-    this.emit("statsUpdate", this.getStats());
+    this.emitQueueEvent("statsUpdate", this.getStats());
   }
 
   private updateItem(id: string, updates: Partial<QueueItem>) {
@@ -146,7 +157,7 @@ class ImageGenerationQueue {
     if (item) {
       const updated = { ...item, ...updates };
       this.queue.set(id, updated);
-      this.emit("itemUpdate", updated);
+      this.emitQueueEvent("itemUpdate", updated);
       this.emitStats();
     }
   }
@@ -167,7 +178,7 @@ class ImageGenerationQueue {
       );
 
       if (pendingItems.length === 0) {
-        this.emit("queueComplete", this.getStats());
+        this.emitQueueEvent("queueComplete", this.getStats());
         break;
       }
 
@@ -243,7 +254,7 @@ class ImageGenerationQueue {
       }
     });
 
-    this.emit("batchComplete", { batch, stats: this.getStats() });
+    this.emitQueueEvent("batchComplete", { batch, stats: this.getStats() });
   }
 
   private async processItem(item: QueueItem): Promise<{
@@ -321,7 +332,7 @@ class ImageGenerationQueue {
 
   private async handleRateLimit(item: QueueItem) {
     console.log("Rate limited, pausing queue...");
-    this.emit("error", { type: "rateLimit", item });
+    this.emitQueueEvent("error", { type: "rateLimit", item });
 
     // Mark item for retry
     this.updateItem(item.id, {
@@ -332,20 +343,20 @@ class ImageGenerationQueue {
 
     // Pause and wait
     this.isPaused = true;
-    this.emit("paused", { reason: "rateLimit" });
+    this.emitQueueEvent("paused", { reason: "rateLimit" });
 
     await this.delay(this.config.rateLimitDelay);
 
     // Resume automatically
     if (this.isProcessing) {
       this.isPaused = false;
-      this.emit("resumed", {});
+      this.emitQueueEvent("resumed", {});
     }
   }
 
   pause() {
     this.isPaused = true;
-    this.emit("paused", { reason: "manual" });
+    this.emitQueueEvent("paused", { reason: "manual" });
   }
 
   resume() {
@@ -353,7 +364,7 @@ class ImageGenerationQueue {
       this.start();
     } else {
       this.isPaused = false;
-      this.emit("resumed", {});
+      this.emitQueueEvent("resumed", {});
     }
   }
 
