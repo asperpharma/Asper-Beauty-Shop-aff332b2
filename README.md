@@ -120,6 +120,8 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 📚 Documentation
 
+- **[What To Do Next?](WHAT_TO_DO_NEXT.md) - Complete launch guide** ⭐ **START HERE**
+- [Next Steps](NEXT_STEPS.md) - Post-deployment checklist
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
