@@ -28,12 +28,12 @@ echo "✅ Available remote branches:"
 git branch -r | grep -v '\->' | sed 's/origin\//  • /' | head -20
 
 # Count branches
-BRANCH_COUNT=$(git branch -r | grep -v '\->' | wc -l)
+BRANCH_COUNT=$(git branch -r | grep -cv '\->')
 echo ""
 echo "📊 Total remote branches fetched: $BRANCH_COUNT"
 
 # List PR branches if they exist
-PR_COUNT=$(git branch -r | grep 'origin/pr/' | wc -l || echo "0")
+PR_COUNT=$(git branch -r | grep -c 'origin/pr/' || echo "0")
 if [ "$PR_COUNT" -gt 0 ]; then
     echo "🔀 Pull request branches: $PR_COUNT"
     git branch -r | grep 'origin/pr/' | sed 's/origin\/pr\//  • PR #/' | head -10
