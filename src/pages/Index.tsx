@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import AnimatedShaderHero from "@/components/ui/animated-shader-hero";
@@ -14,10 +14,12 @@ import { InstagramFeed } from "@/components/InstagramFeed";
 import { Newsletter } from "@/components/Newsletter";
 import { TrustBanner } from "@/components/TrustBanner";
 import { Footer } from "@/components/Footer";
-import { BeautyAssistant } from "@/components/BeautyAssistant";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingSocials } from "@/components/FloatingSocials";
 import { PageLoadingSkeleton } from "@/components/PageLoadingSkeleton";
+
+// Lazy load BeautyAssistant - it's a heavy component with AI integration
+const BeautyAssistant = lazy(() => import("@/components/BeautyAssistant").then(module => ({ default: module.BeautyAssistant })));
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -104,7 +106,10 @@ const Index = () => {
         <TrustBanner />
       </main>
       <Footer />
-      <BeautyAssistant />
+      {/* Lazy load BeautyAssistant - loads when needed */}
+      <Suspense fallback={null}>
+        <BeautyAssistant />
+      </Suspense>
       <ScrollToTop />
       <FloatingSocials />
     </div>

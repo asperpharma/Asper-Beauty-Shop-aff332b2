@@ -7,6 +7,10 @@ const SHOPIFY_STOREFRONT_URL =
 // Note: Shopify Storefront tokens are designed for client-side use with read-only access to public data
 const SHOPIFY_STOREFRONT_TOKEN = "9daedc472c5910e742ec88bdaad108e2";
 
+// Request deduplication cache to prevent duplicate API calls
+const requestCache = new Map<string, Promise<any>>();
+const CACHE_TTL = 30000; // 30 seconds cache
+
 // Sanitize search input to prevent GraphQL injection
 function sanitizeSearchTerm(term: string): string {
   // Remove special characters that could break GraphQL queries
@@ -67,40 +71,62 @@ export async function storefrontApiRequest(
   query: string,
   variables: Record<string, unknown> = {},
 ) {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
+  // Create cache key from query and variables
+  const cacheKey = JSON.stringify({ query, variables });
+  
+  // Check if request is already in flight
+  const cachedRequest = requestCache.get(cacheKey);
+  if (cachedRequest) {
+    return cachedRequest;
+  }
 
-  if (response.status === 402) {
-    toast.error("Shopify: Payment required", {
-      description: "Your store needs to be upgraded to a paid plan.",
+  // Create new request
+  const requestPromise = (async () => {
+    const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
     });
-    return null;
-  }
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
+    if (response.status === 402) {
+      toast.error("Shopify: Payment required", {
+        description: "Your store needs to be upgraded to a paid plan.",
+      });
+      return null;
+    }
 
-  const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  if (data.errors) {
-    throw new Error(
-      `Error calling Shopify: ${
-        data.errors.map((e: { message: string }) => e.message).join(", ")
-      }`,
-    );
-  }
+    const data = await response.json();
 
-  return data;
+    if (data.errors) {
+      throw new Error(
+        `Error calling Shopify: ${
+          data.errors.map((e: { message: string }) => e.message).join(", ")
+        }`,
+      );
+    }
+
+    return data;
+  })();
+
+  // Store request promise in cache
+  requestCache.set(cacheKey, requestPromise);
+  
+  // Clear cache entry after TTL (from when request was initiated, not completed)
+  setTimeout(() => {
+    requestCache.delete(cacheKey);
+  }, CACHE_TTL);
+
+  return requestPromise;
 }
 
 // Paginated query for large catalogs (2000+ products)
