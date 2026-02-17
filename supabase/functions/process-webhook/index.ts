@@ -109,7 +109,7 @@ function determineRoute(req: Request): string {
 /**
  * Extract customer ID from webhook body based on route
  */
-function extractCustomerId(body: any, route: string): string | null {
+function extractCustomerId(body: Record<string, unknown>, route: string): string | null {
   try {
     if (route === "gorgias") {
       return body?.customer?.id?.toString() || body?.ticket?.customer?.id?.toString() || null;
@@ -127,7 +127,7 @@ function extractCustomerId(body: any, route: string): string | null {
 /**
  * Extract message from webhook body based on route
  */
-function extractMessage(body: any, route: string): string | null {
+function extractMessage(body: Record<string, unknown>, route: string): string | null {
   try {
     if (route === "gorgias") {
       return body?.message?.body_text || body?.text || null;
@@ -145,6 +145,7 @@ function extractMessage(body: any, route: string): string | null {
  * Log webhook event to database
  */
 async function logWebhookEvent(
+  // deno-lint-ignore no-explicit-any
   supabase: any,
   event: WebhookEvent,
   result: Partial<ProcessResult>,
@@ -181,10 +182,11 @@ async function logWebhookEvent(
  * Get or create conversation context
  */
 async function getOrCreateConversation(
+  // deno-lint-ignore no-explicit-any
   supabase: any,
   customerId: string,
   channel: string,
-): Promise<{ id: string; context: any } | null> {
+): Promise<{ id: string; context: Record<string, unknown> } | null> {
   try {
     // Try to get existing conversation
     const { data: existing, error: fetchError } = await supabase
@@ -226,6 +228,7 @@ async function getOrCreateConversation(
  * Update conversation with new message
  */
 async function updateConversation(
+  // deno-lint-ignore no-explicit-any
   supabase: any,
   conversationId: string,
   message: string,
@@ -277,7 +280,7 @@ async function updateConversation(
  */
 async function getAIResponse(
   message: string,
-  conversationContext: any,
+  conversationContext: Record<string, unknown> | null,
 ): Promise<{ reply: string; concern_slug?: string } | null> {
   try {
     const BEAUTY_ASSISTANT_URL = Deno.env.get("BEAUTY_ASSISTANT_URL") ||
@@ -370,6 +373,7 @@ async function getAIResponse(
  */
 async function processWebhook(
   req: Request,
+  // deno-lint-ignore no-explicit-any
   supabase: any,
 ): Promise<Response> {
   const startTime = Date.now();
@@ -409,9 +413,9 @@ async function processWebhook(
     }
 
     // Parse JSON body
-    let body: any;
+    let body: Record<string, unknown>;
     try {
-      body = JSON.parse(bodyText);
+      body = JSON.parse(bodyText) as Record<string, unknown>;
     } catch {
       return new Response(
         JSON.stringify({ error: "Invalid JSON body" }),
@@ -511,7 +515,7 @@ async function processWebhook(
 
     // Get or create conversation context (if customer ID available)
     let conversationId: string | undefined;
-    let conversationContext: any = null;
+    let conversationContext: Record<string, unknown> | null = null;
 
     if (customerId) {
       const conversation = await getOrCreateConversation(
