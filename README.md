@@ -107,7 +107,7 @@ public/             # Static (sitemap, robots, manifest, redirects)
 
 ## 🔐 Environment
 
-Create `.env` and `.env.production`:
+**Frontend** - Create `.env` and `.env.production`:
 
 ```env
 VITE_SUPABASE_URL=https://rgehleqcubtmcwyipyvi.supabase.co
@@ -116,11 +116,24 @@ VITE_SUPABASE_PUBLISHABLE_KEY=<your-key>
 VITE_SITE_URL=https://www.asperbeautyshop.com
 ```
 
+**Backend (Edge Functions)** - Auto-injected by Supabase ✅:
+- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+
+**Custom Secrets** - Set manually:
+```bash
+supabase secrets set LOVABLE_API_KEY=your_key
+supabase secrets set SHOPIFY_ACCESS_TOKEN=your_token
+```
+
+📖 See [ENVIRONMENT_VARIABLES.md](ENVIRONMENT_VARIABLES.md) for complete reference.
+
 ---
 
 ## 📚 Documentation
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
+- [Environment Variables](ENVIRONMENT_VARIABLES.md) - Complete env vars reference
+- [Supabase Functions](supabase/functions/README.md) - Edge Functions guide
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
