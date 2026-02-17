@@ -129,17 +129,57 @@ async function testInvalidSignature() {
   }
 }
 
+// Test signature with sha256= prefix
+async function testPrefixedSignature() {
+  console.log('\n\n=== Testing Signature with sha256= Prefix ===\n');
+  const payloadString = JSON.stringify(payload);
+  const signature = generateSignature(payloadString, WEBHOOK_SECRET);
+  const prefixedSignature = `sha256=${signature}`;
+
+  console.log('Sending webhook with prefixed signature...');
+  console.log(`Prefixed Signature: ${prefixedSignature}\n`);
+
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'DD-Signature': prefixedSignature,
+      },
+      body: payloadString,
+    });
+
+    console.log(`Response Status: ${response.status} ${response.statusText}`);
+    const responseData = await response.json();
+    console.log('Response Body:');
+    console.log(JSON.stringify(responseData, null, 2));
+
+    if (response.ok) {
+      console.log('\n✓ Prefixed signature correctly accepted!');
+      return true;
+    } else {
+      console.log('\n✗ Prefixed signature was rejected (unexpected)');
+      return false;
+    }
+  } catch (error) {
+    console.error('\n✗ Error:', error.message);
+    return false;
+  }
+}
+
 // Main execution
 async function main() {
   const validTest = await sendTestWebhook();
   const invalidTest = await testInvalidSignature();
+  const prefixedTest = await testPrefixedSignature();
 
   console.log('\n\n=== Test Results ===');
   console.log(`Valid signature test: ${validTest ? '✓ PASS' : '✗ FAIL'}`);
   console.log(`Invalid signature test: ${invalidTest ? '✓ PASS' : '✗ FAIL'}`);
-  console.log(`\nOverall: ${validTest && invalidTest ? 'ALL TESTS PASSED ✓' : 'SOME TESTS FAILED ✗'}`);
+  console.log(`Prefixed signature test: ${prefixedTest ? '✓ PASS' : '✗ FAIL'}`);
+  console.log(`\nOverall: ${validTest && invalidTest && prefixedTest ? 'ALL TESTS PASSED ✓' : 'SOME TESTS FAILED ✗'}`);
 
-  process.exit(validTest && invalidTest ? 0 : 1);
+  process.exit(validTest && invalidTest && prefixedTest ? 0 : 1);
 }
 
 // Run if executed directly

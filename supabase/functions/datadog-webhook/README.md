@@ -109,13 +109,14 @@ The request body varies based on the Datadog alert type. Common fields include:
 
 ## Signature Verification
 
-The function verifies webhooks using HMAC SHA-256:
+The function verifies webhooks using HMAC SHA-256 with **timing-safe comparison** to prevent timing attacks:
 
 1. Extracts the `DD-Signature` header from the request
-2. Reads the raw request body
-3. Computes HMAC-SHA256 hash: `HMAC-SHA256(secret, body)`
-4. Compares computed signature with provided signature (case-insensitive)
-5. Rejects the request if signatures don't match
+2. Strips the `sha256=` prefix if present (case-insensitive)
+3. Reads the raw request body
+4. Computes HMAC-SHA256 hash: `HMAC-SHA256(secret, body)`
+5. Compares computed signature with provided signature using constant-time comparison
+6. Rejects the request if signatures don't match
 
 ### How Datadog Generates the Signature
 
@@ -125,7 +126,9 @@ Datadog generates the signature as:
 DD-Signature = HMAC-SHA256(webhook_secret, request_body)
 ```
 
-The signature is sent as a lowercase hexadecimal string.
+The signature may be sent as:
+- Plain hexadecimal string: `abc123...`
+- Prefixed format: `sha256=abc123...` (case-insensitive)
 
 ## Testing
 
@@ -175,6 +178,8 @@ This will:
 3. **Validate signatures**: Always verify the `DD-Signature` header
 4. **Use HTTPS**: Ensure your webhook endpoint uses HTTPS (automatic with Supabase)
 5. **Log failures**: Monitor failed verification attempts for security issues
+6. **Timing-safe comparison**: The function uses constant-time comparison to prevent timing attacks
+7. **Prefix handling**: Supports both plain and prefixed signature formats (`sha256=...`)
 
 ## Optional: Store Webhook Events
 

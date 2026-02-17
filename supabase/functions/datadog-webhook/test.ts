@@ -6,9 +6,28 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 /**
+ * Constant-time comparison to prevent timing attacks
+ * @param a - First string (hex signature)
+ * @param b - Second string (hex signature)
+ * @returns boolean indicating if strings are equal
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  
+  return result === 0;
+}
+
+/**
  * Verify HMAC SHA-256 signature from Datadog webhook
  * @param payload - The raw request body
- * @param signature - The DD-Signature header value
+ * @param signature - The DD-Signature header value (may include "sha256=" prefix)
  * @param secret - The webhook secret key
  * @returns boolean indicating if signature is valid
  */
@@ -18,6 +37,12 @@ async function verifyDatadogSignature(
   secret: string,
 ): Promise<boolean> {
   try {
+    // Strip "sha256=" prefix if present
+    let cleanSignature = signature;
+    if (signature.toLowerCase().startsWith("sha256=")) {
+      cleanSignature = signature.substring(7);
+    }
+
     // Create HMAC-SHA256 hash of the payload
     const encoder = new TextEncoder();
     const keyData = encoder.encode(secret);
@@ -45,8 +70,11 @@ async function verifyDatadogSignature(
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
 
-    // Compare signatures (case-insensitive)
-    return computedSignature.toLowerCase() === signature.toLowerCase();
+    // Compare signatures using constant-time comparison to prevent timing attacks
+    return timingSafeEqual(
+      computedSignature.toLowerCase(),
+      cleanSignature.toLowerCase()
+    );
   } catch (error) {
     console.error("Error verifying signature:", error);
     return false;
@@ -137,6 +165,39 @@ async function runTests() {
   );
   console.log(`  Expected: false, Got: ${test5Result}`);
   console.log(`  Result: ${!test5Result ? "✓ PASS" : "✗ FAIL"}\n`);
+
+  // Test 6: Signature with sha256= prefix
+  console.log("Test 6: Signature with sha256= prefix");
+  const prefixedSignature = `sha256=${validSignature}`;
+  const test6Result = await verifyDatadogSignature(
+    testPayload,
+    prefixedSignature,
+    testSecret,
+  );
+  console.log(`  Expected: true, Got: ${test6Result}`);
+  console.log(`  Result: ${test6Result ? "✓ PASS" : "✗ FAIL"}\n`);
+
+  // Test 7: Uppercase sha256= prefix
+  console.log("Test 7: Uppercase SHA256= prefix");
+  const uppercasePrefixedSignature = `SHA256=${validSignature}`;
+  const test7Result = await verifyDatadogSignature(
+    testPayload,
+    uppercasePrefixedSignature,
+    testSecret,
+  );
+  console.log(`  Expected: true, Got: ${test7Result}`);
+  console.log(`  Result: ${test7Result ? "✓ PASS" : "✗ FAIL"}\n`);
+
+  // Test 8: Timing-safe comparison (different length signatures)
+  console.log("Test 8: Timing-safe comparison with different length");
+  const shortSignature = validSignature.substring(0, 32);
+  const test8Result = await verifyDatadogSignature(
+    testPayload,
+    shortSignature,
+    testSecret,
+  );
+  console.log(`  Expected: false, Got: ${test8Result}`);
+  console.log(`  Result: ${!test8Result ? "✓ PASS" : "✗ FAIL"}\n`);
 
   console.log("All tests completed!");
   console.log("\nExample signature generation:");
