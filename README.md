@@ -153,6 +153,19 @@ npm run build && npm run preview # Test production
 
 ---
 
+## 🔄 CI/CD
+
+**GitHub Actions** automatically runs on every push and pull request to `main`:
+
+✅ **Code Formatting** - `deno fmt --check` ensures consistent code style\
+✅ **Linting** - `deno lint` catches code quality issues\
+✅ **Type Checking** - Validates Supabase edge functions\
+✅ **Tests** - Runs Deno test suite with proper permissions
+
+View workflow: [.github/workflows/deno.yml](.github/workflows/deno.yml)
+
+---
+
 ## 📞 Contact
 
 - **Email**: asperpharma@gmail.com
