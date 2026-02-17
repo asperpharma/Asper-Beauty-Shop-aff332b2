@@ -62,11 +62,11 @@ jobs:
         if: steps.check-datadog.outputs.configured == 'true'
         uses: DataDog/synthetics-ci-github-action@v1.14.0
         with:
-          api_key: ${{ secrets.DATADOG_API_KEY }}
-          app_key: ${{ secrets.DATADOG_APP_KEY }}
+          api-key: ${{ secrets.DATADOG_API_KEY }}
+          app-key: ${{ secrets.DATADOG_APP_KEY }}
           # Uncomment and configure if you have specific test IDs
-          # test_search_query: 'tag:ci'
-          # public_ids: 'abc-def-ghi,123-456-789'
+          # test-search-query: 'tag:ci'
+          # public-ids: 'abc-def-ghi,123-456-789'
         continue-on-error: true
         
       - name: Test Summary
