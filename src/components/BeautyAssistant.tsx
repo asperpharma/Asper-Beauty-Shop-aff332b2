@@ -7,9 +7,53 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 
 type Message = { role: "user" | "assistant"; content: string };
+type SkinConcern = "acne" | "antiaging" | "hydration" | null;
 
 const CHAT_URL =
   `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/beauty-assistant`;
+
+const skinConcerns = {
+  en: [
+    {
+      id: "acne" as const,
+      label: "🔴 Acne & Oil",
+      tag: "Concern_Acne",
+      prompt: "I have acne-prone and oily skin. Please recommend a complete skincare routine focusing on clearing pores and controlling oil without damaging my skin barrier. Include products with ingredients like Salicylic Acid.",
+    },
+    {
+      id: "antiaging" as const,
+      label: "⏳ Anti-Aging",
+      tag: "Concern_AntiAging",
+      prompt: "I'm concerned about anti-aging. Please recommend a skincare routine that targets fine lines, wrinkles, and maintains youthful skin. Include products with proven anti-aging ingredients.",
+    },
+    {
+      id: "hydration" as const,
+      label: "💧 Dryness",
+      tag: "Concern_Hydration",
+      prompt: "I have dry skin that needs deep hydration. Please recommend a moisturizing skincare routine that will restore moisture and repair my skin barrier.",
+    },
+  ],
+  ar: [
+    {
+      id: "acne" as const,
+      label: "🔴 حب الشباب والزيوت",
+      tag: "Concern_Acne",
+      prompt: "لدي بشرة معرضة لحب الشباب ودهنية. يرجى التوصية بروتين كامل للعناية بالبشرة يركز على تنظيف المسام والتحكم في الزيوت دون الإضرار بحاجز بشرتي. قم بتضمين المنتجات التي تحتوي على مكونات مثل حمض الساليسيليك.",
+    },
+    {
+      id: "antiaging" as const,
+      label: "⏳ مكافحة الشيخوخة",
+      tag: "Concern_AntiAging",
+      prompt: "أنا قلق بشأن مكافحة الشيخوخة. يرجى التوصية بروتين للعناية بالبشرة يستهدف الخطوط الدقيقة والتجاعيد ويحافظ على بشرة شابة. قم بتضمين المنتجات ذات المكونات المثبتة لمكافحة الشيخوخة.",
+    },
+    {
+      id: "hydration" as const,
+      label: "💧 الجفاف",
+      tag: "Concern_Hydration",
+      prompt: "لدي بشرة جافة تحتاج إلى ترطيب عميق. يرجى التوصية بروتين للعناية بالبشرة يرطب ويستعيد الرطوبة ويصلح حاجز بشرتي.",
+    },
+  ],
+};
 
 const quickPrompts = {
   en: [
@@ -50,6 +94,8 @@ export const BeautyAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedConcern, setSelectedConcern] = useState<SkinConcern>(null);
+  const [showQuiz, setShowQuiz] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const translations = {
@@ -58,27 +104,35 @@ export const BeautyAssistant = () => {
       subtitle: "Clinical Skincare Expert",
       placeholder: "Describe your skin concern...",
       welcome:
+        "Welcome to Asper Beauty Shop. 🌿 I am your Digital Pharmacist. To prescribe the right regimen from our 5,000+ items, I need to know your primary concern:",
+      welcomeChat:
         "Hello. I am trained on clinical skincare data. Tell me your skin concern (e.g., Acne, Dryness) or ask about a specific ingredient.",
-      buttonText: "Ask the Pharmacist",
+      buttonText: "Find My Routine",
+      skipQuiz: "Or ask me anything",
     },
     ar: {
       title: "استشارة آسبر الرقمية",
       subtitle: "خبير العناية بالبشرة السريرية",
       placeholder: "صف مشكلة بشرتك...",
       welcome:
+        "مرحباً بك في متجر آسبر للجمال. 🌿 أنا صيدلي الرقمي الخاص بك. لوصف النظام المناسب من أكثر من 5000 عنصر، أحتاج إلى معرفة مشكلتك الأساسية:",
+      welcomeChat:
         "مرحباً. أنا مدرب على بيانات العناية بالبشرة السريرية. أخبرني عن مشكلة بشرتك (مثل حب الشباب، الجفاف) أو اسأل عن مكون معين.",
-      buttonText: "اسأل الصيدلي",
+      buttonText: "اعثر على روتيني",
+      skipQuiz: "أو اسألني أي شيء",
     },
   };
 
   const t = translations[language];
   const prompts = quickPrompts[language];
+  const concerns = skinConcerns[language];
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ role: "assistant", content: t.welcome }]);
+      const welcomeMsg = showQuiz ? t.welcome : t.welcomeChat;
+      setMessages([{ role: "assistant", content: welcomeMsg }]);
     }
-  }, [isOpen, messages.length, t.welcome]);
+  }, [isOpen, messages.length, t.welcome, t.welcomeChat, showQuiz]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -172,7 +226,7 @@ export const BeautyAssistant = () => {
     setIsLoading(true);
 
     try {
-      await streamChat(newMessages.filter((m) => m.content !== t.welcome));
+      await streamChat(newMessages.filter((m) => m.content !== t.welcome && m.content !== t.welcomeChat));
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [...prev, {
@@ -195,7 +249,7 @@ export const BeautyAssistant = () => {
     setMessages(newMessages);
     setIsLoading(true);
 
-    streamChat(newMessages.filter((m) => m.content !== t.welcome))
+    streamChat(newMessages.filter((m) => m.content !== t.welcome && m.content !== t.welcomeChat))
       .catch((error) => {
         console.error("Chat error:", error);
         setMessages((prev) => [...prev, {
@@ -209,6 +263,17 @@ export const BeautyAssistant = () => {
         setIsLoading(false);
         setInput("");
       });
+  };
+
+  const handleConcernSelect = (concern: typeof concerns[0]) => {
+    setSelectedConcern(concern.id);
+    setShowQuiz(false);
+    handleQuickPrompt(concern.prompt);
+  };
+
+  const handleSkipQuiz = () => {
+    setShowQuiz(false);
+    setMessages([{ role: "assistant", content: t.welcomeChat }]);
   };
 
   return (
@@ -298,7 +363,7 @@ export const BeautyAssistant = () => {
         </ScrollArea>
 
         {/* Quick Prompts */}
-        {messages.length <= 1 && (
+        {messages.length <= 1 && !showQuiz && (
           <div className="px-4 pb-3 pt-2 bg-cream/30 border-t border-gold/10">
             <div className="flex flex-wrap gap-2">
               {prompts.map((prompt, idx) => (
@@ -311,6 +376,33 @@ export const BeautyAssistant = () => {
                   {prompt.label}
                 </button>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Skin Concern Quiz Buttons */}
+        {messages.length <= 1 && showQuiz && (
+          <div className="px-4 pb-3 pt-2 bg-cream/30 border-t border-gold/10">
+            <div className="space-y-3">
+              <div className="flex flex-col gap-2">
+                {concerns.map((concern, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleConcernSelect(concern)}
+                    disabled={isLoading}
+                    className="w-full px-4 py-3 text-sm font-body bg-white border-2 border-gold/30 rounded-lg text-burgundy hover:bg-burgundy hover:text-white hover:border-burgundy transition-all duration-300 disabled:opacity-50 text-left flex items-center gap-2"
+                  >
+                    <span className="font-semibold">{concern.label}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleSkipQuiz}
+                disabled={isLoading}
+                className="w-full px-3 py-2 text-xs font-body text-gold/70 hover:text-gold transition-colors disabled:opacity-50"
+              >
+                {t.skipQuiz}
+              </button>
             </div>
           </div>
         )}
