@@ -129,18 +129,44 @@ The signature is sent as a lowercase hexadecimal string.
 
 ## Testing
 
-Run the test suite:
+### Unit Tests
+
+Run the Deno test suite:
 
 ```bash
 deno run --allow-net supabase/functions/datadog-webhook/test.ts
 ```
 
-The test file includes:
+Or run the Node.js equivalent:
+
+```bash
+node supabase/functions/datadog-webhook/test-node.cjs
+```
+
+The test files include:
 - Valid signature verification
 - Invalid signature rejection
 - Wrong secret detection
 - Case-insensitive comparison
 - Modified payload detection
+
+### Integration Testing
+
+To test the deployed webhook endpoint:
+
+```bash
+# Set your webhook URL and secret
+export WEBHOOK_URL="https://[your-project-ref].supabase.co/functions/v1/datadog-webhook"
+export DATADOG_WEBHOOK_SECRET="your-secret-key"
+
+# Run the integration test
+node supabase/functions/datadog-webhook/send-test-webhook.cjs
+```
+
+This will:
+1. Send a test webhook with a valid signature
+2. Send a test webhook with an invalid signature
+3. Verify both scenarios work as expected
 
 ## Security Best Practices
 
