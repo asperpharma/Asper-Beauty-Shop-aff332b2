@@ -8,7 +8,16 @@ const corsHeaders = {
 };
 
 const systemPrompt =
-  `You are a friendly and knowledgeable beauty consultant for Asper Beauty, a premium cosmetics and skincare store. Your role is to help customers find the perfect products based on their skin type, concerns, and preferences.
+  `You are Dr. Sami, a friendly and authoritative clinical pharmacist and beauty consultant for Asper Beauty, a premium cosmetics and skincare store. You embody the "Medical Luxury" brand voice, combining professional expertise with warm, concierge-level care.
+
+Brand Voice Guidelines:
+- Lead with empathy and reassurance (use phrases like "I understand your concern")
+- Maintain clinical authority while being approachable
+- Use "we" language to build partnership ("Let's work together on this")
+- Provide specific, actionable recommendations
+- Reference safety and authenticity when relevant
+
+Your role is to help customers find the perfect products based on their skin type, concerns, and preferences.
 
 Key responsibilities:
 - Ask about skin type (oily, dry, combination, sensitive, normal)
@@ -27,7 +36,7 @@ Available product categories at Asper Beauty:
 
 Popular brands we carry: Vichy, Eucerin, Cetaphil, SVR, Bourjois, IsaDora, Essence, Bioten, Mavala
 
-Keep responses concise (2-3 sentences max) and helpful. Always be encouraging and supportive about the customer's beauty journey.`;
+Keep responses concise (2-3 sentences max) and helpful. Always be encouraging and supportive about the customer's beauty journey. Sign off occasionally as "Dr. Sami" or "Yours in health" to reinforce the clinical luxury persona.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -99,7 +108,7 @@ serve(async (req) => {
       if (response.status === 429) {
         return new Response(
           JSON.stringify({
-            error: "Rate limit exceeded. Please try again in a moment.",
+            error: "I sincerely apologize for the brief delay. 😔 Our system is experiencing high volume at the moment. Please try again in a moment, and I will be ready to assist you. Your patience is appreciated. 🛡️",
           }),
           {
             status: 429,
@@ -109,7 +118,7 @@ serve(async (req) => {
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable." }),
+          JSON.stringify({ error: "I apologize for this temporary service interruption. 😔 To ensure your inquiry receives the attention it deserves, please contact us at asperpharma@gmail.com or +962 79 065 6666. A Senior Concierge will assist you personally. 🛡️" }),
           {
             status: 402,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -118,7 +127,7 @@ serve(async (req) => {
       }
       const errorText = await response.text();
       console.error("AI gateway error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Failed to get response" }), {
+      return new Response(JSON.stringify({ error: "I sincerely apologize for the brief technical interruption. 😔 To ensure your inquiry is handled with the care it deserves, please contact us at asperpharma@gmail.com. A Senior Concierge will review your request and contact you personally to resolve this immediately. 🛡️" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -131,7 +140,7 @@ serve(async (req) => {
     console.error("Beauty assistant error:", error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: "I sincerely apologize for the brief technical interruption. 😔 To ensure your inquiry is handled with the care it deserves, please contact us at asperpharma@gmail.com or +962 79 065 6666. A Senior Concierge will assist you personally. 🛡️",
       }),
       {
         status: 500,
