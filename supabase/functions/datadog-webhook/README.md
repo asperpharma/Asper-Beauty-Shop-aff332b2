@@ -6,6 +6,8 @@ This Supabase Edge Function handles incoming webhook alerts from Datadog monitor
 
 Datadog webhooks send monitor alerts to this endpoint. Each webhook includes a `DD-Signature` header containing an HMAC SHA-256 signature of the request body, which is verified to ensure the webhook is authentic.
 
+**Related Documentation**: For installing the Datadog Agent to send metrics to Datadog, see the [Datadog Agent Setup Guide](../../../DATADOG_AGENT_SETUP.md).
+
 ## Features
 
 - ✅ HMAC SHA-256 signature verification
@@ -223,6 +225,7 @@ Add your custom alert processing logic in the function after signature verificat
 
 ## Learn More
 
+- [Datadog Agent Setup Guide](../../../DATADOG_AGENT_SETUP.md) - Install Datadog Agent for metrics collection
 - [Datadog Webhooks Documentation](https://docs.datadoghq.com/integrations/webhooks/)
 - [Supabase Edge Functions](https://supabase.com/docs/guides/functions)
 - [HMAC Authentication](https://en.wikipedia.org/wiki/HMAC)
