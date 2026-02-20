@@ -130,15 +130,26 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 🚀 Deployment
 
-**Automatic**: Push to `main` → Lovable deploys → Live at
-www.asperbeautyshop.com
+**Production Deployment Process**:
 
-**Manual**: `npm run build` → Upload `dist/` folder
+1. **Create Feature Branch**: Work on a feature or fix branch
+2. **Open Pull Request**: Target the `main` branch  
+3. **Review & Approval**: Get code review from maintainers
+4. **Merge to Main**: ⚠️ **This triggers automatic deployment!**
+5. **Auto-Deploy**: Lovable deploys to production (2-5 minutes)
 
-**DNS Setup** (for custom domain):
+**Live URLs**:
+- Production: https://www.asperbeautyshop.com  
+- Lovable: https://asperbeautyshop.lovable.app
 
-```
-Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
+**Important**: Only merges to `main` trigger production deployment. Feature branches do NOT auto-deploy.
+
+📖 [Read full PR Merge Guidelines](.github/PR_MERGE_GUIDELINES.md)
+
+**Manual Build** (for testing only):
+```bash
+npm run build        # Creates dist/ folder
+npm run preview      # Test production build locally
 ```
 
 ---

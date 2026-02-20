@@ -31,7 +31,32 @@ follow these guidelines to ensure a smooth process.
    git push origin my-feature-branch
    ```
 8. **Create a Pull Request**: Go to the original repository and create a pull
-   request from your branch.
+   request from your branch targeting the `main` branch.
+
+## Pull Request and Deployment Process
+
+**IMPORTANT**: This repository uses a PR-based deployment workflow. Changes are **only deployed to production when merged to the `main` branch**.
+
+For detailed instructions on:
+- Creating and managing pull requests
+- Code review process
+- Merging PRs to trigger deployment
+- Deployment verification
+
+Please read: [PR Merge Guidelines](.github/PR_MERGE_GUIDELINES.md)
+
+### Quick Deployment Checklist
+
+Before your PR can be merged:
+- [ ] All tests pass locally and in CI
+- [ ] Code follows project style guidelines
+- [ ] PR description is clear and complete
+- [ ] At least one approval from a maintainer
+- [ ] No merge conflicts with `main`
+
+After merge to `main`:
+- ✅ Automatic deployment to https://www.asperbeautyshop.com (2-5 minutes)
+- ✅ Changes go live in production
 
 ## Coding Standards
 
