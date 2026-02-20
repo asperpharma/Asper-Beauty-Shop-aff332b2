@@ -12,6 +12,8 @@ jobs:
   verify-build:
     name: Verify Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,6 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: verify-build
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
     steps:
       - name: Notify deployment
         run: |
