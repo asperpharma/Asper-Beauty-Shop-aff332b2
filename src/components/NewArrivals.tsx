@@ -24,7 +24,7 @@ export const NewArrivals = () => {
         const thirtyDaysAgo = 30 * 24 * 60 * 60 * 1000;
 
         const newProducts = allProducts.filter((product) => {
-          const createdAt = (product.node as any).createdAt;
+          const createdAt = (product.node as { createdAt?: string }).createdAt;
           if (!createdAt) return false;
           const createdTime = new Date(createdAt).getTime();
           return (now - createdTime) < thirtyDaysAgo;
@@ -33,8 +33,8 @@ export const NewArrivals = () => {
         // Sort by creation date (newest first) and take 8
         const sortedNew = newProducts
           .sort((a, b) => {
-            const dateA = new Date((a.node as any).createdAt || 0).getTime();
-            const dateB = new Date((b.node as any).createdAt || 0).getTime();
+            const dateA = new Date((a.node as { createdAt?: string }).createdAt || 0).getTime();
+            const dateB = new Date((b.node as { createdAt?: string }).createdAt || 0).getTime();
             return dateB - dateA;
           })
           .slice(0, 8);
