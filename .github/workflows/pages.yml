@@ -34,13 +34,16 @@ jobs:
       - name: Build for production
         run: npm run build
         env:
-          VITE_SUPABASE_URL: https://rgehleqcubtmcwyipyvi.supabase.co
-          VITE_SUPABASE_PROJECT_ID: rgehleqcubtmcwyipyvi
-          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnZWhsZXFjdWJ0bWN3eWlweXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NDM5MDEsImV4cCI6MjA4MzQxOTkwMX0.8BEpVzIvWc2do2v8v3pOP3txcTs52HsM4F7KVavlQNU
-          VITE_SITE_URL: https://asperpharma.github.io/Asper-Beauty-Shop-aff332b2
-          VITE_SHOPIFY_STORE_DOMAIN: lovable-project-milns.myshopify.com
-          VITE_SHOPIFY_STOREFRONT_TOKEN: 9daedc472c5910e742ec88bdaad108e2
-          VITE_SHOPIFY_API_VERSION: 2025-07
+          # Note: These are PUBLIC keys safe for client-side use
+          # For additional security, store them as GitHub Secrets:
+          # Settings → Secrets and variables → Actions → New repository secret
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://rgehleqcubtmcwyipyvi.supabase.co' }}
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID || 'rgehleqcubtmcwyipyvi' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnZWhsZXFjdWJ0bWN3eWlweXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NDM5MDEsImV4cCI6MjA4MzQxOTkwMX0.8BEpVzIvWc2do2v8v3pOP3txcTs52HsM4F7KVavlQNU' }}
+          VITE_SITE_URL: ${{ secrets.VITE_SITE_URL || 'https://asperpharma.github.io/Asper-Beauty-Shop-aff332b2' }}
+          VITE_SHOPIFY_STORE_DOMAIN: ${{ secrets.VITE_SHOPIFY_STORE_DOMAIN || 'lovable-project-milns.myshopify.com' }}
+          VITE_SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.VITE_SHOPIFY_STOREFRONT_TOKEN || '9daedc472c5910e742ec88bdaad108e2' }}
+          VITE_SHOPIFY_API_VERSION: ${{ secrets.VITE_SHOPIFY_API_VERSION || '2025-07' }}
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
