@@ -15,6 +15,9 @@ interface WishlistStore {
   setOpen: (open: boolean) => void;
 }
 
+// Selector helper for wishlist count
+export const selectWishlistCount = (state: WishlistStore) => state.items.length;
+
 export const useWishlistStore = create<WishlistStore>()(
   persist(
     (set, get) => ({

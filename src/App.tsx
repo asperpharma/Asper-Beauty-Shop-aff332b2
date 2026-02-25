@@ -27,7 +27,21 @@ import Returns from "./pages/Returns";
 import Consultation from "./pages/Consultation";
 import { RequireAdmin } from "./components/RequireAdmin";
 
-const queryClient = new QueryClient();
+// Optimized QueryClient configuration for performance
+// - staleTime: Data stays fresh for 5 minutes, reducing unnecessary refetches
+// - gcTime: Cached data kept for 10 minutes before garbage collection
+// - refetchOnWindowFocus: Disabled to prevent aggressive refetching on tab switches
+// - retry: 1 retry on failure to balance reliability and performance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

@@ -22,7 +22,7 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore, selectTotalItems } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { CartDrawer } from "./CartDrawer";
 import { WishlistDrawer } from "./WishlistDrawer";
@@ -45,7 +45,7 @@ export const Header = () => {
   const adminMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
-  const totalItems = useCartStore((state) => state.getTotalItems());
+  const totalItems = useCartStore(selectTotalItems);
   const wishlistItems = useWishlistStore((state) => state.items);
   const setCartOpen = useCartStore((state) => state.setOpen);
   const setWishlistOpen = useWishlistStore((state) => state.setOpen);
