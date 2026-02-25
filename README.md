@@ -126,6 +126,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 - [Project Status](PROJECT_STATUS.md) - **Main project confirmation**
 - [Channel Connections](CHANNEL_CONNECTIONS.md) - All connected channels (50+)
+- [Cross-Repository Integration](CROSS_REPOSITORY_INTEGRATION.md) - **Sync with understand-project**
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
