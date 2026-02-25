@@ -3,8 +3,12 @@
 > **Premium Beauty E-commerce Platform** - Luxury skincare and beauty essentials
 > for the modern customer
 
+⚡ **THIS IS THE MAIN PROJECT** - All development and updates centralized here
+
 🔗 **Live**: [www.asperbeautyshop.com](https://www.asperbeautyshop.com)\
-🔗 **Dev**: [asperbeautyshop.lovable.app](https://asperbeautyshop.lovable.app)
+🔗 **Dev**: [asperbeautyshop.lovable.app](https://asperbeautyshop.lovable.app)\
+🔗 **GitHub**: [asperpharma/Asper-Beauty-Shop-aff332b2](https://github.com/asperpharma/Asper-Beauty-Shop-aff332b2)\
+🔗 **Lovable Project**: [657fb572-13a5-4a3e-bac9-184d39fdf7e6](https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6/settings)
 
 ---
 
@@ -120,6 +124,8 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 📚 Documentation
 
+- [Project Status](PROJECT_STATUS.md) - **Main project confirmation**
+- [Channel Connections](CHANNEL_CONNECTIONS.md) - All connected channels (50+)
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
