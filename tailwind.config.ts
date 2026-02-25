@@ -19,9 +19,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Playfair Display", "serif"],
-        body: ["Inter", "Lato", "sans-serif"],
+        display: ["Playfair Display", "Cinzel", "serif"],
+        body: ["Inter", "Lato", "Montserrat", "sans-serif"],
         script: ["Great Vibes", "cursive"],
+        arabic: ["Tajawal", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -93,6 +94,16 @@ export default {
         "dark-charcoal": "hsl(var(--dark-charcoal))",
         "luxury-black": "#1A1A1A",
         "luxury-charcoal": "#2D2D2D",
+        "asper-stone": {
+          DEFAULT: "hsl(var(--asper-stone))",
+          light: "hsl(var(--asper-stone-light))",
+          dark: "hsl(var(--asper-stone-dark))",
+        },
+        "rose-clay": {
+          DEFAULT: "hsl(var(--rose-clay))",
+          light: "hsl(var(--rose-clay-light))",
+          dark: "hsl(var(--rose-clay-dark))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

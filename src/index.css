@@ -26,6 +26,16 @@
     --warm-brown: 350 25% 14%;
     --warm-brown-light: 350 20% 35%;
 
+    /* Asper Stone - Warm Light Gray/Soft Ivory Base */
+    --asper-stone: 30 20% 88%;
+    --asper-stone-light: 30 20% 92%;
+    --asper-stone-dark: 30 18% 82%;
+
+    /* Rose Clay - Muted Pink/Terracotta for Feminine Touch */
+    --rose-clay: 15 35% 65%;
+    --rose-clay-light: 15 40% 75%;
+    --rose-clay-dark: 15 30% 55%;
+
     /* Primary backgrounds - Cream base */
     --background: 25 47% 91%;
     --foreground: 350 25% 14%;
@@ -193,6 +203,14 @@
     --gold: 46 66% 52%;
     --gold-light: 46 66% 62%;
 
+    --asper-stone: 30 15% 25%;
+    --asper-stone-light: 30 15% 30%;
+    --asper-stone-dark: 30 15% 20%;
+
+    --rose-clay: 15 30% 40%;
+    --rose-clay-light: 15 35% 50%;
+    --rose-clay-dark: 15 25% 30%;
+
     --sidebar-background: 348 68% 10%;
     --sidebar-foreground: 25 47% 91%;
     --sidebar-primary: 25 47% 91%;
@@ -347,6 +365,81 @@
       after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-accent
       after:origin-bottom-right after:transition-transform after:duration-400
       hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+
+  /* ============================================
+     DESIGN PILLARS - Strategic Architecture
+     ============================================ */
+  
+  /* PILLAR 1: RESILIENCE - Strength & Barrier Protection */
+  .pillar-resilience {
+    @apply border-2 border-primary font-semibold;
+    @apply bg-gradient-to-br from-primary/5 to-primary/10;
+  }
+
+  .pillar-resilience-badge {
+    @apply inline-flex items-center px-3 py-1.5 rounded-full;
+    @apply bg-primary/10 text-primary font-medium text-xs;
+    @apply border border-primary/20;
+  }
+
+  .pillar-resilience-icon {
+    @apply text-primary;
+  }
+
+  /* PILLAR 2: TRANSPARENCY - Clear Information & Trust */
+  .pillar-transparency {
+    @apply bg-white/95 backdrop-blur-sm border border-gold/30;
+    @apply shadow-gold-sm;
+  }
+
+  .pillar-transparency-section {
+    @apply bg-asper-stone/30 border-l-4 border-gold;
+    @apply px-6 py-4 rounded-r-lg;
+  }
+
+  .pillar-transparency-label {
+    @apply text-xs uppercase tracking-wider font-medium text-gold-900;
+  }
+
+  /* PILLAR 3: REFINEMENT - Smooth Process & Elegant UX */
+  .pillar-refinement {
+    @apply transition-all duration-400 ease-in-out;
+    @apply hover:scale-[1.02] hover:shadow-gold-hover;
+  }
+
+  .pillar-refinement-gradient {
+    @apply bg-gradient-to-br from-cream via-cream-dark to-asper-stone;
+  }
+
+  .pillar-refinement-border {
+    @apply border border-gold/20 rounded-lg;
+    @apply shadow-gold-md hover:shadow-gold-hover;
+  }
+
+  /* PILLAR 4: EMPATHY - Supportive & Understanding */
+  .pillar-empathy {
+    @apply bg-rose-clay/10 border border-rose-clay/30;
+    @apply rounded-lg px-4 py-3;
+  }
+
+  .pillar-empathy-text {
+    @apply text-foreground/90 leading-relaxed;
+  }
+
+  .pillar-empathy-icon {
+    @apply text-rose-clay;
+  }
+
+  /* Combined Pillar Styling */
+  .medical-elite-card {
+    @apply pillar-refinement pillar-transparency;
+    @apply bg-card border border-gold/40 rounded-lg p-6;
+  }
+
+  .clinical-badge {
+    @apply pillar-resilience-badge;
+    @apply shadow-gold-badge hover:shadow-gold-badge-hover;
   }
 
   /* Mega Menu */
