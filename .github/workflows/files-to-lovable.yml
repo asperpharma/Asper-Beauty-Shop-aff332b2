@@ -1,0 +1,109 @@
+# Sync all file changes (add/modify/remove) to Lovable via webhook
+# Repo: asperpharma/Asper-Beauty-Shop-aff332b2
+# SETUP: In GitHub repo → Settings → Secrets and variables → Actions, add:
+#   LOVABLE_WEBHOOK_URL = (Lovable webhook endpoint)
+#
+# This action will POST the commit info and changed file lists to Lovable on every push.
+
+name: Sync Files to Lovable
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on push to any branch
+
+permissions:
+  contents: read
+
+jobs:
+  sync-to-lovable:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch current and previous commit to compare changes
+      
+      - name: Get changed files
+        id: changed-files
+        run: |
+          # Get the list of added files
+          ADDED_FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          
+          # Get the list of modified files
+          MODIFIED_FILES=$(git diff --name-only --diff-filter=M HEAD^ HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          
+          # Get the list of deleted files
+          DELETED_FILES=$(git diff --name-only --diff-filter=D HEAD^ HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          
+          echo "added_files=$ADDED_FILES" >> $GITHUB_OUTPUT
+          echo "modified_files=$MODIFIED_FILES" >> $GITHUB_OUTPUT
+          echo "deleted_files=$DELETED_FILES" >> $GITHUB_OUTPUT
+          
+          echo "Added files: $ADDED_FILES"
+          echo "Modified files: $MODIFIED_FILES"
+          echo "Deleted files: $DELETED_FILES"
+      
+      - name: Send webhook to Lovable
+        if: env.LOVABLE_WEBHOOK_URL != ''
+        env:
+          LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
+        run: |
+          # Create JSON payload with commit and file change information
+          PAYLOAD=$(jq -n \
+            --arg repo "${{ github.repository }}" \
+            --arg branch "${{ github.ref_name }}" \
+            --arg commit "${{ github.sha }}" \
+            --arg commit_message "${{ github.event.head_commit.message }}" \
+            --arg author "${{ github.event.head_commit.author.name }}" \
+            --arg author_email "${{ github.event.head_commit.author.email }}" \
+            --arg timestamp "${{ github.event.head_commit.timestamp }}" \
+            --argjson added_files '${{ steps.changed-files.outputs.added_files }}' \
+            --argjson modified_files '${{ steps.changed-files.outputs.modified_files }}' \
+            --argjson deleted_files '${{ steps.changed-files.outputs.deleted_files }}' \
+            '{
+              repository: $repo,
+              branch: $branch,
+              commit: {
+                sha: $commit,
+                message: $commit_message,
+                author: {
+                  name: $author,
+                  email: $author_email
+                },
+                timestamp: $timestamp
+              },
+              changes: {
+                added: $added_files,
+                modified: $modified_files,
+                deleted: $deleted_files
+              }
+            }')
+          
+          echo "Sending payload to Lovable:"
+          echo "$PAYLOAD" | jq .
+          
+          # POST the payload to Lovable webhook
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$LOVABLE_WEBHOOK_URL" \
+            --fail-with-body \
+            --show-error
+          
+          echo "Successfully sent file changes to Lovable webhook"
+      
+      - name: Webhook URL not configured
+        if: env.LOVABLE_WEBHOOK_URL == ''
+        env:
+          LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
+        run: |
+          echo "⚠️  LOVABLE_WEBHOOK_URL secret is not configured"
+          echo "To enable Lovable sync, add LOVABLE_WEBHOOK_URL to your repository secrets:"
+          echo "Repository Settings → Secrets and variables → Actions → New repository secret"
+          echo ""
+          echo "File changes detected but not synced:"
+          echo "Added: ${{ steps.changed-files.outputs.added_files }}"
+          echo "Modified: ${{ steps.changed-files.outputs.modified_files }}"
+          echo "Deleted: ${{ steps.changed-files.outputs.deleted_files }}"
