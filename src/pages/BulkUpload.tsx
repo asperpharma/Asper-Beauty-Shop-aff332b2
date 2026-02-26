@@ -170,6 +170,12 @@ export default function BulkUpload() {
 
         // First row contains headers
         const headers = rows[0].map(h => String(h || "").trim());
+        
+        // Validate that we have at least one non-empty header
+        if (headers.every(h => h === "")) {
+          throw new Error("No valid column headers found in the Excel file");
+        }
+        
         console.log("Found headers:", headers);
 
         // Convert rows to JSON objects
@@ -257,6 +263,12 @@ export default function BulkUpload() {
 
       // First row contains headers
       const headers = rows[0].map(h => String(h || "").trim());
+      
+      // Validate that we have at least one non-empty header
+      if (headers.every(h => h === "")) {
+        throw new Error("No valid column headers found in the Excel file");
+      }
+      
       console.log("Found headers:", headers);
 
       // Convert rows to JSON objects
