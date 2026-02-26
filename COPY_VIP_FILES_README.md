@@ -23,7 +23,7 @@ Before running the script, update these variables at the top of `copy-vip-files.
 
 ```bash
 SOURCE_VIP_FOLDER="/path/to/VIP-folder"           # Update to actual VIP folder location
-TARGET_PROJECT_FOLDER="/path/to/understand-project" # Update to your project repo location
+TARGET_PROJECT_FOLDER="/path/to/project-repo"     # Update to your project repo location
 ```
 
 ## Usage
@@ -140,7 +140,7 @@ TARGET_PROJECT_FOLDER="/home/user/asper-beauty-shop"
 # Make sure .env is listed in .gitignore (never commit real secrets!)
 # [copilot/copy-vip-file-to-project abc1234] Apply to main site: social, Google Merchant Center, all pages checklist
 #  2 files changed, 150 insertions(+)
-# All done! Files copied, committed, and pushed to understand-project.
+# All done! Files copied, committed, and pushed to repository.
 ```
 
 ## Related Scripts

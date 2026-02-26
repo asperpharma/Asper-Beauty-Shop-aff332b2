@@ -6,7 +6,7 @@
 
 # === Customize these paths ===
 SOURCE_VIP_FOLDER="/path/to/VIP-folder"           # Update to actual VIP folder location
-TARGET_PROJECT_FOLDER="/path/to/understand-project" # Update to your understand-project repo location
+TARGET_PROJECT_FOLDER="/path/to/project-repo"     # Update to your project repository location
 
 # === Functions ===
 function check_file_exists() {
@@ -61,6 +61,6 @@ fi
 git commit -m "Apply to main site: social, Google Merchant Center, all pages checklist"
 git push
 
-echo "All done! Files copied, committed, and pushed to understand-project."
+echo "All done! Files copied, committed, and pushed to repository."
 
 # === End ===
