@@ -120,10 +120,18 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 📚 Documentation
 
+📖 **[Documentation Map](DOCUMENTATION_MAP.md)** - Complete guide to all documentation
+
+### Strategic Planning
+- [Project DNA Strategy](PROJECT_DNA_STRATEGY.md) - SaaS ecosystem transformation roadmap
+- [Project Breakdown Framework](PROJECT_BREAKDOWN_FRAMEWORK.md) - Structured approach to feature planning
+- [Framework Quick Start](FRAMEWORK_QUICK_START.md) - 5-minute guide to using the framework
+
+### Technical Documentation
+- [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
-- [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
 
 ---
