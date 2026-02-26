@@ -153,6 +153,30 @@ npm run build && npm run preview # Test production
 
 ---
 
+## 🔧 Utility Scripts
+
+### VIP Files Copy Script
+
+Use `copy-vip-files.sh` to deploy updates from VIP folder to main site:
+
+```bash
+./copy-vip-files.sh  # Copies APPLY_TO_MAIN_SITE.md, env templates
+```
+
+See [COPY_VIP_FILES_README.md](COPY_VIP_FILES_README.md) for full documentation.
+
+### Product Category Audit
+
+Analyze and optimize product categorization:
+
+```bash
+npx tsx scripts/audit-categories.ts  # Audits Shopify product categories
+```
+
+See [scripts/README.md](scripts/README.md) for details.
+
+---
+
 ## 📞 Contact
 
 - **Email**: asperpharma@gmail.com
