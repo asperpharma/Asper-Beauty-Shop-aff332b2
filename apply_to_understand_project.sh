@@ -23,7 +23,7 @@ set -e  # Exit on error
 
 # === CONFIGURATION ===
 # Update these paths to match your local setup
-SOURCE_VIP_FOLDER="${SOURCE_VIP_FOLDER:-/path/to/VIP-folder}"
+SOURCE_DEV_FOLDER="${SOURCE_DEV_FOLDER:-/path/to/Asper-Beauty-Shop-aff332b2}"
 TARGET_PROJECT_FOLDER="${TARGET_PROJECT_FOLDER:-/path/to/understand-project}"
 
 # Colors for output
@@ -68,12 +68,12 @@ confirm() {
 print_header "Apply Updates to understand-project"
 
 # Check if paths are configured
-if [[ "$SOURCE_VIP_FOLDER" == "/path/to/VIP-folder" ]]; then
-    print_error "SOURCE_VIP_FOLDER is not configured!"
-    print_info "Edit this script and set SOURCE_VIP_FOLDER to your actual path."
+if [[ "$SOURCE_DEV_FOLDER" == "/path/to/Asper-Beauty-Shop-aff332b2" ]]; then
+    print_error "SOURCE_DEV_FOLDER is not configured!"
+    print_info "Edit this script and set SOURCE_DEV_FOLDER to your actual path."
     echo
     echo "Example:"
-    echo "  SOURCE_VIP_FOLDER=\"/home/user/projects/Asper-Beauty-Shop-aff332b2\""
+    echo "  SOURCE_DEV_FOLDER=\"/home/user/projects/Asper-Beauty-Shop-aff332b2\""
     exit 1
 fi
 
@@ -87,8 +87,8 @@ if [[ "$TARGET_PROJECT_FOLDER" == "/path/to/understand-project" ]]; then
 fi
 
 # Validate source folder exists
-if [[ ! -d "$SOURCE_VIP_FOLDER" ]]; then
-    print_error "Source folder does not exist: $SOURCE_VIP_FOLDER"
+if [[ ! -d "$SOURCE_DEV_FOLDER" ]]; then
+    print_error "Source folder does not exist: $SOURCE_DEV_FOLDER"
     exit 1
 fi
 
@@ -104,7 +104,7 @@ if [[ ! -d "$TARGET_PROJECT_FOLDER/.git" ]]; then
     exit 1
 fi
 
-print_success "Source folder: $SOURCE_VIP_FOLDER"
+print_success "Source folder: $SOURCE_DEV_FOLDER"
 print_success "Target folder: $TARGET_PROJECT_FOLDER"
 echo
 
@@ -116,7 +116,7 @@ print_header "Select Files to Copy"
 declare -A FILES_TO_COPY
 
 # Check for APPLY_TO_MAIN_SITE.md
-if [[ -f "$SOURCE_VIP_FOLDER/APPLY_TO_MAIN_SITE.md" ]]; then
+if [[ -f "$SOURCE_DEV_FOLDER/APPLY_TO_MAIN_SITE.md" ]]; then
     if confirm "Copy APPLY_TO_MAIN_SITE.md?"; then
         FILES_TO_COPY["APPLY_TO_MAIN_SITE.md"]=1
         print_success "Will copy APPLY_TO_MAIN_SITE.md"
@@ -128,7 +128,7 @@ fi
 echo
 
 # Check for env.main-site.example
-if [[ -f "$SOURCE_VIP_FOLDER/env.main-site.example" ]]; then
+if [[ -f "$SOURCE_DEV_FOLDER/env.main-site.example" ]]; then
     if confirm "Copy env.main-site.example?"; then
         FILES_TO_COPY["env.main-site.example"]=1
         print_success "Will copy env.main-site.example"
@@ -141,7 +141,7 @@ echo
 
 # Optional: Copy .env for local development (NEVER commit this!)
 COPY_ENV=0
-if [[ -f "$SOURCE_VIP_FOLDER/.env" ]]; then
+if [[ -f "$SOURCE_DEV_FOLDER/.env" ]]; then
     echo -e "${YELLOW}WARNING: .env contains secrets and should NEVER be committed!${NC}"
     if confirm "Copy .env for local development? (not recommended)"; then
         COPY_ENV=1
@@ -168,7 +168,7 @@ if [[ $COPY_ENV -eq 1 ]]; then
     echo "  - .env (for local dev only)"
 fi
 echo
-echo "From: $SOURCE_VIP_FOLDER"
+echo "From: $SOURCE_DEV_FOLDER"
 echo "To:   $TARGET_PROJECT_FOLDER"
 echo
 
@@ -182,12 +182,12 @@ fi
 print_header "Copying Files"
 
 for file in "${!FILES_TO_COPY[@]}"; do
-    cp "$SOURCE_VIP_FOLDER/$file" "$TARGET_PROJECT_FOLDER/$file"
+    cp "$SOURCE_DEV_FOLDER/$file" "$TARGET_PROJECT_FOLDER/$file"
     print_success "Copied $file"
 done
 
 if [[ $COPY_ENV -eq 1 ]]; then
-    cp "$SOURCE_VIP_FOLDER/.env" "$TARGET_PROJECT_FOLDER/.env"
+    cp "$SOURCE_DEV_FOLDER/.env" "$TARGET_PROJECT_FOLDER/.env"
     print_warning "Copied .env (verify .gitignore excludes it!)"
 fi
 
@@ -198,6 +198,16 @@ echo
 print_header "Git Commit"
 
 cd "$TARGET_PROJECT_FOLDER"
+
+# Optional: Create a new branch before committing
+CREATE_BRANCH=0
+if confirm "Create a new branch for these changes?"; then
+    CREATE_BRANCH=1
+    BRANCH_NAME="main-site-update-$(date +%Y%m%d-%H%M%S)"
+    git checkout -b "$BRANCH_NAME"
+    print_success "Created and switched to branch: $BRANCH_NAME"
+    echo
+fi
 
 # Check for uncommitted changes
 if [[ -n $(git status --porcelain) ]]; then
@@ -221,8 +231,13 @@ if [[ -n $(git status --porcelain) ]]; then
     
     echo
     if confirm "Push to remote?"; then
-        git push
-        print_success "Pushed to remote"
+        if [[ $CREATE_BRANCH -eq 1 ]]; then
+            git push -u origin "$BRANCH_NAME"
+            print_success "Pushed to remote on branch: $BRANCH_NAME"
+        else
+            git push
+            print_success "Pushed to remote"
+        fi
     else
         print_info "Changes committed locally. Run 'git push' manually when ready."
     fi
@@ -244,18 +259,4 @@ echo
 print_info "See APPLY_TO_MAIN_SITE.md for complete deployment checklist."
 echo
 
-# === ADVANCED OPTIONS ===
-
-print_header "Advanced Options"
-
-# Optional: Create a new branch
-if confirm "Create a new branch for these changes?"; then
-    BRANCH_NAME="main-site-update-$(date +%Y%m%d-%H%M%S)"
-    git checkout -b "$BRANCH_NAME"
-    print_success "Created branch: $BRANCH_NAME"
-    echo
-    print_info "Don't forget to push: git push -u origin $BRANCH_NAME"
-fi
-
-echo
 print_success "Script completed successfully!"
