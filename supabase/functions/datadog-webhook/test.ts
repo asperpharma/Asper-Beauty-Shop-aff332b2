@@ -96,7 +96,8 @@ async function runTests() {
 
   // Test 2: Invalid signature
   console.log("Test 2: Invalid signature");
-  const invalidSignature = "0000000000000000000000000000000000000000000000000000000000000000";
+  const invalidSignature =
+    "0000000000000000000000000000000000000000000000000000000000000000";
   const test2Result = await verifyDatadogSignature(
     testPayload,
     invalidSignature,

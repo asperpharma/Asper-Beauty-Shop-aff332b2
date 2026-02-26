@@ -75,7 +75,7 @@ serve(async (req) => {
 
     // Get the signature from headers
     const ddSignature = req.headers.get("DD-Signature");
-    
+
     if (!ddSignature) {
       console.error("Missing DD-Signature header");
       return new Response(
@@ -89,7 +89,7 @@ serve(async (req) => {
 
     // Get the webhook secret from environment
     const webhookSecret = Deno.env.get("DATADOG_WEBHOOK_SECRET");
-    
+
     if (!webhookSecret) {
       console.error("DATADOG_WEBHOOK_SECRET not configured");
       return new Response(
@@ -124,7 +124,7 @@ serve(async (req) => {
 
     // Parse the verified payload
     const payload = JSON.parse(rawBody);
-    
+
     console.log("Received valid Datadog webhook:", {
       alertType: payload.alert_type,
       title: payload.title,
@@ -151,7 +151,7 @@ serve(async (req) => {
 
     // Process the webhook payload based on alert type
     // Add your custom logic here
-    
+
     return new Response(
       JSON.stringify({
         success: true,
