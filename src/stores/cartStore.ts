@@ -33,9 +33,17 @@ interface CartStore {
   setLoading: (loading: boolean) => void;
   setOpen: (open: boolean) => void;
   createCheckout: () => Promise<void>;
-  getTotalItems: () => number;
-  getTotalPrice: () => number;
 }
+
+// Selector helpers for computed values to prevent unnecessary re-renders
+export const selectTotalItems = (state: CartStore) =>
+  state.items.reduce((sum, item) => sum + item.quantity, 0);
+
+export const selectTotalPrice = (state: CartStore) =>
+  state.items.reduce(
+    (sum, item) => sum + parseFloat(item.price.amount) * item.quantity,
+    0
+  );
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -110,17 +118,6 @@ export const useCartStore = create<CartStore>()(
         } finally {
           setLoading(false);
         }
-      },
-
-      getTotalItems: () => {
-        return get().items.reduce((sum, item) => sum + item.quantity, 0);
-      },
-
-      getTotalPrice: () => {
-        return get().items.reduce(
-          (sum, item) => sum + (parseFloat(item.price.amount) * item.quantity),
-          0,
-        );
       },
     }),
     {
