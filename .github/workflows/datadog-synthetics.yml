@@ -1,0 +1,25 @@
+name: Datadog Synthetics CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  synthetics-ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Datadog Synthetics tests
+        uses: datadog/synthetics-ci-github-action@v1.11.0
+        with:
+          api_key: ${{ secrets.DATADOG_API_KEY }}
+          app_key: ${{ secrets.DATADOG_APP_KEY }}
+          public_ids: ${{ secrets.DATADOG_PUBLIC_IDS }}
