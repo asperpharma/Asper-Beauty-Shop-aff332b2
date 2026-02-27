@@ -21,15 +21,43 @@ function generateHmacSignature(payload, secret) {
 }
 
 /**
+ * Constant-time comparison to prevent timing attacks
+ * @param {string} a - First string
+ * @param {string} b - Second string
+ * @returns {boolean} True if strings are equal
+ */
+function timingSafeEqual(a, b) {
+  if (a.length !== b.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  
+  return result === 0;
+}
+
+/**
  * Verify HMAC SHA-256 signature
  * @param {string} payload - The raw request body
- * @param {string} signature - The DD-Signature header value
+ * @param {string} signature - The DD-Signature header value (may include "sha256=" prefix)
  * @param {string} secret - The webhook secret key
  * @returns {boolean} True if signature is valid
  */
 function verifySignature(payload, signature, secret) {
+  // Strip "sha256=" prefix if present
+  let cleanSignature = signature;
+  if (signature.toLowerCase().startsWith('sha256=')) {
+    cleanSignature = signature.substring(7);
+  }
+  
   const computedSignature = generateHmacSignature(payload, secret);
-  return computedSignature.toLowerCase() === signature.toLowerCase();
+  return timingSafeEqual(
+    computedSignature.toLowerCase(),
+    cleanSignature.toLowerCase()
+  );
 }
 
 // Run tests
@@ -83,8 +111,32 @@ console.log(`  Modified payload: ${modifiedPayload.substring(0, 50)}...`);
 console.log(`  Verification result: ${test5Result}`);
 console.log(`  Status: ${!test5Result ? '✓ PASS' : '✗ FAIL'}\n`);
 
+// Test 6: Signature with sha256= prefix
+console.log('Test 6: Accept signature with sha256= prefix');
+const prefixedSignature = `sha256=${validSignature}`;
+const test6Result = verifySignature(testPayload, prefixedSignature, testSecret);
+console.log(`  Prefixed signature: ${prefixedSignature.substring(0, 50)}...`);
+console.log(`  Verification result: ${test6Result}`);
+console.log(`  Status: ${test6Result ? '✓ PASS' : '✗ FAIL'}\n`);
+
+// Test 7: Uppercase sha256= prefix
+console.log('Test 7: Accept uppercase SHA256= prefix');
+const uppercasePrefixedSignature = `SHA256=${validSignature}`;
+const test7Result = verifySignature(testPayload, uppercasePrefixedSignature, testSecret);
+console.log(`  Uppercase prefixed signature: ${uppercasePrefixedSignature.substring(0, 50)}...`);
+console.log(`  Verification result: ${test7Result}`);
+console.log(`  Status: ${test7Result ? '✓ PASS' : '✗ FAIL'}\n`);
+
+// Test 8: Timing-safe comparison with different length
+console.log('Test 8: Timing-safe comparison with different length');
+const shortSignature = validSignature.substring(0, 32);
+const test8Result = verifySignature(testPayload, shortSignature, testSecret);
+console.log(`  Short signature: ${shortSignature}`);
+console.log(`  Verification result: ${test8Result}`);
+console.log(`  Status: ${!test8Result ? '✓ PASS' : '✗ FAIL'}\n`);
+
 // Summary
-const allPassed = test1Result && !test2Result && !test3Result && test4Result && !test5Result;
+const allPassed = test1Result && !test2Result && !test3Result && test4Result && !test5Result && test6Result && test7Result && !test8Result;
 console.log('=== Test Summary ===');
 console.log(`All tests ${allPassed ? 'PASSED ✓' : 'FAILED ✗'}`);
 
