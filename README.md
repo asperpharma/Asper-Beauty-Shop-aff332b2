@@ -12,9 +12,10 @@
 
 ```bash
 npm install          # Install dependencies
-npm run dev         # Start dev server (localhost:8080)
-npm run build       # Build for production
-npm run preview     # Preview production build
+npm run dev          # Start dev server (localhost:8080)
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run check:all    # Run lint + typecheck + build
 ```
 
 ---
