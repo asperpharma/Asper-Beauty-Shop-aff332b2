@@ -247,7 +247,7 @@ export const Header = () => {
                 <Instagram className="w-4 h-4" strokeWidth={1.5} />
               </a>
               <a
-                href="https://www.facebook.com/asper.beauty.shop"
+                href="https://www.facebook.com/AsperBeautyShop"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1.5 text-gold hover:text-gold-light transition-colors duration-400"
