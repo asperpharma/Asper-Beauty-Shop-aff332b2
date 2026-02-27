@@ -15,6 +15,7 @@ npm install          # Install dependencies
 npm run dev         # Start dev server (localhost:8080)
 npm run build       # Build for production
 npm run preview     # Preview production build
+npm run check:all   # Lint + typecheck + build (pre-deploy)
 ```
 
 ---
@@ -121,6 +122,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 ## 📚 Documentation
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
+- [Publish Final Steps](PUBLISH_FINAL_STEPS.md) - Complete deployment checklist
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
@@ -146,9 +148,11 @@ Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ## 🧪 Testing
 
 ```bash
-npm run lint                     # ESLint
+npm run lint                     # ESLint validation
+npm run typecheck                # TypeScript type checking
+npm run check:all                # Lint + typecheck + build
 ./verify-connections.sh          # Verify integrations (48 checks)
-npm run build && npm run preview # Test production
+npm run build && npm run preview # Test production build
 ```
 
 ---
