@@ -122,6 +122,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
+- [Datadog Synthetics Setup](DATADOG_SYNTHETICS_SETUP.md) - CI/CD testing guide
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
@@ -148,8 +149,12 @@ Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```bash
 npm run lint                     # ESLint
 ./verify-connections.sh          # Verify integrations (48 checks)
-npm run build && npm run preview # Test production
+npm run build && npm run preview # Test production build
 ```
+
+**CI/CD Pipelines**:
+- **Deno Workflow** - Lints/tests Supabase edge functions
+- **Datadog Synthetics** - E2E browser & API tests ([Setup Guide](DATADOG_SYNTHETICS_SETUP.md))
 
 ---
 

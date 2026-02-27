@@ -1,0 +1,85 @@
+# Datadog Synthetics CI Workflow
+# This workflow runs Datadog Synthetic tests to validate the application
+#
+# Setup: Configure DATADOG_API_KEY and DATADOG_APP_KEY secrets in repository settings
+# Documentation: https://github.com/DataDog/synthetics-ci-github-action
+
+name: Datadog Synthetics CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Run tests daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual triggers
+
+permissions:
+  contents: read
+
+jobs:
+  synthetics-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SHOPIFY_STORE_DOMAIN: ${{ secrets.VITE_SHOPIFY_STORE_DOMAIN }}
+          VITE_SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.VITE_SHOPIFY_STOREFRONT_TOKEN }}
+          VITE_SHOPIFY_API_VERSION: ${{ secrets.VITE_SHOPIFY_API_VERSION }}
+
+      - name: Check Datadog Configuration
+        id: check-datadog
+        run: |
+          if [ -z "${{ secrets.DATADOG_API_KEY }}" ] || [ -z "${{ secrets.DATADOG_APP_KEY }}" ]; then
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "⚠️  Datadog API keys not configured"
+            echo "Please configure DATADOG_API_KEY and DATADOG_APP_KEY secrets"
+          else
+            echo "configured=true" >> $GITHUB_OUTPUT
+            echo "✅ Datadog configuration detected"
+          fi
+
+      - name: Run Datadog Synthetics tests
+        if: steps.check-datadog.outputs.configured == 'true'
+        uses: DataDog/synthetics-ci-github-action@v1.14.0
+        with:
+          api-key: ${{ secrets.DATADOG_API_KEY }}
+          app-key: ${{ secrets.DATADOG_APP_KEY }}
+          # Uncomment and configure if you have specific test IDs
+          # test-search-query: 'tag:ci'
+          # public-ids: 'abc-def-ghi,123-456-789'
+        continue-on-error: true
+        
+      - name: Test Summary
+        if: always()
+        run: |
+          if [ "${{ steps.check-datadog.outputs.configured }}" == "true" ]; then
+            echo "✅ Datadog Synthetics tests completed"
+            echo "Check Datadog dashboard for detailed results"
+          else
+            echo "⚠️  Datadog Synthetics not configured"
+            echo "To enable Synthetics testing:"
+            echo "1. Create Synthetic tests in Datadog dashboard"
+            echo "2. Add DATADOG_API_KEY to GitHub secrets"
+            echo "3. Add DATADOG_APP_KEY to GitHub secrets"
+            echo "4. Configure test_search_query or public_ids in workflow"
+          fi
