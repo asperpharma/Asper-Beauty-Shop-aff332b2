@@ -130,16 +130,30 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 ## 🚀 Deployment
 
-**Automatic**: Push to `main` → Lovable deploys → Live at
-www.asperbeautyshop.com
+### Quick Start (GitHub Pages)
+1. Enable GitHub Pages: Settings → Pages → Source: **GitHub Actions**
+2. Push to `main` branch
+3. Site live at: `https://asperpharma.github.io/Asper-Beauty-Shop-aff332b2/`
 
-**Manual**: `npm run build` → Upload `dist/` folder
+### Alternative Options
+- **Lovable Platform**: Push to `main` → auto-deploys to asperbeautyshop.lovable.app
+- **Netlify/Vercel**: Connect GitHub repo → auto-deploy
+- **Manual**: `npm run build` → Upload `dist/` folder to any static host
 
-**DNS Setup** (for custom domain):
+### Custom Domain Setup
 
+**For GitHub Pages:**
+```
+Settings → Pages → Custom domain: www.asperbeautyshop.com
+Add CNAME record: asperpharma.github.io
+```
+
+**For Lovable:**
 ```
 Type: CNAME | Name: www | Value: asperbeautyshop.lovable.app
 ```
+
+📚 **Detailed Instructions**: See [DEPLOYMENT_INSTRUCTIONS.md](DEPLOYMENT_INSTRUCTIONS.md) and [DEPLOYMENT_STATUS.md](DEPLOYMENT_STATUS.md)
 
 ---
 
