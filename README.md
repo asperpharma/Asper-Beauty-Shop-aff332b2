@@ -122,6 +122,7 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - DNS & domain setup
 - [Connection Status](CONNECTION_STATUS.md) - Integration verification
+- [Datadog Agent Setup](DATADOG_AGENT_SETUP.md) - Monitoring & observability
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
