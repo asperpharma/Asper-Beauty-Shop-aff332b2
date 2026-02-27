@@ -4,6 +4,11 @@ import { BeautyAssistant } from "@/components/BeautyAssistant";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Award, FlaskConical, Globe, Sparkles } from "lucide-react";
+import {
+  DermatologistApproved,
+  MedicalGradeBadge,
+  ClinicalCertification,
+} from "@/components/clinical";
 
 interface TimelineItem {
   year: string;
@@ -436,6 +441,59 @@ const Philosophy = () => {
                   }}
                 />
               </div>
+            </section>
+          </ParallaxSection>
+
+          {/* Clinical Credentials Section - NEW */}
+          <ParallaxSection speed={0.04} className="mb-16 md:mb-24">
+            <section className="space-y-8">
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-burgundy mb-4 leading-snug">
+                  {isArabic
+                    ? "المعايير السريرية والطبية"
+                    : "Clinical & Medical Standards"}
+                </h2>
+                <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                  {isArabic
+                    ? "نلتزم بأعلى معايير الجودة الصيدلانية والموافقات الطبية لضمان سلامة وفعالية كل منتج"
+                    : "We adhere to the highest pharmaceutical quality standards and medical approvals to ensure the safety and efficacy of every product"}
+                </p>
+              </div>
+
+              {/* Medical Grade Badges */}
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <MedicalGradeBadge grade="pharmaceutical" size="lg" />
+                <MedicalGradeBadge grade="clinical" size="lg" />
+                <MedicalGradeBadge grade="dermatological" size="lg" />
+              </div>
+
+              {/* Dermatologist Approved Card */}
+              <DermatologistApproved variant="card" className="mb-8" />
+
+              {/* Clinical Certifications */}
+              <ClinicalCertification
+                variant="detailed"
+                certifications={
+                  isArabic
+                    ? [
+                        "مختبر سريريًا",
+                        "معتمد من أطباء الجلدية",
+                        "مضاد للحساسية",
+                        "خالي من العطور",
+                        "غير كوميدوغينيك",
+                        "خالي من البارابين",
+                      ]
+                    : [
+                        "Clinically Tested",
+                        "Dermatologist Approved",
+                        "Hypoallergenic",
+                        "Fragrance Free",
+                        "Non-Comedogenic",
+                        "Paraben Free",
+                      ]
+                }
+              />
             </section>
           </ParallaxSection>
 
