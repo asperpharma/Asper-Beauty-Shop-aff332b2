@@ -1,11 +1,24 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+/**
+ * Get CORS headers based on environment configuration and request origin.
+ * - If ALLOWED_ORIGIN secret is set, use that origin exclusively
+ * - Otherwise, use the request's Origin header if present
+ * - Fall back to "*" if no origin is available
+ */
+function getCorsHeaders(req: Request): Record<string, string> {
+  const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN");
+  const requestOrigin = req.headers.get("Origin");
+
+  const origin = allowedOrigin || requestOrigin || "*";
+
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 const systemPrompt =
   `You are a friendly and knowledgeable beauty consultant for Asper Beauty, a premium cosmetics and skincare store. Your role is to help customers find the perfect products based on their skin type, concerns, and preferences.
@@ -30,6 +43,8 @@ Popular brands we carry: Vichy, Eucerin, Cetaphil, SVR, Bourjois, IsaDora, Essen
 Keep responses concise (2-3 sentences max) and helpful. Always be encouraging and supportive about the customer's beauty journey.`;
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
