@@ -15,7 +15,7 @@ pixel-perfect brand-representative SVG icons.
 | Platform        | URL                                                                | Icon Status | Brand Color                   |
 | --------------- | ------------------------------------------------------------------ | ----------- | ----------------------------- |
 | **Instagram**   | [@asper.beauty.shop](https://www.instagram.com/asper.beauty.shop/) | ✅ SVG      | Gradient (Purple→Pink→Orange) |
-| **Facebook**    | [Asper Beauty Shop](https://www.facebook.com/asper.beauty.shop)    | ✅ SVG      | #1877F2 (Facebook Blue)       |
+| **Facebook**    | [Asper Beauty Shop](https://www.facebook.com/AsperBeautyShop)    | ✅ SVG      | #1877F2 (Facebook Blue)       |
 | **TikTok**      | [@asper.beauty.shop](https://www.tiktok.com/@asper.beauty.shop)    | ✅ SVG      | Black                         |
 | **WhatsApp**    | [+962 79 065 6666](https://wa.me/962790656666)                     | ✅ SVG      | #25D366 (WhatsApp Green)      |
 | **X (Twitter)** | [@asperbeautyshop](https://twitter.com/asperbeautyshop)            | ✅ SVG      | Black                         |
@@ -179,7 +179,7 @@ Each platform has its authentic brand color applied on hover:
 
 ```tsx
 <a
-  href="https://www.facebook.com/asper.beauty.shop"
+  href="https://www.facebook.com/AsperBeautyShop"
   target="_blank"
   rel="noopener noreferrer"
   className="group flex items-center bg-foreground/90 

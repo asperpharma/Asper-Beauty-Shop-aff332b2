@@ -146,7 +146,7 @@
 ### Social Media
 
 - Instagram: [@asper.beauty.shop](https://www.instagram.com/asper.beauty.shop/)
-- Facebook: [asper.beauty.shop](https://www.facebook.com/asper.beauty.shop)
+- Facebook: [AsperBeautyShop](https://www.facebook.com/AsperBeautyShop)
 - TikTok: [@asper.beauty.shop](https://www.tiktok.com/@asper.beauty.shop)
 - WhatsApp: [+962 79 065 6666](https://wa.me/962790656666)
 
