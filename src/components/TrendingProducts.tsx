@@ -22,7 +22,7 @@ export const TrendingProducts = () => {
 
         // Filter for products with bestseller tags or trending indicators
         const trendingProducts = allProducts.filter((product) => {
-          const tags = (product.node as any).tags || [];
+          const tags = (product.node as { tags?: string[] }).tags || [];
           if (Array.isArray(tags)) {
             return tags.some((tag: string) =>
               tag.toLowerCase().includes("bestseller") ||

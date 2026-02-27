@@ -123,13 +123,17 @@ export default function BulkUpload() {
         prev.map((p) => {
           const queueItem = queueItems.find((q) => q.sku === p.sku);
           if (queueItem) {
+            // Map queue statuses to product statuses
+            // "completed" and "failed" pass through unchanged
+            const status: "pending" | "processing" | "completed" | "failed" =
+              queueItem.status === "queued"
+                ? "pending"
+                : queueItem.status === "retrying" || queueItem.status === "processing"
+                ? "processing"
+                : queueItem.status;
             return {
               ...p,
-              status: queueItem.status === "queued"
-                ? "pending"
-                : queueItem.status === "retrying"
-                ? "processing"
-                : queueItem.status as any,
+              status,
               imageUrl: queueItem.imageUrl,
               error: queueItem.error,
             };
@@ -169,7 +173,7 @@ export default function BulkUpload() {
         const worksheet = workbook.Sheets[sheetName];
 
         // Convert to JSON with headers
-        const jsonData = XLSX.utils.sheet_to_json<Record<string, any>>(
+        const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(
           worksheet,
           {
             defval: "",
@@ -230,10 +234,11 @@ export default function BulkUpload() {
           `Successfully loaded ${parsedProducts.length} products from ${file.name}`,
         );
         setStep("categorize");
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Parse error:", error);
-        setParseError(error.message || "Failed to parse file");
-        toast.error(`Failed to parse file: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : "Failed to parse file";
+        setParseError(errorMessage);
+        toast.error(`Failed to parse file: ${errorMessage}`);
       } finally {
         setIsProcessing(false);
       }
@@ -258,7 +263,7 @@ export default function BulkUpload() {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
 
-      const jsonData = XLSX.utils.sheet_to_json<Record<string, any>>(
+      const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(
         worksheet,
         {
           defval: "",
@@ -312,10 +317,11 @@ export default function BulkUpload() {
       setPreviewData(parsedProducts.slice(0, 10));
       toast.success(`Successfully loaded ${parsedProducts.length} products`);
       setStep("categorize");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Load error:", error);
-      setParseError(error.message || "Failed to load file");
-      toast.error(`Failed to load file: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : "Failed to load file";
+      setParseError(errorMessage);
+      toast.error(`Failed to load file: ${errorMessage}`);
     } finally {
       setIsProcessing(false);
     }
@@ -361,15 +367,16 @@ export default function BulkUpload() {
         } categories`,
       );
       setStep("images");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
+      const errorMessage = error instanceof Error ? error.message : "";
       if (
-        error.message?.includes("401") ||
-        error.message?.includes("Unauthorized")
+        errorMessage?.includes("401") ||
+        errorMessage?.includes("Unauthorized")
       ) {
         toast.error("Authentication required. Please log in.");
       } else if (
-        error.message?.includes("403") || error.message?.includes("Forbidden")
+        errorMessage?.includes("403") || errorMessage?.includes("Forbidden")
       ) {
         toast.error("Admin access required for bulk operations.");
       } else {
@@ -512,14 +519,15 @@ export default function BulkUpload() {
 
           // Add small delay between requests to avoid rate limiting
           await new Promise((resolve) => setTimeout(resolve, 300));
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(`Failed to create ${product.name}:`, error);
 
           // Check for auth errors and stop if unauthorized
+          const errorMessage = error instanceof Error ? error.message : "";
           if (
-            error.message?.includes("401") || error.message?.includes("403") ||
-            error.message?.includes("Unauthorized") ||
-            error.message?.includes("Forbidden")
+            errorMessage?.includes("401") || errorMessage?.includes("403") ||
+            errorMessage?.includes("Unauthorized") ||
+            errorMessage?.includes("Forbidden")
           ) {
             toast.error("Authorization failed. Please log in as an admin.");
             setIsShopifyUploading(false);
