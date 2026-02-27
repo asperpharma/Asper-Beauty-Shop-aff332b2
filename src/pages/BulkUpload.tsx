@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import * as XLSX from "xlsx";
+import readXlsxFile from "read-excel-file/browser";
 import { QueueItem, useImageQueue } from "@/lib/imageGenerationQueue";
 
 interface ProcessedProduct {
@@ -161,29 +161,31 @@ export default function BulkUpload() {
       toast.info(`Parsing ${file.name}...`);
 
       try {
-        const arrayBuffer = await file.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        // Read Excel file with headers
+        const rows = await readXlsxFile(file);
 
-        // Get the first sheet
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        // Convert to JSON with headers
-        const jsonData = XLSX.utils.sheet_to_json<Record<string, any>>(
-          worksheet,
-          {
-            defval: "",
-            raw: false,
-          },
-        );
-
-        if (jsonData.length === 0) {
+        if (rows.length < 2) {
           throw new Error("No data found in the Excel file");
         }
 
-        // Get headers from the first row
-        const headers = Object.keys(jsonData[0]);
+        // First row contains headers
+        const headers = rows[0].map(h => String(h || "").trim());
+        
+        // Validate that we have at least one non-empty header
+        if (headers.every(h => h === "")) {
+          throw new Error("No valid column headers found in the Excel file");
+        }
+        
         console.log("Found headers:", headers);
+
+        // Convert rows to JSON objects
+        const jsonData = rows.slice(1).map(row => {
+          const obj: Record<string, any> = {};
+          headers.forEach((header, index) => {
+            obj[header] = row[index] !== null ? String(row[index]) : "";
+          });
+          return obj;
+        });
 
         // Find matching columns
         const skuCol = findColumn(headers, COLUMN_MAPPINGS.sku);
@@ -252,26 +254,31 @@ export default function BulkUpload() {
       const response = await fetch("/data/products-data.xlsx");
       if (!response.ok) throw new Error("Failed to fetch file");
 
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: "array" });
+      const blob = await response.blob();
+      const rows = await readXlsxFile(blob);
 
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-
-      const jsonData = XLSX.utils.sheet_to_json<Record<string, any>>(
-        worksheet,
-        {
-          defval: "",
-          raw: false,
-        },
-      );
-
-      if (jsonData.length === 0) {
+      if (rows.length < 2) {
         throw new Error("No data found in the Excel file");
       }
 
-      const headers = Object.keys(jsonData[0]);
+      // First row contains headers
+      const headers = rows[0].map(h => String(h || "").trim());
+      
+      // Validate that we have at least one non-empty header
+      if (headers.every(h => h === "")) {
+        throw new Error("No valid column headers found in the Excel file");
+      }
+      
       console.log("Found headers:", headers);
+
+      // Convert rows to JSON objects
+      const jsonData = rows.slice(1).map(row => {
+        const obj: Record<string, any> = {};
+        headers.forEach((header, index) => {
+          obj[header] = row[index] !== null ? String(row[index]) : "";
+        });
+        return obj;
+      });
 
       const skuCol = findColumn(headers, COLUMN_MAPPINGS.sku);
       const nameCol = findColumn(headers, COLUMN_MAPPINGS.name);
