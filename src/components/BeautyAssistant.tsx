@@ -71,14 +71,14 @@ export const BeautyAssistant = () => {
     },
   };
 
-  const t = translations[language];
+  const assistantText = translations[language];
   const prompts = quickPrompts[language];
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ role: "assistant", content: t.welcome }]);
+      setMessages([{ role: "assistant", content: assistantText.welcome }]);
     }
-  }, [isOpen, messages.length, t.welcome]);
+  }, [isOpen, messages.length, assistantText.welcome]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -172,7 +172,7 @@ export const BeautyAssistant = () => {
     setIsLoading(true);
 
     try {
-      await streamChat(newMessages.filter((m) => m.content !== t.welcome));
+      await streamChat(newMessages.filter((m) => m.content !== assistantText.welcome));
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [...prev, {
@@ -195,7 +195,7 @@ export const BeautyAssistant = () => {
     setMessages(newMessages);
     setIsLoading(true);
 
-    streamChat(newMessages.filter((m) => m.content !== t.welcome))
+    streamChat(newMessages.filter((m) => m.content !== assistantText.welcome))
       .catch((error) => {
         console.error("Chat error:", error);
         setMessages((prev) => [...prev, {
@@ -227,7 +227,7 @@ export const BeautyAssistant = () => {
           <Stethoscope className="w-4 h-4 text-gold" />
         </div>
         <span className="font-body text-sm font-medium text-burgundy whitespace-nowrap">
-          {t.buttonText}
+          {assistantText.buttonText}
         </span>
       </button>
 
@@ -249,9 +249,9 @@ export const BeautyAssistant = () => {
             </div>
             <div>
               <h3 className="font-display text-base font-semibold text-white">
-                {t.title}
+                {assistantText.title}
               </h3>
-              <p className="text-xs text-gold/90 font-body">{t.subtitle}</p>
+              <p className="text-xs text-gold/90 font-body">{assistantText.subtitle}</p>
             </div>
           </div>
           <Button
@@ -327,7 +327,7 @@ export const BeautyAssistant = () => {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={t.placeholder}
+              placeholder={assistantText.placeholder}
               className="flex-1 rounded-full bg-cream/50 border-gold/30 focus-visible:ring-gold font-body text-sm"
               disabled={isLoading}
               dir={isRTL ? "rtl" : "ltr"}

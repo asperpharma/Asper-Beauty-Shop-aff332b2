@@ -339,7 +339,7 @@ const Philosophy = () => {
     },
   };
 
-  const t = content[language];
+  const pageTranslations = content[language];
 
   return (
     <div
@@ -387,7 +387,7 @@ const Philosophy = () => {
                   transition: "transform 0.1s ease-out",
                 }}
               >
-                {t.pageTitle}
+                {pageTranslations.pageTitle}
               </h1>
             </header>
           </ParallaxSection>
@@ -396,10 +396,10 @@ const Philosophy = () => {
           <ParallaxSection speed={0.06} className="mb-16 md:mb-24">
             <section>
               <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-burgundy mb-6 leading-snug">
-                {t.section1.headline}
+                {pageTranslations.section1.headline}
               </h2>
               <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                {t.section1.body}
+                {pageTranslations.section1.body}
               </p>
 
               {/* Gold Line Separator with animation */}
@@ -421,10 +421,10 @@ const Philosophy = () => {
           <ParallaxSection speed={0.04} className="mb-16 md:mb-24">
             <section>
               <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-burgundy mb-6 leading-snug">
-                {t.section2.headline}
+                {pageTranslations.section2.headline}
               </h2>
               <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                {t.section2.body}
+                {pageTranslations.section2.body}
               </p>
 
               {/* Gold Line Separator */}
@@ -443,10 +443,10 @@ const Philosophy = () => {
           <ParallaxSection speed={0.03} className="mb-16 md:mb-24">
             <section>
               <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-burgundy mb-6 leading-snug">
-                {t.section3.headline}
+                {pageTranslations.section3.headline}
               </h2>
               <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                {t.section3.body}
+                {pageTranslations.section3.body}
               </p>
             </section>
           </ParallaxSection>
@@ -466,7 +466,7 @@ const Philosophy = () => {
                   transition: "transform 0.2s ease-out",
                 }}
               >
-                {t.signature}
+                {pageTranslations.signature}
               </span>
 
               {/* Decorative star */}
