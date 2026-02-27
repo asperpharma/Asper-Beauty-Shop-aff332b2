@@ -71,33 +71,48 @@ To properly connect your custom domain to Lovable:
 
 ## 📦 Deployment Workflow
 
+### ⚠️ IMPORTANT: Deployment Only Happens on Main Branch
+
+**All production deployments are triggered by merging PRs to the `main` branch.**
+
+- Feature branches (e.g., `copilot/fix-*`, `feature/*`) are **NOT** auto-deployed
+- Only code merged into `main` triggers production deployment
+- See [PR Merge Guidelines](.github/PR_MERGE_GUIDELINES.md) for the complete workflow
+
 ### Automatic Deployment (via Lovable)
 
-1. Push changes to `main` branch
+1. **Merge PR to `main` branch** (this is the critical step!)
 2. Lovable automatically:
    - Detects changes via Git webhook
    - Runs `npm run build`
    - Deploys to asperbeautyshop.lovable.app
    - Deploys to <www.asperbeautyshop.com> (custom domain)
    - Invalidates CDN cache
+3. Deployment completes in 2-5 minutes
 
 ### Manual Deployment
 
+**Note**: Direct pushes to `main` should be avoided. Use the PR workflow instead.
+
 ```bash
-# 1. Build production bundle
-npm run build
-
-# 2. Preview locally (optional)
-npm run preview
-
-# 3. Deploy via Lovable CLI (if available)
-lovable deploy --production
-
-# Or push to main branch to trigger automatic deployment
+# Recommended: Create a PR and merge via GitHub UI
+git checkout -b feature/my-feature
 git add .
-git commit -m "Deploy to production"
+git commit -m "Add my feature"
+git push origin feature/my-feature
+# Then create PR on GitHub and merge to main
+
+# Emergency hotfix only (requires repository write access):
+git checkout main
+git pull origin main
+# Make your changes
+git add .
+git commit -m "Hotfix: critical issue description"
 git push origin main
+# Lovable will auto-deploy this to production
 ```
+
+See [PR Merge Guidelines](.github/PR_MERGE_GUIDELINES.md) for detailed workflow.
 
 ### Environment Variables
 
