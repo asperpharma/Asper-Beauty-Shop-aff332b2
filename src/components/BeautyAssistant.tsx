@@ -60,6 +60,10 @@ export const BeautyAssistant = () => {
       welcome:
         "Hello. I am trained on clinical skincare data. Tell me your skin concern (e.g., Acne, Dryness) or ask about a specific ingredient.",
       buttonText: "Ask the Pharmacist",
+      errorMessage:
+        "I sincerely apologize for the brief technical interruption. 😔 To ensure your inquiry is handled with the care it deserves, please leave your email address below. A Senior Concierge will review your file and contact you personally to resolve this immediately. 🛡️",
+      authError:
+        "I apologize for the delay. 😔 Please share your email so our Senior Team can prioritize your request and contact you directly. Your care is our top priority. 🛡️",
     },
     ar: {
       title: "استشارة آسبر الرقمية",
@@ -68,6 +72,10 @@ export const BeautyAssistant = () => {
       welcome:
         "مرحباً. أنا مدرب على بيانات العناية بالبشرة السريرية. أخبرني عن مشكلة بشرتك (مثل حب الشباب، الجفاف) أو اسأل عن مكون معين.",
       buttonText: "اسأل الصيدلي",
+      errorMessage:
+        "أعتذر بصدق عن الانقطاع التقني المؤقت. 😔 للتأكد من التعامل مع استفسارك بالعناية التي يستحقها، يرجى ترك عنوان بريدك الإلكتروني أدناه. سيقوم أحد كبار المستشارين بمراجعة ملفك والاتصال بك شخصياً لحل هذا الأمر فوراً. 🛡️",
+      authError:
+        "أعتذر عن التأخير. 😔 يرجى مشاركة بريدك الإلكتروني حتى يتمكن فريقنا الكبير من إعطاء طلبك الأولوية والاتصال بك مباشرة. رعايتك هي أولويتنا القصوى. 🛡️",
     },
   };
 
@@ -175,11 +183,12 @@ export const BeautyAssistant = () => {
       await streamChat(newMessages.filter((m) => m.content !== t.welcome));
     } catch (error) {
       console.error("Chat error:", error);
+      const errorMsg = error instanceof Error && error.message.includes("sign in")
+        ? t.authError
+        : t.errorMessage;
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: language === "ar"
-          ? "عذراً، حدث خطأ. يرجى المحاولة مرة أخرى."
-          : "Sorry, something went wrong. Please try again.",
+        content: errorMsg,
       }]);
     } finally {
       setIsLoading(false);
@@ -198,11 +207,12 @@ export const BeautyAssistant = () => {
     streamChat(newMessages.filter((m) => m.content !== t.welcome))
       .catch((error) => {
         console.error("Chat error:", error);
+        const errorMsg = error instanceof Error && error.message.includes("sign in")
+          ? t.authError
+          : t.errorMessage;
         setMessages((prev) => [...prev, {
           role: "assistant",
-          content: language === "ar"
-            ? "عذراً، حدث خطأ. يرجى المحاولة مرة أخرى."
-            : "Sorry, something went wrong. Please try again.",
+          content: errorMsg,
         }]);
       })
       .finally(() => {
