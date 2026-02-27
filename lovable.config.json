@@ -1,7 +1,9 @@
 {
   "projectId": "asper-beauty-shop",
+  "lovableProjectId": "657fb572-13a5-4a3e-bac9-184d39fdf7e6",
   "customDomain": "www.asperbeautyshop.com",
   "primaryDomain": "asperbeautyshop.lovable.app",
+  "alternateDomain": "asperbeautyshop-com.lovable.app",
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
@@ -23,6 +25,12 @@
         "bulk-product-upload"
       ]
     }
+  },
+  "repository": {
+    "owner": "asperpharma",
+    "name": "Asper-Beauty-Shop-aff332b2",
+    "url": "https://github.com/asperpharma/Asper-Beauty-Shop-aff332b2",
+    "isMainProject": true
   },
   "seo": {
     "siteName": "Asper Beauty Shop",
