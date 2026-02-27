@@ -1,10 +1,13 @@
 # Datadog Webhook Handler
 
-This Supabase Edge Function handles incoming webhook alerts from Datadog monitoring service with HMAC SHA-256 signature verification.
+This Supabase Edge Function handles incoming webhook alerts from Datadog
+monitoring service with HMAC SHA-256 signature verification.
 
 ## Overview
 
-Datadog webhooks send monitor alerts to this endpoint. Each webhook includes a `DD-Signature` header containing an HMAC SHA-256 signature of the request body, which is verified to ensure the webhook is authentic.
+Datadog webhooks send monitor alerts to this endpoint. Each webhook includes a
+`DD-Signature` header containing an HMAC SHA-256 signature of the request body,
+which is verified to ensure the webhook is authentic.
 
 ## Features
 
@@ -41,7 +44,8 @@ In your Datadog dashboard:
 1. Go to **Integrations** > **Webhooks**
 2. Add a new webhook with:
    - **Name**: Your webhook name
-   - **URL**: `https://[your-project-ref].supabase.co/functions/v1/datadog-webhook`
+   - **URL**:
+     `https://[your-project-ref].supabase.co/functions/v1/datadog-webhook`
    - **Custom Headers**: Not required (signature is automatic)
    - **Secret**: The same secret you configured in step 1
 
@@ -78,6 +82,7 @@ The request body varies based on the Datadog alert type. Common fields include:
 ### Response
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -87,6 +92,7 @@ The request body varies based on the Datadog alert type. Common fields include:
 ```
 
 **Invalid Signature (401)**
+
 ```json
 {
   "error": "Invalid signature"
@@ -94,6 +100,7 @@ The request body varies based on the Datadog alert type. Common fields include:
 ```
 
 **Missing Signature (401)**
+
 ```json
 {
   "error": "Missing DD-Signature header"
@@ -101,6 +108,7 @@ The request body varies based on the Datadog alert type. Common fields include:
 ```
 
 **Server Error (500)**
+
 ```json
 {
   "error": "Error message"
@@ -144,6 +152,7 @@ node supabase/functions/datadog-webhook/test-node.cjs
 ```
 
 The test files include:
+
 - Valid signature verification
 - Invalid signature rejection
 - Wrong secret detection
@@ -164,6 +173,7 @@ node supabase/functions/datadog-webhook/send-test-webhook.cjs
 ```
 
 This will:
+
 1. Send a test webhook with a valid signature
 2. Send a test webhook with an invalid signature
 3. Verify both scenarios work as expected
@@ -173,7 +183,8 @@ This will:
 1. **Keep your webhook secret secure**: Never commit it to version control
 2. **Use environment variables**: Store the secret in Supabase secrets
 3. **Validate signatures**: Always verify the `DD-Signature` header
-4. **Use HTTPS**: Ensure your webhook endpoint uses HTTPS (automatic with Supabase)
+4. **Use HTTPS**: Ensure your webhook endpoint uses HTTPS (automatic with
+   Supabase)
 5. **Log failures**: Monitor failed verification attempts for security issues
 
 ## Optional: Store Webhook Events
@@ -198,7 +209,8 @@ Then uncomment the storage code in `index.ts` (lines 137-144).
 
 ## Customization
 
-Add your custom alert processing logic in the function after signature verification (around line 150 in `index.ts`). Examples:
+Add your custom alert processing logic in the function after signature
+verification (around line 150 in `index.ts`). Examples:
 
 - Send notifications to team members
 - Create issues in your issue tracker
