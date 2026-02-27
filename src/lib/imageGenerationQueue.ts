@@ -49,7 +49,18 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+interface QueueEventData {
+  itemUpdate?: QueueItem;
+  statsUpdate?: QueueStats;
+  batchComplete?: { completed: number; total: number };
+  queueComplete?: { completed: number; failed: number };
+  error?: { message: string; item?: QueueItem };
+  paused?: boolean;
+  resumed?: boolean;
+}
+
+type QueueEventCallback = (data: QueueEventData) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -81,7 +92,7 @@ class ImageGenerationQueue {
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emit(event: QueueEventType, data: QueueEventData) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       listeners.forEach((callback) => callback(data));
@@ -311,11 +322,12 @@ class ImageGenerationQueue {
       }
 
       return { success: false, error: "No image URL returned" };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Exception processing ${item.name}:`, err);
-      const isRateLimited = err.message?.includes("429") ||
-        err.message?.includes("rate");
-      return { success: false, error: err.message, rateLimited: isRateLimited };
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const isRateLimited = errorMessage.includes("429") ||
+        errorMessage.includes("rate");
+      return { success: false, error: errorMessage, rateLimited: isRateLimited };
     }
   }
 
