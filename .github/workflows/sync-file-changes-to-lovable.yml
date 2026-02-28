@@ -37,7 +37,7 @@ jobs:
           echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
 
       - name: Notify Lovable webhook
-        if: env.LOVABLE_WEBHOOK_URL != ''
+        if: secrets.LOVABLE_WEBHOOK_URL != ''
         env:
           LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
         run: |

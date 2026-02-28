@@ -8,8 +8,8 @@
  * 
  * Usage:
  *   npm run health
- *   node scripts/health-check.js
- *   node scripts/health-check.js --url=https://custom-domain.com
+ *   node scripts/health-check.cjs
+ *   node scripts/health-check.cjs --url=https://custom-domain.com
  */
 
 const https = require('https');
