@@ -1,0 +1,107 @@
+name: Sync Issues and PRs to Lovable
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - closed
+      - reopened
+      - labeled
+      - unlabeled
+
+  pull_request:
+    types:
+      - opened
+      - edited
+      - closed
+      - reopened
+      - labeled
+      - unlabeled
+      - synchronize
+
+  workflow_dispatch:
+
+jobs:
+  sync-to-lovable:
+    name: Notify Lovable of Issue/PR Changes
+    runs-on: ubuntu-latest
+    if: github.repository == 'asperpharma/Asper-Beauty-Shop-aff332b2'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Determine event type
+        id: event-type
+        run: |
+          if [ "${{ github.event_name }}" == "issues" ]; then
+            echo "type=issue" >> $GITHUB_OUTPUT
+            echo "number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            echo "title=${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
+            echo "state=${{ github.event.issue.state }}" >> $GITHUB_OUTPUT
+            echo "url=${{ github.event.issue.html_url }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "type=pull_request" >> $GITHUB_OUTPUT
+            echo "number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+            echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+            echo "state=${{ github.event.pull_request.state }}" >> $GITHUB_OUTPUT
+            echo "url=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+          else
+            echo "type=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Lovable webhook
+        if: secrets.LOVABLE_WEBHOOK_URL
+        env:
+          LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
+        run: |
+          if [ -z "$LOVABLE_WEBHOOK_URL" ]; then
+            echo "⚠️ LOVABLE_WEBHOOK_URL not configured. Skipping webhook notification."
+            echo "To enable, add LOVABLE_WEBHOOK_URL to repository secrets."
+            exit 0
+          fi
+          
+          # Prepare labels
+          LABELS=""
+          if [ "${{ github.event_name }}" == "issues" ]; then
+            LABELS=$(echo '${{ toJSON(github.event.issue.labels.*.name) }}' | jq -r 'join(",")')
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            LABELS=$(echo '${{ toJSON(github.event.pull_request.labels.*.name) }}' | jq -r 'join(",")')
+          fi
+          
+          # Send webhook notification
+          curl -X POST "$LOVABLE_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"event\": \"${{ github.event_name }}\",
+              \"action\": \"${{ github.event.action }}\",
+              \"type\": \"${{ steps.event-type.outputs.type }}\",
+              \"repository\": \"${{ github.repository }}\",
+              \"number\": ${{ steps.event-type.outputs.number }},
+              \"title\": \"${{ steps.event-type.outputs.title }}\",
+              \"state\": \"${{ steps.event-type.outputs.state }}\",
+              \"labels\": \"$LABELS\",
+              \"url\": \"${{ steps.event-type.outputs.url }}\",
+              \"sender\": \"${{ github.event.sender.login }}\"
+            }"
+          
+          echo "✅ Webhook notification sent to Lovable"
+
+      - name: Summary
+        run: |
+          echo "### Issue/PR Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${{ steps.event-type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Number:** #${{ steps.event-type.outputs.number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Title:** ${{ steps.event-type.outputs.title }}" >> $GITHUB_STEP_SUMMARY
+          echo "**State:** ${{ steps.event-type.outputs.state }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** ${{ github.event.action }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -z "${{ secrets.LOVABLE_WEBHOOK_URL }}" ]; then
+            echo "⚠️ **Status:** Webhook not configured" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "To enable automatic syncing to Lovable, add \`LOVABLE_WEBHOOK_URL\` to repository secrets." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Status:** Webhook notification sent" >> $GITHUB_STEP_SUMMARY
+          fi

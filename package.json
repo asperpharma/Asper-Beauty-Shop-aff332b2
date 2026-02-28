@@ -9,7 +9,9 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "health": "node scripts/health-check.cjs",
+    "test:brain": "node scripts/health-check.cjs && echo 'For full Brain/Beauty Assistant test, see TEST_BRAIN_AND_CHATBOT.md'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
