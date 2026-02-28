@@ -19,6 +19,8 @@ jobs:
     name: Notify Lovable of File Changes
     runs-on: ubuntu-latest
     if: github.repository == 'asperpharma/Asper-Beauty-Shop-aff332b2'
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
