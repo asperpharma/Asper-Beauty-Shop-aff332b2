@@ -1,0 +1,81 @@
+name: Sync File Changes to Lovable
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package.json'
+      - 'vite.config.ts'
+      - 'tailwind.config.ts'
+      - '.env.production'
+
+  workflow_dispatch:
+
+jobs:
+  sync-files:
+    name: Notify Lovable of File Changes
+    runs-on: ubuntu-latest
+    if: github.repository == 'asperpharma/Asper-Beauty-Shop-aff332b2'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "Changed files in this commit:"
+          git diff --name-only HEAD^ HEAD || echo "No previous commit to compare"
+          
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | tr '\n' ',' || echo "")
+          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+      - name: Notify Lovable webhook
+        if: env.LOVABLE_WEBHOOK_URL != ''
+        env:
+          LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
+        run: |
+          if [ -z "$LOVABLE_WEBHOOK_URL" ]; then
+            echo "⚠️ LOVABLE_WEBHOOK_URL not configured. Skipping webhook notification."
+            echo "To enable, add LOVABLE_WEBHOOK_URL to repository secrets."
+            exit 0
+          fi
+          
+          # Send webhook notification
+          curl -X POST "$LOVABLE_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"event\": \"file_changes\",
+              \"repository\": \"${{ github.repository }}\",
+              \"branch\": \"${{ github.ref_name }}\",
+              \"commit\": \"${{ github.sha }}\",
+              \"message\": \"${{ github.event.head_commit.message }}\",
+              \"author\": \"${{ github.event.head_commit.author.name }}\",
+              \"files\": \"${{ steps.changed-files.outputs.files }}\",
+              \"url\": \"${{ github.event.head_commit.url }}\"
+            }"
+          
+          echo "✅ Webhook notification sent to Lovable"
+
+      - name: Summary
+        run: |
+          echo "### File Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -z "${{ secrets.LOVABLE_WEBHOOK_URL }}" ]; then
+            echo "⚠️ **Status:** Webhook not configured" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "To enable automatic syncing to Lovable, add \`LOVABLE_WEBHOOK_URL\` to repository secrets." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Status:** Webhook notification sent" >> $GITHUB_STEP_SUMMARY
+          fi
