@@ -70,6 +70,15 @@ function makeRequest(url, options = {}) {
     });
 
     req.on('error', reject);
+    
+    // Set timeout explicitly
+    if (options.timeout) {
+      req.setTimeout(options.timeout, () => {
+        req.destroy();
+        reject(new Error('Request timeout'));
+      });
+    }
+    
     req.on('timeout', () => {
       req.destroy();
       reject(new Error('Request timeout'));

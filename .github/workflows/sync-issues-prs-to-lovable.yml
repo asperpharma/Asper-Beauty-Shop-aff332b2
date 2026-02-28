@@ -49,7 +49,7 @@ jobs:
           fi
 
       - name: Notify Lovable webhook
-        if: secrets.LOVABLE_WEBHOOK_URL != ''
+        if: secrets.LOVABLE_WEBHOOK_URL
         env:
           LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
         run: |
