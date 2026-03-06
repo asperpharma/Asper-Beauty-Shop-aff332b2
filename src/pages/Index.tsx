@@ -14,9 +14,6 @@ import { InstagramFeed } from "@/components/InstagramFeed";
 import { Newsletter } from "@/components/Newsletter";
 import { TrustBanner } from "@/components/TrustBanner";
 import { Footer } from "@/components/Footer";
-import { BeautyAssistant } from "@/components/BeautyAssistant";
-import { ScrollToTop } from "@/components/ScrollToTop";
-import { FloatingSocials } from "@/components/FloatingSocials";
 import { PageLoadingSkeleton } from "@/components/PageLoadingSkeleton";
 
 const Index = () => {
@@ -104,9 +101,6 @@ const Index = () => {
         <TrustBanner />
       </main>
       <Footer />
-      <BeautyAssistant />
-      <ScrollToTop />
-      <FloatingSocials />
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { BeautyAssistant } from "@/components/BeautyAssistant";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Award, FlaskConical, Globe, Sparkles } from "lucide-react";
@@ -490,7 +489,6 @@ const Philosophy = () => {
       </main>
 
       <Footer />
-      <BeautyAssistant />
     </div>
   );
 };
