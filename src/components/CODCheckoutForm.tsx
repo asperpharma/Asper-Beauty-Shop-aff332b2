@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore, selectTotalPrice } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -51,7 +51,8 @@ interface CODCheckoutFormProps {
 export const CODCheckoutForm = (
   { onSuccess, onCancel }: CODCheckoutFormProps,
 ) => {
-  const { items, getTotalPrice, clearCart } = useCartStore();
+  const { items, clearCart } = useCartStore();
+  const subtotal = useCartStore(selectTotalPrice);
   const { language } = useLanguage();
   const isArabic = language === "ar";
 
@@ -65,7 +66,6 @@ export const CODCheckoutForm = (
     notes: "",
   });
 
-  const subtotal = getTotalPrice();
   const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const total = subtotal + shippingCost;
 

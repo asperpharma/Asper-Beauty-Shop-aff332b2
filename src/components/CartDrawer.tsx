@@ -16,7 +16,7 @@ import {
   Truck,
   X,
 } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore, selectTotalPrice } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translateTitle } from "@/lib/productUtils";
@@ -38,10 +38,9 @@ export const CartDrawer = () => {
     removeItem,
     createCheckout,
     setOpen,
-    getTotalPrice,
   } = useCartStore();
 
-  const totalPrice = getTotalPrice();
+  const totalPrice = useCartStore(selectTotalPrice);
   const { t, isRTL, language } = useLanguage();
   const isArabic = language === "ar";
 
