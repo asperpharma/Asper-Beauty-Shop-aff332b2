@@ -49,7 +49,24 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+// Extract data types for each event
+type QueueEventDataMap = {
+  itemUpdate: QueueItem;
+  statsUpdate: QueueStats;
+  batchComplete: { batch: QueueItem[]; stats: QueueStats };
+  queueComplete: QueueStats;
+  error: { type: string; item: QueueItem };
+  paused: { reason: string };
+  resumed: Record<string, never>;
+};
+
+// Type-safe callback that accepts the data for the event type
+// Note: Internal storage uses QueueEventCallback (without generic) due to TypeScript Map limitations,
+// but the public API (on/emit methods) enforces type safety through generic constraints
+type QueueEventCallback<T extends QueueEventType = QueueEventType> = (
+  eventData: QueueEventDataMap[T]
+) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -65,26 +82,26 @@ class ImageGenerationQueue {
   }
 
   // Event handling
-  on(event: QueueEventType, callback: QueueEventCallback) {
+  on<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
-    this.eventListeners.get(event)!.push(callback);
+    this.eventListeners.get(event)!.push(callback as QueueEventCallback);
     return () => this.off(event, callback);
   }
 
-  off(event: QueueEventType, callback: QueueEventCallback) {
+  off<T extends QueueEventType>(event: T, callback: QueueEventCallback<T>) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      const index = listeners.indexOf(callback);
+      const index = listeners.indexOf(callback as QueueEventCallback);
       if (index > -1) listeners.splice(index, 1);
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emit<T extends QueueEventType>(event: T, eventData: QueueEventDataMap[T]) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      listeners.forEach((callback) => callback(data));
+      listeners.forEach((callback) => callback(eventData));
     }
   }
 
