@@ -49,7 +49,17 @@ type QueueEventType =
   | "error"
   | "paused"
   | "resumed";
-type QueueEventCallback = (data: any) => void;
+
+type QueueEventData = 
+  | { type: "itemUpdate"; item: QueueItem }
+  | { type: "statsUpdate"; stats: QueueStats }
+  | { type: "batchComplete" }
+  | { type: "queueComplete" }
+  | { type: "error"; error: Error | string }
+  | { type: "paused" }
+  | { type: "resumed" };
+
+type QueueEventCallback = (data: QueueEventData) => void;
 
 class ImageGenerationQueue {
   private queue: Map<string, QueueItem> = new Map();
@@ -81,7 +91,7 @@ class ImageGenerationQueue {
     }
   }
 
-  private emit(event: QueueEventType, data: any) {
+  private emit(event: QueueEventType, data: QueueEventData) {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       listeners.forEach((callback) => callback(data));
@@ -138,7 +148,7 @@ class ImageGenerationQueue {
   }
 
   private emitStats() {
-    this.emit("statsUpdate", this.getStats());
+    this.emit("statsUpdate", { type: "statsUpdate", stats: this.getStats() });
   }
 
   private updateItem(id: string, updates: Partial<QueueItem>) {
@@ -146,7 +156,7 @@ class ImageGenerationQueue {
     if (item) {
       const updated = { ...item, ...updates };
       this.queue.set(id, updated);
-      this.emit("itemUpdate", updated);
+      this.emit("itemUpdate", { type: "itemUpdate", item: updated });
       this.emitStats();
     }
   }
@@ -167,7 +177,7 @@ class ImageGenerationQueue {
       );
 
       if (pendingItems.length === 0) {
-        this.emit("queueComplete", this.getStats());
+        this.emit("queueComplete", { type: "queueComplete" });
         break;
       }
 
@@ -243,7 +253,7 @@ class ImageGenerationQueue {
       }
     });
 
-    this.emit("batchComplete", { batch, stats: this.getStats() });
+    this.emit("batchComplete", { type: "batchComplete" });
   }
 
   private async processItem(item: QueueItem): Promise<{
@@ -311,17 +321,18 @@ class ImageGenerationQueue {
       }
 
       return { success: false, error: "No image URL returned" };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Exception processing ${item.name}:`, err);
-      const isRateLimited = err.message?.includes("429") ||
-        err.message?.includes("rate");
-      return { success: false, error: err.message, rateLimited: isRateLimited };
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      const isRateLimited = errorMessage.includes("429") ||
+        errorMessage.includes("rate");
+      return { success: false, error: errorMessage, rateLimited: isRateLimited };
     }
   }
 
   private async handleRateLimit(item: QueueItem) {
     console.log("Rate limited, pausing queue...");
-    this.emit("error", { type: "rateLimit", item });
+    this.emit("error", { type: "error", error: `Rate limited for item ${item.id}` });
 
     // Mark item for retry
     this.updateItem(item.id, {
@@ -332,20 +343,20 @@ class ImageGenerationQueue {
 
     // Pause and wait
     this.isPaused = true;
-    this.emit("paused", { reason: "rateLimit" });
+    this.emit("paused", { type: "paused" });
 
     await this.delay(this.config.rateLimitDelay);
 
     // Resume automatically
     if (this.isProcessing) {
       this.isPaused = false;
-      this.emit("resumed", {});
+      this.emit("resumed", { type: "resumed" });
     }
   }
 
   pause() {
     this.isPaused = true;
-    this.emit("paused", { reason: "manual" });
+    this.emit("paused", { type: "paused" });
   }
 
   resume() {
@@ -353,7 +364,7 @@ class ImageGenerationQueue {
       this.start();
     } else {
       this.isPaused = false;
-      this.emit("resumed", {});
+      this.emit("resumed", { type: "resumed" });
     }
   }
 

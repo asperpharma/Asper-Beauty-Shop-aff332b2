@@ -148,7 +148,7 @@ export const CODCheckoutForm = (
 
       clearCart();
       onSuccess(data.order_number);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to place COD order:", error);
 
       // Provide more specific error messages
@@ -156,7 +156,7 @@ export const CODCheckoutForm = (
         ? "فشل في إرسال الطلب. حاول مرة أخرى."
         : "Failed to place order. Please try again.";
 
-      if (error?.message) {
+      if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
         if (
           error.message.includes("duplicate") ||
           error.message.includes("unique")
