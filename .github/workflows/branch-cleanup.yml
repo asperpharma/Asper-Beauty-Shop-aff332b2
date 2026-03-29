@@ -1,0 +1,207 @@
+name: Branch Cleanup Monitor
+
+on:
+  schedule:
+    # Run every Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  analyze-branches:
+    runs-on: ubuntu-latest
+    name: Analyze and Report Stale Branches
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches
+          
+      - name: Fetch all branches
+        run: |
+          git fetch --all --prune
+          
+      - name: Analyze branches
+        id: analyze
+        run: |
+          echo "# Branch Analysis Report" > /tmp/report.md
+          echo "" >> /tmp/report.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          
+          # Count total branches
+          TOTAL_BRANCHES=$(git branch -r | grep -v HEAD | wc -l)
+          echo "**Total branches:** $TOTAL_BRANCHES" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          
+          # Find stale branches (no commits in last 90 days)
+          echo "## Stale Branches (90+ days old)" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          echo "| Branch | Last Commit | Days Old | Author |" >> /tmp/report.md
+          echo "|--------|-------------|----------|--------|" >> /tmp/report.md
+          
+          STALE_COUNT=0
+          NINETY_DAYS_AGO=$(date -d '90 days ago' +%s)
+          
+          for branch in $(git branch -r | grep -v HEAD | sed 's/origin\///'); do
+            LAST_COMMIT_DATE=$(git log -1 --format="%at" "origin/$branch" 2>/dev/null || echo "0")
+            
+            if [ "$LAST_COMMIT_DATE" -lt "$NINETY_DAYS_AGO" ] && [ "$LAST_COMMIT_DATE" != "0" ]; then
+              LAST_COMMIT_HUMAN=$(git log -1 --format="%ai" "origin/$branch")
+              DAYS_OLD=$(( ($(date +%s) - LAST_COMMIT_DATE) / 86400 ))
+              AUTHOR=$(git log -1 --format="%an" "origin/$branch")
+              echo "| \`$branch\` | $LAST_COMMIT_HUMAN | $DAYS_OLD | $AUTHOR |" >> /tmp/report.md
+              STALE_COUNT=$((STALE_COUNT + 1))
+            fi
+          done
+          
+          if [ "$STALE_COUNT" -eq 0 ]; then
+            echo "| - | - | - | - |" >> /tmp/report.md
+            echo "" >> /tmp/report.md
+            echo "_No stale branches found._" >> /tmp/report.md
+          fi
+          
+          echo "" >> /tmp/report.md
+          echo "**Stale branches found:** $STALE_COUNT" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          
+          # Find merged branches
+          echo "## Merged Branches (Can be deleted)" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          echo "| Branch |" >> /tmp/report.md
+          echo "|--------|" >> /tmp/report.md
+          
+          MERGED_COUNT=0
+          git checkout main 2>/dev/null || git checkout origin/main 2>/dev/null
+          
+          for branch in $(git branch -r --merged | grep -v HEAD | grep -v main | sed 's/origin\///'); do
+            echo "| \`$branch\` |" >> /tmp/report.md
+            MERGED_COUNT=$((MERGED_COUNT + 1))
+          done
+          
+          if [ "$MERGED_COUNT" -eq 0 ]; then
+            echo "| - |" >> /tmp/report.md
+            echo "" >> /tmp/report.md
+            echo "_No merged branches found._" >> /tmp/report.md
+          fi
+          
+          echo "" >> /tmp/report.md
+          echo "**Merged branches found:** $MERGED_COUNT" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          
+          # Recommendations
+          echo "## Recommendations" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          
+          if [ "$STALE_COUNT" -gt 0 ] || [ "$MERGED_COUNT" -gt 0 ]; then
+            echo "### Action Required" >> /tmp/report.md
+            echo "" >> /tmp/report.md
+            
+            if [ "$MERGED_COUNT" -gt 0 ]; then
+              echo "**Merged branches** can be safely deleted as their changes are already in \`main\`." >> /tmp/report.md
+              echo "" >> /tmp/report.md
+            fi
+            
+            if [ "$STALE_COUNT" -gt 0 ]; then
+              echo "**Stale branches** should be reviewed:" >> /tmp/report.md
+              echo "- Check if work is still needed" >> /tmp/report.md
+              echo "- Check for associated open PRs" >> /tmp/report.md
+              echo "- Delete if work is abandoned or no longer relevant" >> /tmp/report.md
+              echo "" >> /tmp/report.md
+            fi
+            
+            echo "### How to Delete Branches" >> /tmp/report.md
+            echo "" >> /tmp/report.md
+            echo "\`\`\`bash" >> /tmp/report.md
+            echo "# Delete a single remote branch" >> /tmp/report.md
+            echo "git push origin --delete <branch-name>" >> /tmp/report.md
+            echo "" >> /tmp/report.md
+            echo "# Using GitHub CLI" >> /tmp/report.md
+            echo "gh api -X DELETE /repos/{owner}/{repo}/git/refs/heads/<branch-name>" >> /tmp/report.md
+            echo "\`\`\`" >> /tmp/report.md
+          else
+            echo "✅ **No action required** - All branches are recent and active!" >> /tmp/report.md
+          fi
+          
+          echo "" >> /tmp/report.md
+          echo "## Resources" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          echo "- [Branch Management Guide](../BRANCH_MANAGEMENT.md)" >> /tmp/report.md
+          echo "- [Contributing Guidelines](../CONTRIBUTING.md)" >> /tmp/report.md
+          echo "" >> /tmp/report.md
+          echo "---" >> /tmp/report.md
+          echo "_This report is automatically generated by the Branch Cleanup Monitor workflow._" >> /tmp/report.md
+          
+          # Output for next steps
+          echo "stale_count=$STALE_COUNT" >> $GITHUB_OUTPUT
+          echo "merged_count=$MERGED_COUNT" >> $GITHUB_OUTPUT
+          
+      - name: Check for existing issue
+        id: check-issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['branch-cleanup'],
+              state: 'open'
+            });
+            
+            if (issues.data.length > 0) {
+              core.setOutput('issue_number', issues.data[0].number);
+              return true;
+            }
+            return false;
+            
+      - name: Create or update issue
+        if: steps.analyze.outputs.stale_count > 0 || steps.analyze.outputs.merged_count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportContent = fs.readFileSync('/tmp/report.md', 'utf8');
+            
+            const issueNumber = '${{ steps.check-issue.outputs.issue_number }}';
+            
+            if (issueNumber) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(issueNumber),
+                body: '## Updated Report\n\n' + reportContent
+              });
+              
+              console.log(`Updated existing issue #${issueNumber}`);
+            } else {
+              // Create new issue
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🧹 Branch Cleanup Required - Weekly Report',
+                body: reportContent,
+                labels: ['branch-cleanup', 'maintenance']
+              });
+              
+              console.log(`Created new issue #${issue.data.number}`);
+            }
+            
+      - name: Summary
+        run: |
+          echo "## Branch Analysis Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Stale branches: ${{ steps.analyze.outputs.stale_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Merged branches: ${{ steps.analyze.outputs.merged_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.analyze.outputs.stale_count }}" -gt 0 ] || [ "${{ steps.analyze.outputs.merged_count }}" -gt 0 ]; then
+            echo "⚠️ Action required - see issue for details" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No action required" >> $GITHUB_STEP_SUMMARY
+          fi

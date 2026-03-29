@@ -125,6 +125,9 @@ VITE_SITE_URL=https://www.asperbeautyshop.com
 - [Copilot Instructions](.github/copilot-instructions.md) - AI agent guide
 - [Architecture](ARCHITECTURE_DIAGRAM.md) - System design
 - [Social Media](SOCIAL_MEDIA_INTEGRATION.md) - Platform connections
+- [Branch Management](BRANCH_MANAGEMENT.md) - Branch cleanup & hygiene
+- [PR Management](PR_MANAGEMENT.md) - Pull request guidelines
+- [Contributing](CONTRIBUTING.md) - How to contribute
 
 ---
 
