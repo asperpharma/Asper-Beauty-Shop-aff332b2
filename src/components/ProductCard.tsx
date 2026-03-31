@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShopifyProduct } from "@/lib/shopify";
@@ -17,7 +17,7 @@ interface ProductCardProps {
   product: ShopifyProduct;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = memo(({ product }: ProductCardProps) => {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { node } = product;
   const addItem = useCartStore((state) => state.addItem);
@@ -31,31 +31,57 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const firstImage = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
 
-  // Check for badges based on tags
-  const tags = (node as any).tags || [];
-  const isBestseller = Array.isArray(tags)
-    ? tags.some((tag: string) => tag.toLowerCase().includes("bestseller"))
-    : typeof tags === "string" && tags.toLowerCase().includes("bestseller");
-
-  // Check if product is new (created within last 30 days)
+  // Extract stable values for dependencies to minimize recalculations
+  const tags = (node as any).tags;
   const createdAt = (node as any).createdAt;
-  const isNewArrival = createdAt
-    ? (Date.now() - new Date(createdAt).getTime()) < 30 * 24 * 60 * 60 * 1000
-    : false;
+  const vendor = (node as any).vendor;
+  const compareAtPriceAmount = firstVariant?.compareAtPrice?.amount;
+  const variantPriceAmount = firstVariant?.price?.amount;
 
-  // Check for sale/discount
-  const compareAtPrice = firstVariant?.compareAtPrice;
-  const currentPrice = parseFloat(firstVariant?.price?.amount || price.amount);
-  const originalPrice = compareAtPrice
-    ? parseFloat(compareAtPrice.amount)
-    : null;
-  const isOnSale = originalPrice && originalPrice > currentPrice;
-  const discountPercent = isOnSale
-    ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
-    : 0;
+  // Memoize all expensive calculations with stable dependencies
+  // Using node.id as key since product identity doesn't change
+  const { isBestseller, isNewArrival, isOnSale, discountPercent, brand, productCategory, currentPrice, originalPrice } = useMemo(() => {
+    // Check for badges based on tags
+    const bestseller = Array.isArray(tags)
+      ? tags.some((tag: string) => tag.toLowerCase().includes("bestseller"))
+      : typeof tags === "string" && tags.toLowerCase().includes("bestseller");
 
-  // Extract brand from vendor or title
-  const brand = (node as any).vendor || node.title.split(" ")[0];
+    // Check if product is new (created within last 30 days)
+    const newArrival = createdAt
+      ? (Date.now() - new Date(createdAt).getTime()) < 30 * 24 * 60 * 60 * 1000
+      : false;
+
+    // Check for sale/discount and calculate prices
+    const current = parseFloat(variantPriceAmount || price.amount);
+    const original = compareAtPriceAmount
+      ? parseFloat(compareAtPriceAmount)
+      : null;
+    const onSale = original && original > current;
+    const discount = onSale
+      ? Math.round(((original - current) / original) * 100)
+      : 0;
+
+    // Extract brand from vendor or title
+    const brandName = vendor || node.title.split(" ")[0];
+    
+    // Get category for display (expensive operation, memoize it)
+    const category = categorizeProduct(
+      node.title,
+      node.productType,
+      vendor,
+    );
+
+    return {
+      isBestseller: bestseller,
+      isNewArrival: newArrival,
+      isOnSale: onSale,
+      discountPercent: discount,
+      brand: brandName,
+      productCategory: category,
+      currentPrice: current,
+      originalPrice: original,
+    };
+  }, [node.id, node.title, node.productType, vendor, tags, createdAt, compareAtPriceAmount, variantPriceAmount, price.amount]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -92,13 +118,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       });
     }
   };
-
-  // Get category for display
-  const productCategory = categorizeProduct(
-    node.title,
-    node.productType,
-    node.vendor,
-  );
 
   return (
     <Link to={`/product/${node.handle}`} className="group block">
@@ -202,8 +221,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="p-6 md:p-8 bg-white text-center space-y-3">
           {/* Category Badge - Wide Letter Spacing (Luxury Fashion Style) */}
           <p className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
-            {categorizeProduct(node.title, node.productType, node.vendor)
-              .replace("-", " ")}
+            {productCategory.replace("-", " ")}
           </p>
 
           {/* Brand Name - Minimalist */}
@@ -248,4 +266,4 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       />
     </Link>
   );
-};
+});

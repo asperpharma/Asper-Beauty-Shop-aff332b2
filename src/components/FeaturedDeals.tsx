@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
@@ -7,7 +7,7 @@ import { ProductCard } from "./ProductCard";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { ChevronRight, Loader2, Tag } from "lucide-react";
 
-export const FeaturedDeals = () => {
+export const FeaturedDeals = memo(() => {
   const { language } = useLanguage();
   const isArabic = language === "ar";
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
@@ -131,4 +131,4 @@ export const FeaturedDeals = () => {
       </div>
     </section>
   );
-};
+});
