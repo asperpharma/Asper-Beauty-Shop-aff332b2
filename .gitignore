@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 
 # Environment files with real secrets (templates like .env and .env.production are tracked)
 .env.local

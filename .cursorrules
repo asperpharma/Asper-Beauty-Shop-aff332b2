@@ -1,0 +1,349 @@
+# Asper Beauty Shop - Cursor AI Rules & Pre-Publishing Checklist
+
+## Project Context
+This is a luxury beauty e-commerce platform built with React, TypeScript, Vite, and Tailwind CSS. It integrates with Shopify for products and checkout, and Supabase for authentication and serverless functions.
+
+## Key Requirements
+- **Bilingual Support**: English & Arabic (RTL for Arabic)
+- **Luxury Design**: Maroon (#800020), Soft Ivory (#F8F8FF), Shiny Gold (#C5A028)
+- **Integrations**: Shopify Storefront API v2025-07, Supabase, 9 social media platforms
+- **Production URL**: https://www.asperbeautyshop.com
+- **Dev URL**: https://asperbeautyshop.lovable.app
+
+## Coding Standards
+- Use TypeScript for all new files
+- Follow existing component patterns in `src/components/`
+- Use shadcn/ui components from `src/components/ui/`
+- Maintain bilingual support with `useLanguage()` hook
+- Keep RTL compatibility for Arabic
+- Use Zustand stores for state management
+- Follow luxury design system (see tailwind.config.ts)
+
+## Before Publishing: Comprehensive Checklist
+
+### 1. Technical Verification ✅
+
+#### Build & Dependencies
+- [ ] Run `npm install` - all dependencies installed
+- [ ] Run `npm run build` - production build succeeds
+- [ ] Run `npm run preview` - preview works correctly
+- [ ] No build errors or warnings in console
+- [ ] Check `package.json` version is updated
+- [ ] All dependencies are up to date (or documented exceptions)
+
+#### Linting & Code Quality
+- [ ] Run `npm run lint` - no critical linting errors
+- [ ] TypeScript compilation succeeds without errors
+- [ ] All TODO/FIXME comments resolved or documented
+- [ ] No console.log statements in production code
+- [ ] No commented-out code blocks (except documented)
+
+#### Testing
+- [ ] Manual test: All routes accessible (/, /product/:handle, /collections/:slug, /brands, /contact, /wishlist)
+- [ ] Manual test: Product listing loads correctly
+- [ ] Manual test: Product detail pages work
+- [ ] Manual test: Search functionality works
+- [ ] Manual test: Cart operations (add, update, remove)
+- [ ] Manual test: Checkout flow completes
+- [ ] Manual test: Language switching (EN/AR)
+- [ ] Manual test: RTL layout works correctly
+- [ ] Manual test: Mobile responsiveness
+- [ ] Manual test: Tablet responsiveness
+- [ ] Manual test: Desktop display
+
+### 2. Content Verification ✅
+
+#### Product Data
+- [ ] All product images load correctly
+- [ ] Product titles display properly in both languages
+- [ ] Product descriptions are accurate
+- [ ] Prices are correct (JOD currency)
+- [ ] Sale prices display correctly
+- [ ] Product variants work properly
+- [ ] "Add to Cart" functionality works
+- [ ] Product categories are correct
+- [ ] Brand filtering works
+
+#### UI/UX
+- [ ] All buttons are clickable and functional
+- [ ] All links navigate correctly
+- [ ] All forms validate properly
+- [ ] Error messages are clear and helpful
+- [ ] Success messages display correctly
+- [ ] Loading states show appropriately
+- [ ] Empty states are handled gracefully
+- [ ] No broken images or missing icons
+- [ ] Animations are smooth (700-1000ms luxury timing)
+- [ ] Color scheme matches brand (maroon, gold, ivory, charcoal)
+
+#### Text & Copy
+- [ ] No typos in English content
+- [ ] No typos in Arabic content
+- [ ] Contact information is correct
+- [ ] Phone number: +962 79 065 6666
+- [ ] Email: asperpharma@gmail.com
+- [ ] Location: Amman, Jordan
+- [ ] Copyright year is current
+- [ ] Terms of service link works (if applicable)
+- [ ] Privacy policy link works (if applicable)
+
+### 3. Integration Verification ✅
+
+#### Shopify
+- [ ] Shopify store domain configured: lovable-project-milns.myshopify.com
+- [ ] Shopify API version: 2025-07
+- [ ] Storefront API token is valid
+- [ ] Products fetch successfully
+- [ ] Checkout creation works
+- [ ] Checkout redirect works
+- [ ] GraphQL injection protection enabled (sanitizeSearchTerm)
+
+#### Supabase
+- [ ] Supabase project ID: rgehleqcubtmcwyipyvi
+- [ ] Supabase URL configured
+- [ ] Supabase API key is valid
+- [ ] Authentication works
+- [ ] Beauty Assistant AI works
+- [ ] Bulk upload function accessible (admin only)
+- [ ] Database queries work
+
+#### Social Media Links
+- [ ] Instagram link works: @asper.beauty.shop
+- [ ] Facebook link works
+- [ ] TikTok link works
+- [ ] WhatsApp link works
+- [ ] X (Twitter) link works
+- [ ] YouTube link works
+- [ ] LinkedIn link works
+- [ ] Snapchat link works
+- [ ] Pinterest link works
+
+### 4. Security Verification ✅
+
+#### Environment Variables
+- [ ] `.env` file NOT committed to git
+- [ ] `.env.production` configured correctly
+- [ ] All required environment variables set
+- [ ] No hardcoded API keys in source code
+- [ ] Sensitive data not exposed in client-side code
+
+#### Security Checks
+- [ ] Run `npm audit` - no critical vulnerabilities
+- [ ] Review SECURITY_STATUS.md for known issues
+- [ ] Admin routes protected with RequireAdmin guard
+- [ ] User authentication works properly
+- [ ] Session persistence works
+- [ ] GraphQL injection prevention in search
+- [ ] CORS configured properly
+- [ ] HTTPS enforced (via Lovable platform)
+
+#### Data Privacy
+- [ ] User data handled according to privacy policy
+- [ ] No PII logged to console
+- [ ] Cart data persists correctly in localStorage
+- [ ] Wishlist data persists correctly in localStorage
+
+### 5. Performance Verification ✅
+
+#### Page Load Performance
+- [ ] Home page loads in < 3 seconds
+- [ ] Product pages load in < 2 seconds
+- [ ] Collection pages load in < 3 seconds
+- [ ] Images are optimized (using OptimizedImage component)
+- [ ] Lazy loading implemented for images
+- [ ] Code splitting by route enabled
+
+#### Bundle Size
+- [ ] Run `npm run build` and check dist/ size
+- [ ] Main bundle < 500KB (gzipped)
+- [ ] Vendor bundle < 300KB (gzipped)
+- [ ] Review large dependencies if exceeded
+
+#### Caching
+- [ ] Static assets have cache headers
+- [ ] Service worker configured (if PWA enabled)
+- [ ] CDN configured via Lovable platform
+
+### 6. SEO & Analytics ✅
+
+#### SEO Configuration
+- [ ] Sitemap exists: public/sitemap.xml
+- [ ] Sitemap accessible at /sitemap.xml
+- [ ] Sitemap contains all main pages
+- [ ] Robots.txt exists: public/robots.txt
+- [ ] Robots.txt accessible at /robots.txt
+- [ ] Admin routes blocked in robots.txt
+- [ ] Meta tags in index.html are complete
+- [ ] Open Graph tags configured
+- [ ] Twitter Card tags configured
+- [ ] Canonical URLs point to www.asperbeautyshop.com
+- [ ] Page titles are descriptive
+- [ ] Meta descriptions are compelling
+
+#### Analytics (Optional)
+- [ ] Google Analytics configured (if implemented)
+- [ ] Facebook Pixel configured (if implemented)
+- [ ] Analytics tracking verified
+- [ ] Conversion tracking set up
+
+#### Search Console
+- [ ] Submit sitemap to Google Search Console
+- [ ] Submit sitemap to Bing Webmaster Tools
+- [ ] Verify domain ownership
+
+### 7. Accessibility ✅
+
+#### WCAG Compliance
+- [ ] All images have alt text
+- [ ] Color contrast meets WCAG AA standards
+- [ ] Keyboard navigation works
+- [ ] Focus indicators visible
+- [ ] ARIA labels on interactive elements
+- [ ] Form labels properly associated
+- [ ] Error messages accessible
+- [ ] Skip to content link (if applicable)
+
+#### Language & Localization
+- [ ] HTML lang attribute set correctly (en/ar)
+- [ ] RTL works properly for Arabic
+- [ ] Text readable in both languages
+- [ ] Currency format correct (JOD)
+- [ ] Date format appropriate for region
+
+### 8. Deployment Verification ✅
+
+#### DNS & Domain
+- [ ] Custom domain configured: www.asperbeautyshop.com
+- [ ] CNAME record points to asperbeautyshop.lovable.app
+- [ ] DNS propagation complete (check dnschecker.org)
+- [ ] SSL certificate active (HTTPS)
+- [ ] Non-www redirects to www
+- [ ] HTTP redirects to HTTPS
+
+#### Lovable Platform
+- [ ] Environment variables set in Lovable dashboard
+- [ ] Build configuration correct
+- [ ] Deploy hooks configured
+- [ ] Production build deployed
+- [ ] Preview URL works: asperbeautyshop.lovable.app
+- [ ] Custom domain works: www.asperbeautyshop.com
+
+#### PWA (Progressive Web App)
+- [ ] manifest.json configured
+- [ ] Icons set (192x192, 512x512)
+- [ ] Installable on mobile devices
+- [ ] Splash screen configured
+- [ ] Theme color set
+
+#### Redirects & 404
+- [ ] _redirects file in public/ directory
+- [ ] _redirects copied to dist/ on build
+- [ ] SPA redirects work (all routes → index.html)
+- [ ] 404 page displays correctly
+
+### 9. Documentation ✅
+
+#### Required Documentation
+- [ ] README.md is up to date
+- [ ] DEPLOYMENT_GUIDE.md reviewed
+- [ ] CONNECTION_STATUS.md verified
+- [ ] SECURITY_STATUS.md reviewed
+- [ ] Version number updated (if applicable)
+
+#### Code Documentation
+- [ ] Complex functions have comments
+- [ ] Component props documented (if using prop-types)
+- [ ] API integrations documented
+- [ ] Environment variables documented
+
+### 10. Final Checks ✅
+
+#### Pre-Launch
+- [ ] All staging/test data removed
+- [ ] All console.log statements removed
+- [ ] All debug flags set to false
+- [ ] Source maps disabled for production (or minimal)
+- [ ] Run `./verify-connections.sh` - all checks pass
+
+#### Team Review
+- [ ] Code reviewed by at least one other person
+- [ ] Stakeholder sign-off obtained
+- [ ] Marketing team notified of launch
+- [ ] Customer support team briefed
+
+#### Backup & Recovery
+- [ ] Recent database backup exists
+- [ ] Rollback plan documented
+- [ ] Monitoring alerts configured
+- [ ] Support contact information available
+
+#### Post-Launch Monitoring
+- [ ] Monitor error tracking (first 24 hours)
+- [ ] Monitor analytics (traffic patterns)
+- [ ] Check user feedback channels
+- [ ] Review server logs for errors
+- [ ] Verify checkout completions working
+
+---
+
+## Quick Pre-Publish Command Sequence
+
+```bash
+# 1. Clean install
+rm -rf node_modules package-lock.json
+npm install
+
+# 2. Run verification script
+./verify-connections.sh
+
+# 3. Lint code
+npm run lint
+
+# 4. Build for production
+npm run build
+
+# 5. Preview production build
+npm run preview
+
+# 6. Check bundle size
+du -sh dist/
+ls -lh dist/assets/
+
+# 7. Test in browser
+# Open http://localhost:4173 and manually test all features
+
+# 8. Deploy (via Lovable platform)
+git add .
+git commit -m "Release: Production build vX.X.X"
+git push origin main
+```
+
+---
+
+## Emergency Rollback Procedure
+
+If critical issues found after deployment:
+
+1. **Immediate**: Contact Lovable support to rollback deployment
+2. **Alternative**: Deploy previous working commit:
+   ```bash
+   git revert HEAD
+   git push origin main
+   ```
+3. **Notify**: Alert team via communication channels
+4. **Document**: Record issue in GitHub issues
+5. **Fix**: Create hotfix branch, test thoroughly, deploy
+
+---
+
+## Support Contacts
+
+- **Lovable Platform**: support@lovable.dev
+- **Shopify Support**: Via Shopify admin dashboard  
+- **Supabase Support**: Via Supabase dashboard
+- **Domain/DNS**: Check your DNS provider documentation
+
+---
+
+**Last Updated**: January 2026
+**Maintainer**: Asper Pharma Team
