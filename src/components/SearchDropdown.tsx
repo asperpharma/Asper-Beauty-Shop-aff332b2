@@ -153,7 +153,7 @@ export const SearchDropdown = ({
                           : (
                             <ProductImagePlaceholder
                               title={displayTitle}
-                              brand={(product.node as any).vendor ||
+                              brand={product.node.vendor ||
                                 displayTitle.split(" ")[0]}
                               category={categorizeProduct(
                                 product.node.title,
