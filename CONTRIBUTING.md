@@ -33,6 +33,50 @@ follow these guidelines to ensure a smooth process.
 8. **Create a Pull Request**: Go to the original repository and create a pull
    request from your branch.
 
+## Deployment Workflow
+
+### For Contributors Without Direct Push Access
+
+Follow the standard pull request workflow above. Your changes will be reviewed and merged by maintainers.
+
+### For Team Members with Push Access
+
+If you have write access to the repository, you can deploy using dedicated branches:
+
+#### Using the Deploy Branch
+
+```bash
+# Create or switch to deployment branch
+git checkout -b deploy/asper-updates
+# Or: git checkout deploy/asper-updates && git pull origin deploy/asper-updates
+
+# Make and commit your changes
+git add .
+git commit -m "Descriptive commit message"
+
+# Push to deployment branch
+git push origin deploy/asper-updates
+```
+
+#### Merging to Main
+
+If you have permissions to push directly to `main`:
+
+```bash
+# Update both branches
+git checkout deploy/asper-updates
+git pull origin deploy/asper-updates
+
+git checkout main
+git pull origin main
+
+# Merge and push
+git merge deploy/asper-updates
+git push origin main
+```
+
+**Note**: Always check branch protection rules before pushing. See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed deployment instructions.
+
 ## Coding Standards
 
 - Follow the existing code style in the project.
